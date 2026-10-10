@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@500;600;800&display=swap">
+<script>
+function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
+function toHex(c) { return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); }
+function applyTheme(t) {
+  var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
+  r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
+  r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
+  r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
+}
+</script>
+<style>
+:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
+.adm.on a.ghost{text-decoration:none}
+[hidden]{display:none!important}
+.adm{position:fixed;inset:0;z-index:20;background:rgba(var(--br),.97);overflow:auto;display:none}
+.adm.on{display:block}
+.adm-in{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 140px}
+.adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.adm h3{margin:0;font:400 clamp(40px,7vw,64px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.4)}
+.ghost,.pub{font:600 14px Inter,sans-serif;color:#fff;border-radius:999px;padding:.7em 1.4em;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent}
+.pub{border-color:var(--glow);background:rgba(var(--ar),.2)}
+.pub:disabled{opacity:.35;cursor:default}
+.ghost:hover,.pub:not(:disabled):hover{background:rgba(var(--ar),.3)}
+.gate{max-width:440px;margin:10vh auto;text-align:center;padding:32px;border:1px solid rgba(var(--ar),.35);border-radius:18px;background:rgba(var(--ar),.05)}
+.gate b{font-size:20px}.gate p{color:rgba(255,255,255,.65);line-height:1.5}
+.drop{display:grid;place-items:center;min-height:130px;padding:16px;text-align:center;border:2px dashed rgba(var(--ar),.5);border-radius:16px;color:rgba(255,255,255,.8);font-weight:600;cursor:pointer;transition:background .2s}
+.drop:hover,.drop.over{background:rgba(var(--ar),.12)}
+.hint{color:rgba(255,255,255,.55);font-size:14px;line-height:1.5;margin:14px 0 22px}
+.admgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.it{position:relative;display:flex;flex-direction:column;gap:8px;padding-bottom:10px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.03)}
+.it img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.it input{margin:0 10px;padding:.55em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 13px Inter,sans-serif}
+.it input:focus{outline:2px solid var(--glow)}
+.ctl{display:flex;gap:6px;margin:0 10px}
+.ctl button{flex:1;padding:.5em;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;font:600 13px Inter,sans-serif;cursor:pointer}
+.ctl .del{flex:3;border-color:rgba(248,113,113,.5);color:#fca5a5}
+.tag{position:absolute;top:8px;left:8px;padding:.25em .7em;border-radius:99px;background:rgba(var(--br),.8);font:600 11px Inter,sans-serif;color:var(--glow)}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));background:rgba(var(--br),.96);border-top:1px solid rgba(var(--ar),.3);font-size:14px;color:rgba(255,255,255,.75)}
+.chips{margin-bottom:16px;color:rgba(255,255,255,.7);font-weight:600;font-size:14px}
+.tabs{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding:10px 0;background:rgba(var(--br),.97)}
+.tabs button{padding:.65em 1.3em;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font:600 14px Inter,sans-serif;cursor:pointer}
+.tabs button.on{border-color:var(--glow);background:rgba(var(--ar),.2)}
+.srow{margin-bottom:26px}
+.slab{margin-bottom:8px;color:var(--glow);font-weight:600;font-size:14px}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}
+.mini{position:relative;flex:none;width:170px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111;cursor:pointer;border:1px solid rgba(255,255,255,.12)}
+.mini img{width:100%;height:100%;object-fit:cover;display:block}
+.mini:hover{outline:2px solid var(--glow)}
+.ph2{position:absolute;inset:0;display:grid;place-items:center;font:800 26px Inter,sans-serif}
+.num{position:absolute;top:8px;right:8px;z-index:1;padding:.25em .65em;border-radius:99px;background:rgba(var(--br),.8);font:600 11px Inter,sans-serif}
+.mini .num{top:6px;right:6px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:200px;padding:16px;text-align:center;border:2px dashed rgba(255,255,255,.18);border-radius:14px;color:rgba(255,255,255,.5);font-size:13px}
+.empty b{color:#fff;font-size:15px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.fset{margin-top:22px;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:14px}
+.fset>b{display:block;margin-bottom:12px;color:var(--glow)}
+.fld{display:flex;flex-direction:column;gap:6px;color:rgba(255,255,255,.65);font-weight:600;font-size:13px}
+.fld input{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.fld input:focus{outline:2px solid var(--glow)}
+.flash{animation:fl 1.7s}
+@keyframes fl{0%,60%{box-shadow:0 0 0 3px var(--glow),0 0 40px rgba(var(--ar),.6)}}
+.bt{display:flex;gap:10px}
+.ghost:disabled{opacity:.35;cursor:default}
+.ctl .on{border-color:var(--glow);background:rgba(var(--ar),.2);color:var(--glow)}
+.mini.feat{outline:2px solid var(--glow)}
+.mini.feat::after{content:"\2605";position:absolute;top:6px;left:6px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--glow);color:var(--bg);font-size:13px}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+.adm.on{animation:fade .25s}
+.adm section{animation:up .35s}
+.it,.mini,.empty,.fset{animation:up .4s backwards}
+.avrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.avprev{flex:none;width:88px;height:88px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,var(--glow),var(--glow2));font:800 34px Inter,sans-serif;border:2px solid rgba(var(--ar),.6)}
+.avprev img{width:100%;height:100%;object-fit:cover}
+.avtx{flex:1;min-width:200px;display:flex;flex-direction:column;gap:4px}
+.avtx span{color:rgba(255,255,255,.55);font-size:13px;line-height:1.4}
+label.ghost{display:inline-block}
+.gate input{width:100%;margin:8px 0 14px;padding:.8em 1em;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(var(--br),.8);color:#fff;font:500 16px Inter,sans-serif;text-align:center}
+.gate input:focus{outline:2px solid var(--glow)}
+.gate .pub{width:100%}
+.err{min-height:1.3em;margin:12px 0 0;color:#fca5a5;font-size:14px}
+.pwnote{margin:0 0 14px;color:rgba(255,255,255,.65);font-size:14px;line-height:1.5}
+.pwbtn{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.swatches{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.sw{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0}
+.sw:hover{transform:scale(1.1)}
+.sw.on{border-color:#fff;box-shadow:0 0 0 3px var(--glow)}
+.crow{display:flex;gap:10px;align-items:center}
+.col{width:56px;height:44px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:none;cursor:pointer}
+.crow input:not(.col){width:140px;padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.cprev{margin-bottom:6px;padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:var(--bg)}
+.cname{font:400 clamp(36px,6vw,56px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
+.cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
+.mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+</style>
+</head>
+<body>
+<div class="adm on" id="adm">
+<div class="adm-in">
+<div class="adm-top"><h3>Admin</h3><span class="bt"><a class="ghost" href="/" target="_blank" rel="noopener">View site</a><button class="ghost" id="logout" type="button" hidden>Log out</button></span></div>
+<div id="admGate"><div class="gate"><b>Loading…</b></div></div>
+<div id="admPanel" hidden>
+<div class="chips" id="chips"></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<section id="tab-lib">
+<label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
+<p class="hint" id="hint"></p>
+<div class="admgrid" id="admList"></div>
+</section>
+<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 20).</p><div id="admSlides"></div></section>
+<section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
+<section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
+<section id="tab-site" hidden><p class="hint">Your photo, name, role and the three stats at the top of the site.</p><div id="admSite"></div></section>
+</div>
+</div>
+<div class="bar" id="admBar" hidden><span id="msg"></span><span class="bt"><button class="ghost" id="disc" type="button" disabled>Discard</button><button class="pub" id="pub" type="button" disabled>Save changes</button></span></div>
+</div>
+<script>
+function $(i) { return document.getElementById(i); }
+function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
+function cp(o) { return JSON.parse(JSON.stringify(o)); }
+var MAXF = 20, TH0 = {accent: '#fb2f01', bg: '#02070d'};
+var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
+var draft = [], siteDraft = null, saved = '', tab = 'lib';
+
+function norm(d) {
+  d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats));
+  while (st.length < 3) st.push({v: '', l: '', n: ''});
+  return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
+    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', theme: Object.assign({}, TH0, s.theme || {})}};
+}
+function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
+function flash(t) { $('msg').textContent = t; }
+function meter() { var d = snap() !== saved; $('msg').textContent = d ? 'Unsaved changes' : 'All changes saved'; $('pub').disabled = !d; $('disc').disabled = !d; }
+function featCount() { return draft.filter(function (t) { return t.feat; }).length; }
+function chips() { var n = draft.length, k = featCount(); $('chips').textContent = n + ' thumbnail' + (n === 1 ? '' : 's') + ' \u00B7 3 sliding rows \u00B7 ' + (k ? k + ' of ' + MAXF + ' picked for Selected work' : 'Selected work shows your first 10 until you pick'); }
+function chg() { meter(); chips(); }
+function toggleFeat(it) { if (!it.feat && featCount() >= MAXF) { flash('You can pick up to ' + MAXF + ' for Selected work.'); return false; } it.feat = !it.feat; chg(); return true; }
+addEventListener('beforeunload', function (e) { if (siteDraft && snap() !== saved) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- server ---------- */
+function signedOut() { $('admPanel').hidden = true; $('admBar').hidden = true; $('logout').hidden = true; showLogin('You were signed out. Sign in again (unsaved changes on this page are kept only until you reload).'); }
+async function uploadBlob(blob) {
+  var r = await fetch('/api/upload', {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: blob, credentials: 'same-origin'});
+  var j = {}; try { j = await r.json(); } catch (e) {}
+  if (r.status === 401) { signedOut(); throw new Error('Signed out'); }
+  if (!r.ok) throw new Error(j.error || 'Upload failed (' + r.status + ')');
+  return j.id;
+}
+async function save() {
+  $('pub').disabled = true; flash('Saving\u2026');
+  try {
+    var r = await fetch('/api/data', {method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({thumbs: draft, site: siteDraft}), credentials: 'same-origin'});
+    var j = {}; try { j = await r.json(); } catch (e) {}
+    if (r.status === 401) { signedOut(); return; }
+    if (!r.ok) throw new Error(j.error || 'Save failed (' + r.status + ')');
+    saved = snap(); meter(); flash('Saved. Your website is updated.');
+  } catch (e) { flash('Could not save: ' + e.message); $('pub').disabled = false; }
+}
+async function toJpeg(bm, max) {
+  var tries = [[max, .82], [max, .7], [Math.round(max * .8), .65], [Math.round(max * .6), .6]], blob;
+  for (var k = 0; k < tries.length; k++) {
+    var w = Math.min(tries[k][0], bm.width), h = Math.round(bm.height * w / bm.width), cv = document.createElement('canvas');
+    cv.width = w; cv.height = h; var cx = cv.getContext('2d'); cx.fillStyle = '#000'; cx.fillRect(0, 0, w, h); cx.drawImage(bm, 0, 0, w, h);
+    blob = await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', tries[k][1]); });
+    if (blob && blob.size <= 700000) return blob;
+  }
+  throw new Error('That image is too large to shrink.');
+}
+async function addFiles(fl) {
+  var files = [].filter.call(fl, function (f) { return /^image\//.test(f.type); }), n = 0, last = '';
+  for (var q = 0; q < files.length; q++) {
+    flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
+    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); draft.push({id: id, title: '', stat: '', feat: false}); n++; renderAdm(); }
+    catch (e) { last = e.message; if (last === 'Signed out') return; }
+  }
+  chg(); if (last) flash(n + ' added. Problem: ' + last); else if (n) flash(n + ' added. Press Save changes to publish.');
+}
+
+/* ---------- Library / Slides / Selected work ---------- */
+function card(it, i) {
+  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), c2 = mk('div', 'ctl');
+  c.id = 'it-' + i; im.src = '/api/img/' + it.id; im.alt = '';
+  ti.placeholder = 'Title (optional)'; ti.value = it.title; ti.oninput = function () { it.title = ti.value; chg(); };
+  st.placeholder = 'Views or result (optional)'; st.value = it.stat; st.oninput = function () { it.stat = st.value; chg(); };
+  [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
+    var b = mk('button', 0, m[0]); b.type = 'button'; b.setAttribute('aria-label', m[2]);
+    b.onclick = function () { var j = i + m[1]; if (j < 0 || j >= draft.length) return; draft.splice(j, 0, draft.splice(i, 1)[0]); chg(); renderAdm(); };
+    ct.appendChild(b);
+  });
+  var del = mk('button', 'del', 'Remove'); del.type = 'button';
+  del.onclick = function () {
+    if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
+    draft.splice(i, 1); chg(); renderAdm();
+  };
+  ct.appendChild(del);
+  var star = mk('button', it.feat ? 'on' : 0, it.feat ? '\u2605 In Selected work' : '\u2606 Add to Selected work'); star.type = 'button';
+  star.onclick = function () { if (toggleFeat(it)) renderAdm(); };
+  c2.appendChild(star);
+  if (it.feat) c.appendChild(mk('span', 'tag', 'Selected work'));
+  c.appendChild(mk('span', 'num', '#' + (i + 1)));
+  c.append(im, ti, st, c2, ct);
+  return c;
+}
+function renderLib() {
+  $('hint').textContent = draft.length ? 'Every thumbnail you own. All of them slide across the top. Use "Add to Selected work" on your best ones (up to 20). Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
+  var L = $('admList'); L.innerHTML = '';
+  draft.forEach(function (it, i) { L.appendChild(card(it, i)); });
+}
+function rowGroup(r, n) { var a = Math.floor(r * n / 3), b = Math.floor((r + 1) * n / 3), g = []; for (var k = a; k < b; k++) g.push(k); return g.length ? g : [r % n]; }
+function mini(it, i, real) {
+  var m = mk('div', 'mini' + (real && it.feat ? ' feat' : ''));
+  m.dataset.i = i;
+  if (it.id) { var im = mk('img'); im.src = '/api/img/' + it.id; im.alt = ''; m.appendChild(im); } else { m.style.background = it.bg; m.appendChild(mk('span', 'ph2', String(it.n))); }
+  m.appendChild(mk('span', 'num', '#' + (i + 1)));
+  if (real) { m.title = 'Click to pick or un-pick for Selected work'; m.onclick = function () { if (toggleFeat(it)) [].forEach.call(document.querySelectorAll('.mini[data-i="' + i + '"]'), function (e) { e.classList.toggle('feat', !!it.feat); }); }; } else m.style.cursor = 'default';
+  return m;
+}
+function renderSlides() {
+  var real = draft.length > 0, N = real ? draft.length : 12, src = [];
+  for (var i = 0; i < N; i++) { var h = (i * 47 + 190) % 360; src.push(real ? draft[i] : {id: null, n: i + 1, bg: 'linear-gradient(135deg,hsl(' + h + ',75%,45%),hsl(' + ((h + 50) % 360) + ',80%,22%))'}); }
+  var L = $('admSlides'); L.innerHTML = '';
+  ['moves left', 'moves right', 'moves left'].forEach(function (dir, r) {
+    var row = mk('div', 'srow'), st = mk('div', 'strip'), grp = rowGroup(r, N);
+    row.appendChild(mk('div', 'slab', 'Row ' + (r + 1) + ' \u00B7 ' + dir + ' \u00B7 ' + grp.length + ' thumbnails' + (real ? '' : ' (placeholders)')));
+    grp.forEach(function (ix) { st.appendChild(mini(src[ix], ix, real)); });
+    row.appendChild(st); L.appendChild(row);
+  });
+}
+function renderSel() {
+  var L = $('admSel'), sh = []; L.innerHTML = '';
+  draft.forEach(function (t, i) { if (t.feat) sh.push(i); });
+  var picked = sh.length > 0;
+  if (!picked) for (var q = 0; q < Math.min(draft.length, 10); q++) sh.push(q);
+  $('selNote').textContent = picked ? sh.length + ' of ' + MAXF + ' boxes in use. Un-pick one to remove it, or use the arrows to reorder.' : 'Nothing picked yet, so your site shows your first 10 thumbnails. Pick your best from the Library or Slides tab (up to ' + MAXF + ').';
+  var total = Math.min(MAXF, Math.max(10, sh.length));
+  for (var s2 = 0; s2 < total; s2++) {
+    if (s2 < sh.length) { var c = card(draft[sh[s2]], sh[s2]), tg = c.querySelector('.tag'); if (tg) tg.textContent = 'Box ' + (s2 + 1); else c.appendChild(mk('span', 'tag', 'Box ' + (s2 + 1))); L.appendChild(c); }
+    else { var e = mk('div', 'empty'); e.appendChild(mk('b', 0, 'Box ' + (s2 + 1))); e.appendChild(mk('span', 0, 'Empty. Pick another thumbnail for it.')); L.appendChild(e); }
+  }
+}
+
+/* ---------- Colors ---------- */
+var PA = [['Electric Orange', '#fb2f01'], ['Sky Blue', '#38bdf8'], ['Violet', '#8b5cf6'], ['Hot Pink', '#ff2d87'], ['Lime', '#a3e635'], ['Gold', '#fbbf24'], ['Red', '#ef4444'], ['Cyan', '#06b6d4'], ['White', '#ffffff']];
+var PB = [['Midnight', '#02070d'], ['Black', '#000000'], ['Charcoal', '#111114'], ['Deep Navy', '#050b1f'], ['Plum', '#12060f'], ['Forest', '#04100a']];
+function colorRow(title, key, presets) {
+  var box = mk('div', 'fset'), sw = mk('div', 'swatches'), pk = mk('input', 'col'), hx = mk('input'), line = mk('div', 'crow');
+  pk.type = 'color'; hx.placeholder = '#fb2f01'; hx.maxLength = 7; hx.setAttribute('aria-label', title + ' hex');
+  function paint() { [].forEach.call(sw.children, function (b) { b.classList.toggle('on', b.dataset.v === siteDraft.theme[key].toLowerCase()); }); }
+  function set(v) { v = v.toLowerCase(); siteDraft.theme[key] = v; applyTheme(siteDraft.theme); pk.value = v; hx.value = v; paint(); chg(); note(); }
+  presets.forEach(function (p) { var b = mk('button', 'sw'); b.type = 'button'; b.title = p[0]; b.setAttribute('aria-label', p[0]); b.dataset.v = p[1]; b.style.background = p[1]; b.onclick = function () { set(p[1]); }; sw.appendChild(b); });
+  pk.value = hx.value = siteDraft.theme[key];
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); };
+  box.appendChild(mk('b', 0, title)); line.append(pk, hx); box.append(sw, line); paint();
+  return box;
+}
+function note() {
+  var n = $('cnote'); if (!n) return;
+  var c = hexRgb(siteDraft.theme.bg) || [2, 7, 13], lum = (c[0] * .299 + c[1] * .587 + c[2] * .114) / 255;
+  n.textContent = lum > .45 ? 'This background is quite light. Your text is white, so it may be hard to read. A darker background works best.' : '';
+}
+function renderColors() {
+  var L = $('admColors'); L.innerHTML = '';
+  var pv = mk('div', 'cprev'); pv.append(mk('div', 'cname', siteDraft.name || 'Your name'), mk('div', 'cstat', '50M+'));
+  L.append(pv, colorRow('Accent color (your name, stat bars, glow and highlights)', 'accent', PA), colorRow('Background color', 'bg', PB));
+  L.appendChild(mk('p', 'err', '')).id = 'cnote';
+  var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
+  rs.onclick = function () { siteDraft.theme = cp(TH0); applyTheme(siteDraft.theme); chg(); renderColors(); };
+  L.appendChild(rs); note();
+}
+
+/* ---------- Site details ---------- */
+function fld(lb, o, k, ph) {
+  var w = mk('label', 'fld'), inp = mk('input'); inp.value = o[k] || ''; inp.placeholder = ph || '';
+  inp.oninput = function () { o[k] = inp.value; chg(); };
+  w.append(mk('span', 0, lb), inp); return w;
+}
+function renderSite() {
+  var L = $('admSite'); L.innerHTML = '';
+  var av = mk('div', 'avrow'), pv = mk('div', 'avprev'), up = mk('label', 'ghost', siteDraft.avatarId ? 'Change photo' : 'Upload photo'), fi = mk('input');
+  if (siteDraft.avatarId) { var pi = mk('img'); pi.src = '/api/img/' + siteDraft.avatarId; pi.alt = ''; pv.appendChild(pi); } else pv.textContent = (siteDraft.name || 'S').charAt(0).toUpperCase();
+  fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+  fi.onchange = async function () {
+    var f = fi.files[0]; if (!f) return;
+    try {
+      flash('Uploading photo\u2026');
+      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
+      siteDraft.avatarId = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', .85); })); chg(); renderSite();
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  var tx = mk('div', 'avtx'); tx.append(mk('b', 0, 'Your photo'), mk('span', 0, 'Shows in the round badge at the top-left of your site, next to your name.'));
+  av.append(pv, tx, up);
+  if (siteDraft.avatarId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { siteDraft.avatarId = ''; chg(); renderSite(); }; av.appendChild(rm); }
+  L.appendChild(av);
+  var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (under your name)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
+  siteDraft.stats.forEach(function (s, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Stat ' + (i + 1)));
+    g2.append(fld('Number', s, 'v', '50M+'), fld('Label', s, 'l', 'Clicks generated'), fld('Handwritten note (optional)', s, 'n', 'every single time :)'));
+    f.appendChild(g2); L.appendChild(f);
+  });
+  L.appendChild(mk('p', 'pwnote', 'Your admin password is set in your hosting dashboard (the ADMIN_PASSWORD variable). To change it, edit that variable and redeploy.'));
+}
+function renderAdm() {
+  ['lib', 'slides', 'sel', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  chips();
+  ({lib: renderLib, slides: renderSlides, sel: renderSel, colors: renderColors, site: renderSite})[tab]();
+  meter();
+}
+
+/* ---------- login + start ---------- */
+function gateCard(title, text) { var G = $('admGate'); G.innerHTML = ''; var c = mk('div', 'gate'); c.appendChild(mk('b', 0, title)); if (text) c.appendChild(mk('p', 0, text)); G.appendChild(c); return c; }
+function showLogin(text) {
+  var c = gateCard('Admin login', text || 'Enter your admin password to continue.');
+  var pi = mk('input'), go = mk('button', 'pub', 'Sign in'), er = mk('p', 'err');
+  pi.type = 'password'; pi.placeholder = 'Password'; pi.autocomplete = 'current-password'; go.type = 'button';
+  async function submit() {
+    go.disabled = true; er.textContent = '';
+    try {
+      var r = await fetch('/api/login', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({password: pi.value}), credentials: 'same-origin'});
+      var j = {}; try { j = await r.json(); } catch (e) {}
+      if (r.ok) { loadApp(); return; }
+      er.textContent = j.error || 'Could not sign in.'; pi.value = '';
+    } catch (e) { er.textContent = 'Can\u2019t reach the server.'; }
+    go.disabled = false; pi.focus();
+  }
+  go.onclick = submit; pi.onkeydown = function (e) { if (e.key === 'Enter') submit(); };
+  c.append(pi, go, er); setTimeout(function () { pi.focus(); }, 50);
+}
+async function loadApp() {
+  try {
+    var r = await fetch('/api/data', {cache: 'no-cache', credentials: 'same-origin'}), d = norm(await r.json());
+    draft = d.thumbs; siteDraft = d.site; saved = snap(); applyTheme(siteDraft.theme);
+    $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
+    renderAdm(); checkSeed();
+  } catch (e) { gateCard('Could not load your site', e.message); }
+}
+function checkSeed() {
+  fetch('/seed/data.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (seed) {
+    if (!seed || !seed.thumbs || !seed.thumbs.length || draft.length) return;
+    var box = mk('div', 'gate'), b = mk('button', 'pub', 'Import my ' + seed.thumbs.length + ' existing thumbnails');
+    box.style.margin = '0 0 22px'; box.style.maxWidth = 'none'; b.type = 'button';
+    box.append(mk('b', 0, 'Bring over your existing content'), mk('p', 0, 'Your thumbnails, photo, colors and details from before are included in this project. One click copies them into your new admin.'), b);
+    b.onclick = function () { importSeed(seed, b, box); };
+    $('tab-lib').insertBefore(box, $('tab-lib').firstChild);
+  }).catch(function () {});
+}
+async function importSeed(seed, btn, box) {
+  btn.disabled = true;
+  try {
+    for (var i = 0; i < seed.thumbs.length; i++) {
+      var t = seed.thumbs[i]; flash('Importing ' + (i + 1) + ' of ' + seed.thumbs.length + '\u2026');
+      var id = await uploadBlob(await (await fetch('/seed/' + t.file)).blob());
+      draft.push({id: id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}); if (tab === 'lib') renderLib();
+    }
+    if (seed.avatar) siteDraft.avatarId = await uploadBlob(await (await fetch('/seed/' + seed.avatar)).blob());
+    var s = seed.site || {}; siteDraft.name = s.name || siteDraft.name; siteDraft.role = s.role || siteDraft.role;
+    if (s.stats && s.stats.length) siteDraft.stats = s.stats; if (s.theme) { siteDraft.theme = Object.assign({}, TH0, s.theme); applyTheme(siteDraft.theme); }
+    await save(); box.remove(); renderAdm(); flash('Imported and saved. Your website is updated.');
+  } catch (e) { if (e.message !== 'Signed out') flash('Import stopped: ' + e.message); btn.disabled = false; }
+}
+async function init() {
+  var me; try { me = await (await fetch('/api/me', {credentials: 'same-origin'})).json(); } catch (e) { gateCard('Can\u2019t reach the server', 'Open this page from your deployed website (or run npm run dev). The API did not answer.'); return; }
+  if (!me.storage) { gateCard('Storage isn\u2019t connected yet', me.storageError || 'Connect storage in your hosting dashboard (see the README), then redeploy.'); return; }
+  if (!me.configured) { gateCard('Set your admin password', 'In your hosting dashboard add an environment variable named ADMIN_PASSWORD with the password you want, redeploy, then reload this page.'); return; }
+  if (!me.admin) showLogin(); else loadApp();
+}
+
+$('pub').onclick = save;
+$('disc').onclick = function () { var d = norm(JSON.parse(saved)); draft = d.thumbs; siteDraft = d.site; applyTheme(siteDraft.theme); renderAdm(); };
+$('logout').onclick = async function () { try { await fetch('/api/logout', {method: 'POST', credentials: 'same-origin'}); } catch (e) {} location.reload(); };
+[].forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; renderAdm(); }; });
+$('file').onchange = function (e) { addFiles(e.target.files); e.target.value = ''; };
+var drop = $('drop');
+['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function (e) { addFiles(e.dataTransfer.files); });
+init();
+</script>
+</body>
+</html>

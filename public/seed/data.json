@@ -1,0 +1,222 @@
+{
+ "thumbs": [
+  {
+   "file": "t01.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t02.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t03.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t04.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t05.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t06.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t07.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t08.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t09.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t10.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t11.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t12.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t13.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t14.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t15.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t16.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t17.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t18.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t19.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t20.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t21.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t22.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t23.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t24.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t25.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t26.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t27.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t28.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t29.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t30.jpg",
+   "title": "",
+   "stat": "",
+   "feat": true
+  },
+  {
+   "file": "t31.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  },
+  {
+   "file": "t32.jpg",
+   "title": "",
+   "stat": "",
+   "feat": false
+  }
+ ],
+ "site": {
+  "name": "Shehroz Khan",
+  "role": "Thumbnail designer",
+  "stats": [
+   {
+    "v": "50M+",
+    "l": "Clicks generated",
+    "n": ""
+   },
+   {
+    "v": "100+",
+    "l": "Clients worked with globally",
+    "n": ""
+   },
+   {
+    "v": "100%",
+    "l": "Satisfied clients",
+    "n": "every single time :)"
+   }
+  ],
+  "theme": {
+   "accent": "#fb2f01",
+   "bg": "#000000"
+  }
+ },
+ "avatar": "avatar.jpg"
+}
