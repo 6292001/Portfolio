@@ -109,6 +109,17 @@ label.ghost{display:inline-block}
 .lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
 @media (max-width:700px){.hlstrip{grid-template-columns:1fr 1fr}}
 .fld select{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.cmp{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--p:50%}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cmp .bf{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.cmp .ln{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff;pointer-events:none}
+.cmp .hd{position:absolute;top:50%;left:var(--p);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;box-shadow:0 4px 18px rgba(0,0,0,.45);cursor:ew-resize}
+.cmp .hd:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+.cmpbox{max-width:760px;margin-bottom:22px}
+.cslots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.cslot img,.cslot .ph3{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;margin:10px 0}
+.ph3{display:grid;place-items:center;border:2px dashed rgba(255,255,255,.18);color:rgba(255,255,255,.45);font-size:14px}
+.crow2{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -118,13 +129,14 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Stats strip</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Stats strip</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 20).</p><div id="admSlides"></div></section>
+<section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images. Drag the handle in the preview to try it. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
 <section id="tab-strip" hidden><p class="hint">The row of highlights under your Selected work. Change the number, label and handwritten note for each box. Leave a box completely empty to hide it, or empty all of them to remove the strip.</p><div id="admStrip"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
@@ -147,7 +159,7 @@ function norm(d) {
   d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats));
   while (st.length < 3) st.push({v: '', l: '', n: ''});
   return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
-    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', strip: padStrip(s.strip), theme: Object.assign({}, TH0, s.theme || {})}};
+    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', compare: {beforeId: (s.compare || {}).beforeId || '', afterId: (s.compare || {}).afterId || ''}, strip: padStrip(s.strip), theme: Object.assign({}, TH0, s.theme || {})}};
 }
 function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
 function flash(t) { $('msg').textContent = t; }
@@ -351,10 +363,56 @@ function renderStrip() {
     f.appendChild(g); L.appendChild(f);
   });
 }
+function makeCompare(box, before, after) {
+  var af = mk('img'), bf = mk('img', 'bf'), ln = mk('div', 'ln'), hd = mk('div', 'hd'), cur = 50, dragging = false, anim = 0;
+  af.src = after; bf.src = before; af.alt = bf.alt = ''; af.draggable = bf.draggable = false;
+  hd.tabIndex = 0; hd.setAttribute('role', 'slider'); hd.setAttribute('aria-label', 'Before and after comparison');
+  hd.setAttribute('aria-valuemin', '0'); hd.setAttribute('aria-valuemax', '100');
+  hd.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>';
+  box.innerHTML = ''; box.append(af, bf, ln, hd);
+  function set(p) { cur = Math.max(0, Math.min(100, p)); box.style.setProperty('--p', cur + '%'); hd.setAttribute('aria-valuenow', Math.round(cur)); }
+  function fromX(x) { var r = box.getBoundingClientRect(); if (r.width) set((x - r.left) / r.width * 100); }
+  box.addEventListener('pointerdown', function (e) { cancelAnimationFrame(anim); dragging = true; try { box.setPointerCapture(e.pointerId); } catch (x) {} fromX(e.clientX); });
+  box.addEventListener('pointermove', function (e) { if (dragging) fromX(e.clientX); });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { box.addEventListener(ev, function () { dragging = false; }); });
+  hd.addEventListener('keydown', function (e) {
+    var d = e.key === 'ArrowLeft' ? -4 : e.key === 'ArrowRight' ? 4 : 0;
+    if (d) { e.preventDefault(); set(cur + d); }
+  });
+  box.sweep = function () {
+    cancelAnimationFrame(anim); var t0 = performance.now();
+    (function f(t) { var k = Math.min(1, (t - t0) / 2200); set(50 + 26 * Math.sin(k * Math.PI * 2)); if (k < 1) anim = requestAnimationFrame(f); else set(50); })(t0);
+  };
+  set(50);
+}
+function renderCompare() {
+  var L = $('admCompare'), c = siteDraft.compare; L.innerHTML = '';
+  var pv = mk('div', 'cmp cmpbox');
+  if (c.beforeId && c.afterId) makeCompare(pv, '/api/img/' + c.beforeId, '/api/img/' + c.afterId); else { pv.style.cursor = 'default'; pv.appendChild(mk('div', 'ph3', 'Add both images to see the slider here')); pv.firstChild.style.cssText = 'position:absolute;inset:0'; }
+  L.appendChild(pv);
+  var g = mk('div', 'cslots');
+  [['beforeId', 'Before image'], ['afterId', 'After image']].forEach(function (o) {
+    var k = o[0], f = mk('div', 'fset cslot'), row = mk('div', 'crow2');
+    f.appendChild(mk('b', 0, o[1]));
+    if (c[k]) { var im = mk('img'); im.src = '/api/img/' + c[k]; im.alt = ''; f.appendChild(im); } else f.appendChild(mk('div', 'ph3', 'No image yet'));
+    var up = mk('label', 'ghost', c[k] ? 'Change image' : 'Upload image'), fi = mk('input');
+    fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+    fi.onchange = async function () {
+      var file = fi.files[0]; if (!file) return;
+      try { flash('Uploading\u2026'); c[k] = await uploadBlob(await toJpeg(await createImageBitmap(file), 1400)); chg(); renderCompare(); }
+      catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+    };
+    row.appendChild(up);
+    if (c[k]) { var rm = mk('button', 'ghost', 'Remove'); rm.type = 'button'; rm.onclick = function () { c[k] = ''; chg(); renderCompare(); }; row.appendChild(rm); }
+    f.appendChild(row); g.appendChild(f);
+  });
+  L.appendChild(g);
+  if (c.beforeId || c.afterId) { var sw = mk('button', 'ghost', 'Swap before and after'); sw.type = 'button'; sw.style.marginTop = '16px'; sw.onclick = function () { var t = c.beforeId; c.beforeId = c.afterId; c.afterId = t; chg(); renderCompare(); }; L.appendChild(sw); }
+}
 function renderAdm() {
-  ['lib', 'slides', 'sel', 'strip', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'slides', 'compare', 'sel', 'strip', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, slides: renderSlides, sel: renderSel, strip: renderStrip, colors: renderColors, site: renderSite})[tab]();
+  ({lib: renderLib, slides: renderSlides, compare: renderCompare, sel: renderSel, strip: renderStrip, colors: renderColors, site: renderSite})[tab]();
   meter();
 }
 

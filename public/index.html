@@ -84,6 +84,14 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .ca{color:var(--glow)}.cw{color:#fff}
 .lab{margin-top:10px;padding-left:21px;color:rgba(255,255,255,.65);font-size:16px;line-height:1.5}
 .lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
+.compare{max-width:1000px;margin:0 auto;padding:10vh 4vw 4vh}
+.compare .cmp{box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.cmp{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--p:50%}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cmp .bf{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.cmp .ln{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff;pointer-events:none}
+.cmp .hd{position:absolute;top:50%;left:var(--p);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;box-shadow:0 4px 18px rgba(0,0,0,.45);cursor:ew-resize}
+.cmp .hd:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.track{animation-duration:400s!important}.hero *,.mark{animation:none!important}}
 @media (max-width:700px){.wall{gap:.8vh}}
 
@@ -98,6 +106,7 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 <div class="stats" id="stats"></div>
 </header>
 <main class="wall" id="wall" aria-label="Thumbnail designs"></main>
+<section class="compare" id="compare"><div class="cmp" id="cmp"></div></section>
 <section class="work">
 <h2>Selected work</h2>
 <p>A few of my favourites.</p>
@@ -160,6 +169,30 @@ else {
     cell.append(big, lab); $('strip').appendChild(cell);
   });
 }
+function makeCompare(box, before, after) {
+  var af = mk('img'), bf = mk('img', 'bf'), ln = mk('div', 'ln'), hd = mk('div', 'hd'), cur = 50, dragging = false, anim = 0;
+  af.src = after; bf.src = before; af.alt = bf.alt = ''; af.draggable = bf.draggable = false;
+  hd.tabIndex = 0; hd.setAttribute('role', 'slider'); hd.setAttribute('aria-label', 'Before and after comparison');
+  hd.setAttribute('aria-valuemin', '0'); hd.setAttribute('aria-valuemax', '100');
+  hd.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>';
+  box.innerHTML = ''; box.append(af, bf, ln, hd);
+  function set(p) { cur = Math.max(0, Math.min(100, p)); box.style.setProperty('--p', cur + '%'); hd.setAttribute('aria-valuenow', Math.round(cur)); }
+  function fromX(x) { var r = box.getBoundingClientRect(); if (r.width) set((x - r.left) / r.width * 100); }
+  box.addEventListener('pointerdown', function (e) { cancelAnimationFrame(anim); dragging = true; try { box.setPointerCapture(e.pointerId); } catch (x) {} fromX(e.clientX); });
+  box.addEventListener('pointermove', function (e) { if (dragging) fromX(e.clientX); });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { box.addEventListener(ev, function () { dragging = false; }); });
+  hd.addEventListener('keydown', function (e) {
+    var d = e.key === 'ArrowLeft' ? -4 : e.key === 'ArrowRight' ? 4 : 0;
+    if (d) { e.preventDefault(); set(cur + d); }
+  });
+  box.sweep = function () {
+    cancelAnimationFrame(anim); var t0 = performance.now();
+    (function f(t) { var k = Math.min(1, (t - t0) / 2200); set(50 + 26 * Math.sin(k * Math.PI * 2)); if (k < 1) anim = requestAnimationFrame(f); else set(50); })(t0);
+  };
+  set(50);
+}
+var cmpd = S1.compare || {};
+if (cmpd.beforeId && cmpd.afterId) makeCompare($('cmp'), '/api/img/' + cmpd.beforeId, '/api/img/' + cmpd.afterId); else $('compare').style.display = 'none';
 /* identity */
 document.getElementById('mark').innerHTML = '<span class="av">' + (AVATAR ? '<img src="' + AVATAR + '" alt="">' : NAME.charAt(0).toUpperCase()) + '</span>' + x(NAME);
 document.getElementById('sig').textContent = NAME;
@@ -179,11 +212,13 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
     b.textContent = fmt(0) + suf;
     b._t = setTimeout(function () { var t0 = performance.now(); (function g(t) { var p = Math.min(1, (t - t0) / 1700); b.textContent = fmt(end * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) b._r = requestAnimationFrame(g); })(t0); }, 500 + (+el.dataset.i || 0) * 150);
   }
-  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var on = e.isIntersecting; e.target.classList.toggle('in', on); if (e.target.classList.contains('stat') || e.target.classList.contains('cell')) cnt(e.target, on); }); }, {threshold: .1});
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var on = e.isIntersecting; e.target.classList.toggle('in', on); if (e.target.classList.contains('stat') || e.target.classList.contains('cell')) cnt(e.target, on);
+      if (on && e.target.sweep) e.target.sweep(); }); }, {threshold: .1});
   function rv(el, d) { el.classList.add('rv'); el.style.setProperty('--d', d + 's'); io.observe(el); }
   rv($('sig'), .1); rv($('role'), .3);
   [].forEach.call(document.querySelectorAll('.stat'), function (el, i) { el.dataset.i = i; rv(el, .5 + i * .15); });
   [].forEach.call(document.querySelectorAll('.row'), function (el, i) { rv(el, i * .15); });
+  [].forEach.call(document.querySelectorAll('.cmp'), function (el) { rv(el, 0); });
   [].forEach.call(document.querySelectorAll('.cell'), function (el, i) { el.dataset.i = i; rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.work h2, .work p'), function (el, i) { rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.gcard'), function (el, i) { rv(el, (i % 4) * .1); });
