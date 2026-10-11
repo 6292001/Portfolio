@@ -9,16 +9,26 @@
 <script>
 function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
 function toHex(c) { return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); }
+var GF = {'Inter': ['500;600;800', 's'], 'Poppins': ['500;600;800', 's'], 'Montserrat': ['500;600;800', 's'], 'Space Grotesk': ['500;600;700', 's'], 'Outfit': ['500;600;800', 's'], 'Manrope': ['500;600;800', 's'], 'DM Sans': ['500;600;800', 's'], 'Sora': ['500;600;800', 's'], 'Syne': ['500;600;800', 's'], 'Bebas Neue': ['', 'd'], 'Anton': ['', 'd'], 'Oswald': ['500;600;700', 'd'], 'Archivo Black': ['', 'd'], 'Bangers': ['', 'd'], 'Righteous': ['', 'd'], 'Playfair Display': ['500;600;800', 'f'], 'Caveat Brush': ['', 'h'], 'Caveat': ['500;700', 'h'], 'Permanent Marker': ['', 'h'], 'Kalam': ['400;700', 'h'], 'Shadows Into Light': ['', 'h'], 'Gochi Hand': ['', 'h'], 'Rock Salt': ['', 'h'], 'Patrick Hand': ['', 'h'], 'Gloria Hallelujah': ['', 'h'], 'Nanum Pen Script': ['', 'h'], 'Covered By Your Grace': ['', 'h']}, FB = {s: 'system-ui,sans-serif', d: 'Impact,sans-serif', f: 'Georgia,serif', h: 'cursive'}, LOADED = {};
+function loadFont(n) {
+  if (n === 'Inter' || n === 'Caveat Brush' || LOADED[n] || !GF[n]) return; LOADED[n] = 1;
+  var l = document.createElement('link'); l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
+}
 function applyTheme(t) {
   var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
   r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
   r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
   r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
   document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
+  var fo = (t && t.fonts) || {};
+  [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Caveat Brush'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
+    var n = GF[x[1]] ? x[1] : x[2]; loadFont(n); r.setProperty(x[0], "'" + n + "'," + FB[GF[n][1]]);
+  });
 }
 </script>
 <style>
-:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;box-sizing:border-box}
+:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;--f-body:Inter,system-ui,sans-serif;--f-head:'Caveat Brush',cursive;--f-hand:'Caveat Brush',cursive;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
 html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
 .adm.on a.ghost{text-decoration:none}
@@ -100,14 +110,14 @@ label.ghost{display:inline-block}
 .col{width:56px;height:44px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:none;cursor:pointer}
 .crow input:not(.col){width:140px;padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
 .cprev{margin-bottom:6px;padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:var(--bg)}
-.cname{font:400 clamp(36px,6vw,56px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
+.cname{font:400 clamp(36px,6vw,56px)/1 var(--f-head);color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
 .cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
 .mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 .hlstrip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:24px 20px;margin-bottom:22px;padding:24px 22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.02)}
-.big{border-left:3px solid var(--glow);padding-left:14px;font:600 clamp(28px,3.4vw,46px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em;white-space:nowrap}
+.big{border-left:3px solid var(--glow);padding-left:14px;font:600 clamp(28px,3.4vw,46px)/1.1 var(--f-body);letter-spacing:-.03em;white-space:nowrap}
 .ca{color:var(--glow)}.cw{color:#fff}
 .lab{margin-top:8px;padding-left:17px;color:rgba(255,255,255,.65);font-size:15px;line-height:1.5}
-.lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
+.lab em{font:400 1.2em/1.2 var(--f-hand);font-style:normal;color:var(--glow)}
 @media (max-width:700px){.hlstrip{grid-template-columns:1fr 1fr}}
 .fld select{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
 .cmp{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--p:50%}
@@ -118,7 +128,7 @@ label.ghost{display:inline-block}
 .cmp .hd:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
 .cmpstage{position:relative;padding:8% 9%;font-size:var(--fs,18px);--nc:#ffe14d;max-width:900px;margin-bottom:18px;border:1px solid rgba(255,255,255,.1);border-radius:14px}
 .notes{position:absolute;inset:0;pointer-events:none;z-index:3}
-.an{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r));font:400 1em/1.1 'Caveat Brush',cursive;color:#fff;white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.75);opacity:0}
+.an{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r));font:400 1em/1.1 var(--f-hand);color:#fff;white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.75);opacity:0}
 .an .ul{position:absolute;left:-3%;bottom:-.3em;width:106%;height:.45em;overflow:visible}
 .an .ar{position:absolute;width:2.5em;height:2.5em;left:calc(50% + var(--dx) * (50% + 1.4em));top:calc(50% + var(--dy) * (50% + .95em));margin:-1.25em 0 0 -1.25em;transform:rotate(var(--rot));overflow:visible}
 .an path{fill:none;stroke:var(--nc);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
@@ -144,6 +154,19 @@ label.ghost{display:inline-block}
 .crow2{display:flex;gap:8px;flex-wrap:wrap}
 .chk{display:flex;align-items:center;gap:10px;margin:6px 0 14px;color:rgba(255,255,255,.8);font-weight:600;font-size:14px;cursor:pointer}
 .chk input{width:18px;height:18px;accent-color:var(--glow)}
+.fset.sub{margin-top:12px;background:rgba(255,255,255,.02)}
+.fprev{margin:14px 0 18px;padding:26px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}
+.fprev h3{margin:0;font:400 clamp(30px,4vw,44px)/1.1 var(--f-head);color:var(--glow)}
+.fprev .fsub{margin:.6em 0 0;color:rgba(255,255,255,.65);line-height:1.5}
+.fprev .flinks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+.fprev .flinks span{padding:.5em 1.1em;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-size:13px;font-weight:600}
+.fprev .fcopy{margin-top:20px;color:rgba(255,255,255,.45);font-size:12px}
+.lrow{display:grid;grid-template-columns:1fr 1.6fr auto;gap:8px;margin-bottom:8px}
+.lrow input{padding:.6em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
+.fontprev{margin:6px 0 16px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;display:grid;gap:10px}
+.fp1{font:400 clamp(34px,5vw,52px)/1 var(--f-head);color:var(--glow)}
+.fp2{font:600 26px/1.2 var(--f-body)}
+.fp3{font:400 26px/1.2 var(--f-hand);color:var(--glow)}
 </style>
 </head>
 <body>
@@ -153,7 +176,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Stats strip</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -162,7 +185,9 @@ label.ghost{display:inline-block}
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 21).</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
-<section id="tab-strip" hidden><p class="hint">The row of highlights under your Selected work. Change the number, label and handwritten note for each box. Leave a box completely empty to hide it, or empty all of them to remove the strip.</p><div id="admStrip"></div></section>
+<section id="tab-strip" hidden><p class="hint">Rows of highlights that sit under your Selected work. Add as many strips as you like (up to 5), each with up to 6 boxes. Give a strip a heading if you want one. Leave a strip empty to hide it.</p><div id="admStrip"></div></section>
+<section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
+<section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name, role and the three stats at the top of the site.</p><div id="admSite"></div></section>
 </div>
@@ -173,17 +198,24 @@ label.ghost{display:inline-block}
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
 function cp(o) { return JSON.parse(JSON.stringify(o)); }
-var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on'};
+var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on', fonts: {body: 'Inter', head: 'Caveat Brush', hand: 'Caveat Brush'}};
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var draft = [], siteDraft = null, saved = '', tab = 'lib';
-function padStrip(a) { var r = Array.isArray(a) ? cp(a) : cp(STRIP0); while (r.length < 4) r.push({v: '', t: '', d: '', s: 'w'}); return r.slice(0, 6); }
 
 function norm(d) {
-  d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats));
+  d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats)), cm = s.compare || {}, th = s.theme || {}, sec = s.sections || {}, f = s.footer || {}, name = s.name || S0.name;
   while (st.length < 3) st.push({v: '', l: '', n: ''});
+  var strips = Array.isArray(s.strips) ? cp(s.strips) : (Array.isArray(s.strip) ? [{t: '', s: '', items: cp(s.strip)}] : [{t: '', s: '', items: cp(STRIP0)}]);
+  strips.forEach(function (z) { z.t = z.t || ''; z.s = z.s || ''; z.items = z.items || []; });
+  function sc(x) { x = x || {}; return {t: x.t || '', s: x.s || ''}; }
   return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
-    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', compare: {beforeId: (s.compare || {}).beforeId || '', afterId: (s.compare || {}).afterId || '', color: (s.compare || {}).color || '#ffe14d', size: (s.compare || {}).size || 3, notes: Array.isArray((s.compare || {}).notes) ? cp(s.compare.notes) : cp(NOTES0)}, strip: padStrip(s.strip), theme: Object.assign({}, TH0, s.theme || {})}};
+    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', tabTitle: s.tabTitle || '',
+      compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
+      strips: strips,
+      sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
+      footer: {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, links: cp(f.links || [])},
+      theme: Object.assign(cp(TH0), th, {fonts: Object.assign({}, TH0.fonts, th.fonts || {})})}};
 }
 function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
 function flash(t) { $('msg').textContent = t; }
@@ -325,7 +357,7 @@ function renderColors() {
   gl.append(gi, mk('span', 0, 'Show the soft grid and glow in the background')); L.appendChild(gl);
   L.appendChild(mk('p', 'err', '')).id = 'cnote';
   var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
-  rs.onclick = function () { siteDraft.theme = cp(TH0); applyTheme(siteDraft.theme); chg(); renderColors(); };
+  rs.onclick = function () { siteDraft.theme = Object.assign(cp(TH0), {fonts: siteDraft.theme.fonts}); applyTheme(siteDraft.theme); chg(); renderColors(); };
   L.appendChild(rs); note();
 }
 
@@ -361,11 +393,11 @@ function renderSite() {
   });
   L.appendChild(mk('p', 'pwnote', 'Your admin password is set in your hosting dashboard (the ADMIN_PASSWORD variable). To change it, edit that variable and redeploy.'));
 }
-function stripPreview(box) {
+function stripPreview(box, items) {
   box.innerHTML = '';
-  var cells = siteDraft.strip.filter(function (c) { return c && (c.v || c.t || c.d); });
+  var cells = (items || []).filter(function (c) { return c && (c.v || c.t || c.d); });
   box.style.setProperty('--n', Math.max(1, Math.min(cells.length, 4)));
-  if (!cells.length) { box.appendChild(mk('div', 'lab', 'The strip is hidden (all boxes are empty).')); return; }
+  if (!cells.length) { box.appendChild(mk('div', 'lab', 'This strip has no boxes yet.')); return; }
   cells.forEach(function (c) {
     var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'w';
     var cell = mk('div', 'cell'), big = mk('div', 'big'), lab = mk('div', 'lab', c.t || '');
@@ -374,21 +406,36 @@ function stripPreview(box) {
     cell.append(big, lab); box.appendChild(cell);
   });
 }
+function moveIn(arr, i, d) { var j = i + d; if (j < 0 || j >= arr.length) return false; arr.splice(j, 0, arr.splice(i, 1)[0]); return true; }
 function renderStrip() {
   var L = $('admStrip'); L.innerHTML = '';
-  var pv = mk('div', 'hlstrip'); L.appendChild(pv); stripPreview(pv);
-  function live() { chg(); stripPreview(pv); }
-  siteDraft.strip.forEach(function (c, i) {
-    var f = mk('div', 'fset'), g = mk('div', 'fgrid');
-    f.appendChild(mk('b', 0, 'Box ' + (i + 1)));
-    function tf(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = c[k] || ''; inp.placeholder = ph; inp.oninput = function () { c[k] = inp.value; live(); }; w.append(mk('span', 0, lb), inp); return w; }
-    var sw = mk('label', 'fld'), sel = mk('select');
-    [['w', 'All white'], ['a', 'All accent color'], ['na', 'Number accent, symbol white'], ['sa', 'Number white, symbol accent']].forEach(function (o) { var op = mk('option', 0, o[1]); op.value = o[0]; sel.appendChild(op); });
-    sel.value = c.s || 'w'; sel.onchange = function () { c.s = sel.value; live(); };
-    sw.append(mk('span', 0, 'Number colors'), sel);
-    g.append(tf('Number', 'v', '800+'), tf('Label', 't', 'Creators served'), tf('Handwritten note (optional)', 'd', 'every single time :)'), sw);
-    f.appendChild(g); L.appendChild(f);
+  siteDraft.strips.forEach(function (z, zi) {
+    var box = mk('div', 'fset'), pv = mk('div', 'hlstrip');
+    function live() { chg(); stripPreview(pv, z.items); }
+    box.appendChild(mk('b', 0, 'Strip ' + (zi + 1)));
+    var hg = mk('div', 'fgrid'); hg.append(fld('Heading (optional)', z, 't', 'e.g. Why work with me'), fld('Subtitle (optional)', z, 's', 'A short line under the heading')); box.appendChild(hg);
+    box.appendChild(pv); stripPreview(pv, z.items);
+    z.items.forEach(function (c, i) {
+      var f = mk('div', 'fset sub'), g = mk('div', 'fgrid');
+      f.appendChild(mk('b', 0, 'Box ' + (i + 1)));
+      function tf(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = c[k] || ''; inp.placeholder = ph; inp.oninput = function () { c[k] = inp.value; live(); }; w.append(mk('span', 0, lb), inp); return w; }
+      var sw = mk('label', 'fld'), sel = mk('select');
+      [['w', 'All white'], ['a', 'All accent color'], ['na', 'Number accent, symbol white'], ['sa', 'Number white, symbol accent']].forEach(function (o) { var op = mk('option', 0, o[1]); op.value = o[0]; sel.appendChild(op); });
+      sel.value = c.s || 'w'; sel.onchange = function () { c.s = sel.value; live(); };
+      sw.append(mk('span', 0, 'Number colors'), sel);
+      g.append(tf('Number', 'v', '800+'), tf('Label', 't', 'Creators served'), tf('Handwritten note (optional)', 'd', 'every single time :)'), sw); f.appendChild(g);
+      var rm = mk('button', 'ghost', 'Remove box'); rm.type = 'button'; rm.style.marginTop = '12px'; rm.onclick = function () { z.items.splice(i, 1); chg(); renderStrip(); }; f.appendChild(rm); box.appendChild(f);
+    });
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '14px';
+    function btn(txt, fn) { var b = mk('button', 'ghost', txt); b.type = 'button'; b.onclick = fn; bar.appendChild(b); }
+    btn('Add a box', function () { if (z.items.length >= 6) { flash('A strip can have up to 6 boxes.'); return; } z.items.push({v: '', t: '', d: '', s: 'w'}); chg(); renderStrip(); });
+    btn('Move strip up', function () { if (moveIn(siteDraft.strips, zi, -1)) { chg(); renderStrip(); } });
+    btn('Move strip down', function () { if (moveIn(siteDraft.strips, zi, 1)) { chg(); renderStrip(); } });
+    btn('Delete this strip', function () { siteDraft.strips.splice(zi, 1); chg(); renderStrip(); });
+    box.appendChild(bar); L.appendChild(box);
   });
+  var add = mk('button', 'pub', 'Add a new strip'); add.type = 'button'; add.onclick = function () { if (siteDraft.strips.length >= 5) { flash('You can have up to 5 strips.'); return; } siteDraft.strips.push({t: '', s: '', items: [{v: '', t: '', d: '', s: 'w'}]}); chg(); renderStrip(); };
+  L.appendChild(add);
 }
 function makeCompare(box, before, after) {
   var af = mk('img'), bf = mk('img', 'bf'), ln = mk('div', 'ln'), hd = mk('div', 'hd'), cur = 50, dragging = false, anim = 0;
@@ -497,10 +544,65 @@ function renderCompare() {
   L.appendChild(g);
   if (c.beforeId || c.afterId) { var sw = mk('button', 'ghost', 'Swap before and after'); sw.type = 'button'; sw.style.marginTop = '16px'; sw.onclick = function () { var t = c.beforeId; c.beforeId = c.afterId; c.afterId = t; chg(); renderCompare(); }; L.appendChild(sw); }
 }
+function renderFooter() {
+  var L = $('admFooter'), F = siteDraft.footer; L.innerHTML = '';
+  var on = mk('label', 'chk'), oi = mk('input'), pv = mk('div', 'fprev');
+  function draw() {
+    pv.innerHTML = '';
+    if (!F.on) { pv.appendChild(mk('p', 'pwnote', 'The footer is hidden. Tick the box above to show it on your site.')); return; }
+    if (F.t) pv.appendChild(mk('h3', 0, F.t)); if (F.s) pv.appendChild(mk('p', 'fsub', F.s));
+    var ls = F.links.filter(function (l) { return l.l; }); if (ls.length) { var ln = mk('div', 'flinks'); ls.forEach(function (l) { ln.appendChild(mk('span', 0, l.l)); }); pv.appendChild(ln); }
+    if (F.c) pv.appendChild(mk('div', 'fcopy', F.c));
+    if (!pv.firstChild) pv.appendChild(mk('p', 'pwnote', 'The footer is empty. Add a title, a line, links or a copyright line.'));
+  }
+  oi.type = 'checkbox'; oi.checked = !!F.on; oi.onchange = function () { F.on = oi.checked; chg(); draw(); };
+  on.append(oi, mk('span', 0, 'Show a footer at the bottom of my website')); L.append(on, pv);
+  function ff(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = F[k] || ''; inp.placeholder = ph; inp.oninput = function () { F[k] = inp.value; chg(); draw(); }; w.append(mk('span', 0, lb), inp); return w; }
+  var g = mk('div', 'fgrid'); g.append(ff('Title (optional)', 't', 'Let\u2019s work together'), ff('Line under the title (optional)', 's', 'Open for new projects'), ff('Copyright line (optional)', 'c', '\u00A9 2026 Your Name. All rights reserved.')); L.appendChild(g);
+  var lh = mk('b', 0, 'Links'); lh.style.cssText = 'display:block;margin:22px 0 10px;color:var(--glow)'; L.appendChild(lh);
+  var lst = mk('div');
+  function rows() {
+    lst.innerHTML = '';
+    F.links.forEach(function (l, i) {
+      var r = mk('div', 'lrow'), a1 = mk('input'), a2 = mk('input'), del = mk('button', 'ghost', 'Delete'); del.type = 'button';
+      a1.placeholder = 'Label, e.g. YouTube'; a1.value = l.l || ''; a1.oninput = function () { l.l = a1.value; chg(); draw(); };
+      a2.placeholder = 'https://youtube.com/@you or mailto:you@mail.com'; a2.value = l.u || ''; a2.oninput = function () { l.u = a2.value; chg(); };
+      del.onclick = function () { F.links.splice(i, 1); chg(); rows(); draw(); };
+      r.append(a1, a2, del); lst.appendChild(r);
+    });
+  }
+  rows(); L.appendChild(lst);
+  var add = mk('button', 'ghost', 'Add a link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 8) { flash('You can add up to 8 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
+  L.append(add, mk('p', 'pwnote', 'Links must start with https://, mailto: or tel: to work. Anything else is dropped when you save.')); draw();
+}
+var FG = [['s', 'Clean sans-serif'], ['d', 'Bold display'], ['f', 'Serif'], ['h', 'Handwritten']];
+function fontSel(key) {
+  var sel = mk('select');
+  FG.forEach(function (g) { var og = document.createElement('optgroup'); og.label = g[1]; Object.keys(GF).forEach(function (n) { if (GF[n][1] === g[0]) { var op = mk('option', 0, n); op.value = n; og.appendChild(op); } }); sel.appendChild(og); });
+  sel.value = siteDraft.theme.fonts[key];
+  sel.onchange = function () { siteDraft.theme.fonts[key] = sel.value; applyTheme(siteDraft.theme); chg(); };
+  return sel;
+}
+function renderText() {
+  var L = $('admText'); L.innerHTML = '';
+  var t0 = mk('div', 'fset'); t0.appendChild(mk('b', 0, 'Browser tab'));
+  t0.appendChild(fld('Title shown in the browser tab', siteDraft, 'tabTitle', siteDraft.name + ' | Thumbnail designs')); L.appendChild(t0);
+  [['slides', 'Above the sliding rows'], ['compare', 'Above the before / after slider'], ['work', 'Selected work section']].forEach(function (o) {
+    var f = mk('div', 'fset'), g = mk('div', 'fgrid'); f.appendChild(mk('b', 0, o[1]));
+    g.append(fld('Heading', siteDraft.sections[o[0]], 't', ''), fld('Subtitle', siteDraft.sections[o[0]], 's', '')); f.appendChild(g); L.appendChild(f);
+  });
+  L.appendChild(mk('p', 'pwnote', 'Headings for your strips are set on the Strips tab. Your name, role and top stats are on Site details.'));
+  var ff = mk('div', 'fset'), g = mk('div', 'fgrid'); ff.appendChild(mk('b', 0, 'Fonts'));
+  function fw(lb, key) { var w = mk('label', 'fld'); w.append(mk('span', 0, lb), fontSel(key)); return w; }
+  g.append(fw('Main font (all text and numbers)', 'body'), fw('Title font (your name and big headings)', 'head'), fw('Handwritten font (notes and slider texts)', 'hand')); ff.appendChild(g);
+  var pv = mk('div', 'fontprev'); pv.append(mk('div', 'fp1', siteDraft.name || 'Your name'), mk('div', 'fp2', '50M+ Clicks generated'), mk('div', 'fp3', 'every single time :)')); ff.appendChild(pv);
+  var rs = mk('button', 'ghost', 'Reset fonts'); rs.type = 'button'; rs.onclick = function () { siteDraft.theme.fonts = cp(TH0.fonts); applyTheme(siteDraft.theme); chg(); renderText(); }; ff.appendChild(rs);
+  ff.appendChild(mk('p', 'pwnote', 'Fonts load from Google Fonts. After you save, your site loads the fonts you picked.')); L.appendChild(ff);
+}
 function renderAdm() {
-  ['lib', 'slides', 'compare', 'sel', 'strip', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'slides', 'compare', 'sel', 'strip', 'footer', 'text', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, slides: renderSlides, compare: renderCompare, sel: renderSel, strip: renderStrip, colors: renderColors, site: renderSite})[tab]();
+  ({lib: renderLib, slides: renderSlides, compare: renderCompare, sel: renderSel, strip: renderStrip, footer: renderFooter, text: renderText, colors: renderColors, site: renderSite})[tab]();
   meter();
 }
 
@@ -551,7 +653,7 @@ async function importSeed(seed, btn, box) {
     }
     if (seed.avatar) siteDraft.avatarId = await uploadBlob(await (await fetch('/seed/' + seed.avatar)).blob());
     var s = seed.site || {}; siteDraft.name = s.name || siteDraft.name; siteDraft.role = s.role || siteDraft.role;
-    if (s.stats && s.stats.length) siteDraft.stats = s.stats; if (s.theme) { siteDraft.theme = Object.assign({}, TH0, s.theme); applyTheme(siteDraft.theme); }
+    if (s.stats && s.stats.length) siteDraft.stats = s.stats; if (s.theme) { siteDraft.theme = Object.assign(cp(TH0), s.theme, {fonts: siteDraft.theme.fonts}); applyTheme(siteDraft.theme); }
     await save(); box.remove(); renderAdm(); flash('Imported and saved. Your website is updated.');
   } catch (e) { if (e.message !== 'Signed out') flash('Import stopped: ' + e.message); btn.disabled = false; }
 }
