@@ -167,6 +167,8 @@ label.ghost{display:inline-block}
 .fp1{font:400 clamp(34px,5vw,52px)/1 var(--f-head);color:var(--glow)}
 .fp2{font:600 26px/1.2 var(--f-body)}
 .fp3{font:400 26px/1.2 var(--f-hand);color:var(--glow)}
+.iconprev{border-radius:14px}
+.iconprev img{border-radius:0}
 </style>
 </head>
 <body>
@@ -210,7 +212,7 @@ function norm(d) {
   strips.forEach(function (z) { z.t = z.t || ''; z.s = z.s || ''; z.items = z.items || []; });
   function sc(x) { x = x || {}; return {t: x.t || '', s: x.s || ''}; }
   return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
-    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', tabTitle: s.tabTitle || '',
+    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', tabTitle: s.tabTitle || '',
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -228,8 +230,8 @@ addEventListener('beforeunload', function (e) { if (siteDraft && snap() !== save
 
 /* ---------- server ---------- */
 function signedOut() { $('admPanel').hidden = true; $('admBar').hidden = true; $('logout').hidden = true; showLogin('You were signed out. Sign in again (unsaved changes on this page are kept only until you reload).'); }
-async function uploadBlob(blob) {
-  var r = await fetch('/api/upload', {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: blob, credentials: 'same-origin'});
+async function uploadBlob(blob, icon) {
+  var r = await fetch('/api/upload' + (icon ? '?icon=1' : ''), {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: blob, credentials: 'same-origin'});
   var j = {}; try { j = await r.json(); } catch (e) {}
   if (r.status === 401) { signedOut(); throw new Error('Signed out'); }
   if (!r.ok) throw new Error(j.error || 'Upload failed (' + r.status + ')');
@@ -385,6 +387,22 @@ function renderSite() {
   av.append(pv, tx, up);
   if (siteDraft.avatarId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { siteDraft.avatarId = ''; chg(); renderSite(); }; av.appendChild(rm); }
   L.appendChild(av);
+  var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft.iconId ? 'Change icon' : 'Upload icon'), ifi = mk('input');
+  if (siteDraft.iconId) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft.iconId; ii.alt = ''; ip.appendChild(ii); } else ip.textContent = (siteDraft.name || 'S').charAt(0).toUpperCase();
+  ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
+  ifi.onchange = async function () {
+    var f = ifi.files[0]; if (!f) return;
+    try {
+      flash('Uploading icon\u2026');
+      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
+      siteDraft.iconId = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderSite();
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  var itx = mk('div', 'avtx'); itx.append(mk('b', 0, 'Browser tab icon (favicon)'), mk('span', 0, 'The small picture in the browser tab and in bookmarks. Square images work best, and a transparent PNG keeps its transparency. With no icon, your site uses a letter icon in your accent color. Browsers remember tab icons, so a change can take a little while to show.'));
+  ir.append(ip, itx, iu);
+  if (siteDraft.iconId) { var irm = mk('button', 'ghost', 'Use the automatic icon'); irm.type = 'button'; irm.onclick = function () { siteDraft.iconId = ''; chg(); renderSite(); }; ir.appendChild(irm); }
+  L.appendChild(ir);
   var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (under your name)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
   siteDraft.stats.forEach(function (s, i) {
     var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Stat ' + (i + 1)));

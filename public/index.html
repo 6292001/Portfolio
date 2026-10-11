@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Thumbnails</title>
+<link rel="icon" id="ico" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fb2f01'/%3E%3Cpath d='M26 20l18 12-18 12z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@500;600;800&display=swap">
 <script>
 function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
@@ -311,6 +312,16 @@ if (FT && FT.on) {
   if (FT.links && FT.links.length) { var ln = mk('div', 'flinks'); FT.links.forEach(function (l) { var a = mk('a', 0, l.l); a.href = l.u; a.target = '_blank'; a.rel = 'noopener noreferrer'; ln.appendChild(a); }); ft.appendChild(ln); }
   if (FT.c) ft.appendChild(mk('div', 'fcopy', FT.c));
 }
+/* tab icon: your uploaded icon, or a letter icon in your accent color */
+(function () {
+  var ic = $('ico');
+  if (S1.iconId) { ic.type = 'image/png'; ic.href = '/api/img/' + S1.iconId; var ap = document.createElement('link'); ap.rel = 'apple-touch-icon'; ap.href = '/api/img/' + S1.iconId; document.head.appendChild(ap); }
+  else {
+    var L = (NAME.charAt(0) || 'S').toUpperCase().replace(/&/g, '&amp;').replace(/</g, '&lt;'), ac = SITE.theme.accent || '#fb2f01';
+    ic.type = 'image/svg+xml';
+    ic.href = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="' + ac + '"/><text x="32" y="46" font-size="40" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,Helvetica,sans-serif">' + L + '</text></svg>');
+  }
+})();
 /* identity */
 document.getElementById('mark').innerHTML = '<span class="av">' + (AVATAR ? '<img draggable="false" src="' + AVATAR + '" alt="">' : NAME.charAt(0).toUpperCase()) + '</span>' + x(NAME);
 document.getElementById('sig').textContent = NAME;
