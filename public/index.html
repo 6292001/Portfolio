@@ -84,8 +84,24 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .ca{color:var(--glow)}.cw{color:#fff}
 .lab{margin-top:10px;padding-left:21px;color:rgba(255,255,255,.65);font-size:16px;line-height:1.5}
 .lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
-.compare{max-width:1000px;margin:0 auto;padding:10vh 4vw 4vh}
+.compare{max-width:1100px;margin:0 auto;padding:8vh 3vw 2vh}
 .compare .cmp{box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.cmpstage{position:relative;padding:8% 9%;font-size:var(--fs,18px);--nc:#ffe14d}
+.notes{position:absolute;inset:0;pointer-events:none;z-index:3}
+.an{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r));font:400 1em/1.1 'Caveat Brush',cursive;color:#fff;white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.75);opacity:0}
+.an .ul{position:absolute;left:-3%;bottom:-.3em;width:106%;height:.45em;overflow:visible}
+.an .ar{position:absolute;width:2.5em;height:2.5em;left:calc(50% + var(--dx) * (50% + 1.4em));top:calc(50% + var(--dy) * (50% + .95em));margin:-1.25em 0 0 -1.25em;transform:rotate(var(--rot));overflow:visible}
+.an path{fill:none;stroke:var(--nc);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.an .ul path{stroke-width:3}
+.notes.on .an{animation:anin .55s cubic-bezier(.2,.8,.2,1) calc(var(--i) * .3s) both}
+.notes.on .an .ul path{animation:draw .6s ease calc(var(--i) * .3s + .35s) both}
+.notes.on .an .ar path{animation:draw .55s ease calc(var(--i) * .3s + .6s) both}
+.notes.edit .an{opacity:1;pointer-events:auto;cursor:grab;outline:1px dashed rgba(255,255,255,.4);outline-offset:6px;touch-action:none;user-select:none}
+.notes.edit .an:active{cursor:grabbing}
+.notes.edit .an path{stroke-dashoffset:0}
+@keyframes anin{from{opacity:0;transform:translate(-50%,-20%) rotate(var(--r)) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--r))}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.notes .an{opacity:1!important;animation:none!important}.notes .an path{stroke-dashoffset:0!important;animation:none!important}}
 .cmp{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--p:50%}
 .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .cmp .bf{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
@@ -106,7 +122,7 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 <div class="stats" id="stats"></div>
 </header>
 <main class="wall" id="wall" aria-label="Thumbnail designs"></main>
-<section class="compare" id="compare"><div class="cmp" id="cmp"></div></section>
+<section class="compare" id="compare"><div class="cmpstage" id="cmp"></div></section>
 <section class="work">
 <h2>Selected work</h2>
 <p>A few of my favourites.</p>
@@ -192,7 +208,48 @@ function makeCompare(box, before, after) {
   set(50);
 }
 var cmpd = S1.compare || {};
-if (cmpd.beforeId && cmpd.afterId) makeCompare($('cmp'), '/api/img/' + cmpd.beforeId, '/api/img/' + cmpd.afterId); else $('compare').style.display = 'none';
+var NOTES0 = [{t: 'High Curiosity', x: 19, y: 9, a: 'se'}, {t: 'Strong Contrast', x: 80, y: 7, a: 'sw'}, {t: 'Trust Factor', x: 17, y: 76, a: 'ne'}, {t: 'Clear Value', x: 41, y: 93, a: 'ne'}, {t: 'Bold Text', x: 82, y: 90, a: 'nw'}];
+var DIRV = {n: [0, -1], ne: [1, -1], e: [1, 0], se: [1, 1], s: [0, 1], sw: [-1, 1], w: [-1, 0], nw: [-1, -1]}, TILT = [-6, 4, -4, 5, -5, 3, -3, 6];
+function svgEl(tag, attrs) { var e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+function noteEl(n, i) {
+  var el = mk('div', 'an'); el.style.setProperty('--x', n.x + '%'); el.style.setProperty('--y', n.y + '%'); el.style.setProperty('--r', TILT[i % 8] + 'deg'); el.style.setProperty('--i', i);
+  el.appendChild(mk('span', 0, n.t));
+  var u = svgEl('svg', {'class': 'ul', viewBox: '0 0 100 10', preserveAspectRatio: 'none'}); u.appendChild(svgEl('path', {d: 'M2 6 C 18 2, 34 9, 52 4 S 86 6, 98 3', pathLength: '1'})); el.appendChild(u);
+  var d = DIRV[n.a];
+  if (d) {
+    var a = svgEl('svg', {'class': 'ar', viewBox: '0 0 50 50'});
+    a.style.setProperty('--dx', d[0]); a.style.setProperty('--dy', d[1]); a.style.setProperty('--rot', (Math.atan2(d[1], d[0]) * 180 / Math.PI - 45) + 'deg');
+    a.append(svgEl('path', {d: 'M6 8 C 2 28, 24 24, 40 40', pathLength: '1'}), svgEl('path', {d: 'M37.7 27.2 L40 40 L27.2 37.7', pathLength: '1', 'class': 'hd2'}));
+    el.appendChild(a);
+  }
+  return el;
+}
+function makeStage(stage, cfg, urls, opt) {
+  opt = opt || {}; stage.innerHTML = '';
+  var box = mk('div', 'cmp'), layer = mk('div', 'notes' + (opt.edit ? ' edit' : '')), tm = 0;
+  stage.append(box, layer);
+  if (urls.before && urls.after) makeCompare(box, urls.before, urls.after);
+  else { box.style.cursor = 'default'; var ph = mk('div', 'ph3', 'Add both images to see the slider here'); ph.style.cssText = 'position:absolute;inset:0'; box.appendChild(ph); }
+  stage.sweep = box.sweep;
+  stage.style.setProperty('--nc', cfg.color || '#ffe14d');
+  stage.fit = function () { var w = stage.clientWidth; if (w) stage.style.setProperty('--fs', Math.max(11, w * (cfg.size || 3) / 100) + 'px'); };
+  stage.fit(); if (stage._ro) stage._ro.disconnect();
+  if (window.ResizeObserver) { stage._ro = new ResizeObserver(stage.fit); stage._ro.observe(stage); } else addEventListener('resize', stage.fit);
+  function dragify(el, n) {
+    el.addEventListener('pointerdown', function (e) { e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (x) {} el.dataset.d = 1; });
+    el.addEventListener('pointermove', function (e) {
+      if (!el.dataset.d) return; var r = stage.getBoundingClientRect(); if (!r.width) return;
+      n.x = Math.round(Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)) * 10) / 10; n.y = Math.round(Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100)) * 10) / 10;
+      el.style.setProperty('--x', n.x + '%'); el.style.setProperty('--y', n.y + '%');
+    });
+    ['pointerup', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, function () { if (el.dataset.d) { delete el.dataset.d; if (opt.onChange) opt.onChange(); } }); });
+  }
+  stage.drawNotes = function () { layer.innerHTML = ''; (cfg.notes || []).forEach(function (n, i) { var el = noteEl(n, i); if (opt.edit) dragify(el, n); layer.appendChild(el); }); };
+  stage.reveal = function (on) { clearTimeout(tm); if (on) tm = setTimeout(function () { layer.classList.add('on'); }, 1300); else layer.classList.remove('on'); };
+  stage.drawNotes();
+  if (!opt.edit && !('IntersectionObserver' in window)) layer.classList.add('on');
+}
+if (cmpd.beforeId && cmpd.afterId) makeStage($('cmp'), {color: cmpd.color, size: cmpd.size, notes: Array.isArray(cmpd.notes) ? cmpd.notes : NOTES0}, {before: '/api/img/' + cmpd.beforeId, after: '/api/img/' + cmpd.afterId}); else $('compare').style.display = 'none';
 /* identity */
 document.getElementById('mark').innerHTML = '<span class="av">' + (AVATAR ? '<img src="' + AVATAR + '" alt="">' : NAME.charAt(0).toUpperCase()) + '</span>' + x(NAME);
 document.getElementById('sig').textContent = NAME;
@@ -213,12 +270,13 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
     b._t = setTimeout(function () { var t0 = performance.now(); (function g(t) { var p = Math.min(1, (t - t0) / 1700); b.textContent = fmt(end * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) b._r = requestAnimationFrame(g); })(t0); }, 500 + (+el.dataset.i || 0) * 150);
   }
   var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var on = e.isIntersecting; e.target.classList.toggle('in', on); if (e.target.classList.contains('stat') || e.target.classList.contains('cell')) cnt(e.target, on);
-      if (on && e.target.sweep) e.target.sweep(); }); }, {threshold: .1});
+      if (on && e.target.sweep) e.target.sweep();
+      if (e.target.reveal) e.target.reveal(on); }); }, {threshold: .1});
   function rv(el, d) { el.classList.add('rv'); el.style.setProperty('--d', d + 's'); io.observe(el); }
   rv($('sig'), .1); rv($('role'), .3);
   [].forEach.call(document.querySelectorAll('.stat'), function (el, i) { el.dataset.i = i; rv(el, .5 + i * .15); });
   [].forEach.call(document.querySelectorAll('.row'), function (el, i) { rv(el, i * .15); });
-  [].forEach.call(document.querySelectorAll('.cmp'), function (el) { rv(el, 0); });
+  [].forEach.call(document.querySelectorAll('.cmpstage'), function (el) { rv(el, 0); });
   [].forEach.call(document.querySelectorAll('.cell'), function (el, i) { el.dataset.i = i; rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.work h2, .work p'), function (el, i) { rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.gcard'), function (el, i) { rv(el, (i % 4) * .1); });
