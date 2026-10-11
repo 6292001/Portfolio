@@ -77,6 +77,15 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .sig.rv.in{animation:rise .95s cubic-bezier(.2,.7,.2,1) var(--d,0s) backwards,glow 4.5s ease-in-out 1.3s infinite}
 .row.rv.in{animation-name:inL;animation-duration:1.15s}
 .row.rv:nth-child(even).in{animation-name:inR}
+.strip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015)}
+.cell{padding:46px 3vw 42px;border-left:1px solid rgba(255,255,255,.09)}
+.cell:first-child{border-left:0}
+.big{font:800 clamp(52px,6vw,86px)/1 Inter,system-ui,sans-serif;letter-spacing:-.04em}
+.ca{color:var(--glow)}.cw{color:#fff}
+.lab{margin-top:18px;color:var(--glow);font:800 12px/1 Inter,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.desc{margin:14px 0 0;color:rgba(255,255,255,.5);font-size:16px;line-height:1.45}
+@media (max-width:900px){.strip{grid-template-columns:repeat(2,1fr)}.cell:nth-child(odd){border-left:0}.cell:nth-child(n+3){border-top:1px solid rgba(255,255,255,.09)}}
+@media (max-width:520px){.strip{grid-template-columns:1fr}.cell{border-left:0}.cell:nth-child(n+2){border-top:1px solid rgba(255,255,255,.09)}}
 @media (prefers-reduced-motion:reduce){.track{animation-duration:400s!important}.hero *,.mark{animation:none!important}}
 @media (max-width:700px){.wall{gap:.8vh}}
 
@@ -96,6 +105,7 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 <p>A few of my favourites.</p>
 <div class="grid" id="grid"></div>
 </section>
+<section class="strip" id="strip" aria-label="Highlights"></section>
 <script>
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
@@ -139,6 +149,19 @@ var grid = document.getElementById('grid');
 var fi = []; items.forEach(function (it, ix) { if (it.feat) fi.push(ix); });
 if (!fi.length) for (var q0 = 0; q0 < Math.min(N, 10); q0++) fi.push(q0);
 fi.slice(0, 20).forEach(function (ix) { grid.appendChild(tile(ix, 'gcard', true)); });
+var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'a'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'sa'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'na'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'sa'}];
+var cells = (Array.isArray(S1.strip) ? S1.strip : STRIP0).filter(function (c) { return c && (c.v || c.t || c.d); });
+if (!cells.length) $('strip').style.display = 'none';
+else {
+  $('strip').style.setProperty('--n', cells.length);
+  cells.forEach(function (c) {
+    var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'a';
+    var cell = mk('div', 'cell'), big = mk('div', 'big');
+    big.append(mk('span', 'n ' + (st === 'a' || st === 'na' ? 'ca' : 'cw'), num), mk('span', 'sf ' + (st === 'a' || st === 'sa' ? 'ca' : 'cw'), suf));
+    cell.append(big, mk('div', 'lab', c.t || ''), mk('p', 'desc', c.d || ''));
+    $('strip').appendChild(cell);
+  });
+}
 /* identity */
 document.getElementById('mark').innerHTML = '<span class="av">' + (AVATAR ? '<img src="' + AVATAR + '" alt="">' : NAME.charAt(0).toUpperCase()) + '</span>' + x(NAME);
 document.getElementById('sig').textContent = NAME;
@@ -148,20 +171,22 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
 (function () {
   if (matchMedia('(prefers-reduced-motion:reduce)').matches || !('IntersectionObserver' in window)) return;
   function cnt(el, on) {
-    var b = el.querySelector('b'); if (!b) return;
-    var f = b.dataset.f || (b.dataset.f = b.textContent), m = /^(\d+(?:\.\d+)?)(.*)$/.exec(f);
+    var b = el.querySelector('b, .n'); if (!b) return;
+    var f = b.dataset.f || (b.dataset.f = b.textContent), m = /^(\d[\d,]*(?:\.\d+)?)(.*)$/.exec(f);
     clearTimeout(b._t); cancelAnimationFrame(b._r);
     if (!m) return;
     if (!on) { b.textContent = f; return; }
-    var end = parseFloat(m[1]), dec = (m[1].split('.')[1] || '').length, suf = m[2];
-    b.textContent = '0' + suf;
-    b._t = setTimeout(function () { var t0 = performance.now(); (function g(t) { var p = Math.min(1, (t - t0) / 1700); b.textContent = (end * (1 - Math.pow(1 - p, 3))).toFixed(dec) + suf; if (p < 1) b._r = requestAnimationFrame(g); })(t0); }, 500 + (+el.dataset.i || 0) * 150);
+    var end = parseFloat(m[1].replace(/,/g, '')), dec = (m[1].split('.')[1] || '').length, suf = m[2], comma = m[1].indexOf(',') >= 0;
+    function fmt(v) { v = v.toFixed(dec); return comma ? Number(v).toLocaleString('en-US', {minimumFractionDigits: dec, maximumFractionDigits: dec}) : v; }
+    b.textContent = fmt(0) + suf;
+    b._t = setTimeout(function () { var t0 = performance.now(); (function g(t) { var p = Math.min(1, (t - t0) / 1700); b.textContent = fmt(end * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) b._r = requestAnimationFrame(g); })(t0); }, 500 + (+el.dataset.i || 0) * 150);
   }
-  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var on = e.isIntersecting; e.target.classList.toggle('in', on); if (e.target.classList.contains('stat')) cnt(e.target, on); }); }, {threshold: .1});
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var on = e.isIntersecting; e.target.classList.toggle('in', on); if (e.target.classList.contains('stat') || e.target.classList.contains('cell')) cnt(e.target, on); }); }, {threshold: .1});
   function rv(el, d) { el.classList.add('rv'); el.style.setProperty('--d', d + 's'); io.observe(el); }
   rv($('sig'), .1); rv($('role'), .3);
   [].forEach.call(document.querySelectorAll('.stat'), function (el, i) { el.dataset.i = i; rv(el, .5 + i * .15); });
   [].forEach.call(document.querySelectorAll('.row'), function (el, i) { rv(el, i * .15); });
+  [].forEach.call(document.querySelectorAll('.cell'), function (el, i) { el.dataset.i = i; rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.work h2, .work p'), function (el, i) { rv(el, i * .12); });
   [].forEach.call(document.querySelectorAll('.gcard'), function (el, i) { rv(el, (i % 4) * .1); });
 })();

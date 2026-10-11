@@ -102,6 +102,15 @@ label.ghost{display:inline-block}
 .cname{font:400 clamp(36px,6vw,56px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
 .cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
 .mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.hlstrip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;margin-bottom:22px;background:rgba(255,255,255,.02)}
+.cell{padding:28px 22px;border-left:1px solid rgba(255,255,255,.09)}
+.cell:first-child{border-left:0}
+.big{font:800 clamp(34px,4vw,56px)/1 Inter,system-ui,sans-serif;letter-spacing:-.04em}
+.ca{color:var(--glow)}.cw{color:#fff}
+.lab{margin-top:12px;color:var(--glow);font:800 11px/1 Inter,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.desc{margin:10px 0 0;color:rgba(255,255,255,.5);font-size:14px;line-height:1.4}
+.fld select{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+@media (max-width:700px){.hlstrip{grid-template-columns:1fr 1fr}.cell:nth-child(odd){border-left:0}.cell:nth-child(n+3){border-top:1px solid rgba(255,255,255,.09)}}
 </style>
 </head>
 <body>
@@ -111,7 +120,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Stats strip</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -119,6 +128,7 @@ label.ghost{display:inline-block}
 </section>
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 20).</p><div id="admSlides"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
+<section id="tab-strip" hidden><p class="hint">The row of highlights under your Selected work. Change the numbers and text for each box. Leave a box completely empty to hide it, or empty all of them to remove the strip.</p><div id="admStrip"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name, role and the three stats at the top of the site.</p><div id="admSite"></div></section>
 </div>
@@ -131,13 +141,15 @@ function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = 
 function cp(o) { return JSON.parse(JSON.stringify(o)); }
 var MAXF = 20, TH0 = {accent: '#fb2f01', bg: '#02070d'};
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
+var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'a'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'sa'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'na'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'sa'}];
 var draft = [], siteDraft = null, saved = '', tab = 'lib';
+function padStrip(a) { var r = Array.isArray(a) ? cp(a) : cp(STRIP0); while (r.length < 4) r.push({v: '', t: '', d: '', s: 'a'}); return r.slice(0, 6); }
 
 function norm(d) {
   d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats));
   while (st.length < 3) st.push({v: '', l: '', n: ''});
   return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
-    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', theme: Object.assign({}, TH0, s.theme || {})}};
+    site: {name: s.name || S0.name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', strip: padStrip(s.strip), theme: Object.assign({}, TH0, s.theme || {})}};
 }
 function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
 function flash(t) { $('msg').textContent = t; }
@@ -312,10 +324,39 @@ function renderSite() {
   });
   L.appendChild(mk('p', 'pwnote', 'Your admin password is set in your hosting dashboard (the ADMIN_PASSWORD variable). To change it, edit that variable and redeploy.'));
 }
+function stripPreview(box) {
+  box.innerHTML = '';
+  var cells = siteDraft.strip.filter(function (c) { return c && (c.v || c.t || c.d); });
+  box.style.setProperty('--n', Math.max(1, cells.length));
+  if (!cells.length) { box.appendChild(mk('div', 'cell', 'The strip is hidden (all boxes are empty).')); return; }
+  cells.forEach(function (c) {
+    var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'a';
+    var cell = mk('div', 'cell'), big = mk('div', 'big');
+    big.append(mk('span', 'n ' + (st === 'a' || st === 'na' ? 'ca' : 'cw'), num), mk('span', 'sf ' + (st === 'a' || st === 'sa' ? 'ca' : 'cw'), suf));
+    cell.append(big, mk('div', 'lab', c.t || ''), mk('p', 'desc', c.d || ''));
+    box.appendChild(cell);
+  });
+}
+function renderStrip() {
+  var L = $('admStrip'); L.innerHTML = '';
+  var pv = mk('div', 'hlstrip'); L.appendChild(pv); stripPreview(pv);
+  function live() { chg(); stripPreview(pv); }
+  siteDraft.strip.forEach(function (c, i) {
+    var f = mk('div', 'fset'), g = mk('div', 'fgrid');
+    f.appendChild(mk('b', 0, 'Box ' + (i + 1)));
+    function tf(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = c[k] || ''; inp.placeholder = ph; inp.oninput = function () { c[k] = inp.value; live(); }; w.append(mk('span', 0, lb), inp); return w; }
+    var sw = mk('label', 'fld'), sel = mk('select');
+    [['a', 'All accent color'], ['w', 'All white'], ['na', 'Number accent, symbol white'], ['sa', 'Number white, symbol accent']].forEach(function (o) { var op = mk('option', 0, o[1]); op.value = o[0]; sel.appendChild(op); });
+    sel.value = c.s || 'a'; sel.onchange = function () { c.s = sel.value; live(); };
+    sw.append(mk('span', 0, 'Number colors'), sel);
+    g.append(tf('Number', 'v', '800+'), tf('Small label', 't', 'Creators served'), tf('Description', 'd', 'Every niche imaginable'), sw);
+    f.appendChild(g); L.appendChild(f);
+  });
+}
 function renderAdm() {
-  ['lib', 'slides', 'sel', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'slides', 'sel', 'strip', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, slides: renderSlides, sel: renderSel, colors: renderColors, site: renderSite})[tab]();
+  ({lib: renderLib, slides: renderSlides, sel: renderSel, strip: renderStrip, colors: renderColors, site: renderSite})[tab]();
   meter();
 }
 
