@@ -171,7 +171,7 @@ for (var r = 0; r < 3; r++) {
 var grid = document.getElementById('grid');
 var fi = []; items.forEach(function (it, ix) { if (it.feat) fi.push(ix); });
 if (!fi.length) for (var q0 = 0; q0 < Math.min(N, 10); q0++) fi.push(q0);
-fi.slice(0, 20).forEach(function (ix) { grid.appendChild(tile(ix, 'gcard', true)); });
+fi.slice(0, 21).forEach(function (ix) { grid.appendChild(tile(ix, 'gcard', true)); });
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var cells = (Array.isArray(S1.strip) ? S1.strip : STRIP0).filter(function (c) { return c && (c.v || c.t || c.d); });
 if (!cells.length) $('strip').style.display = 'none';

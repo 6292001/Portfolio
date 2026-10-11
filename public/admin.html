@@ -156,7 +156,7 @@ label.ghost{display:inline-block}
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
-<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 20).</p><div id="admSlides"></div></section>
+<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 21).</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
 <section id="tab-strip" hidden><p class="hint">The row of highlights under your Selected work. Change the number, label and handwritten note for each box. Leave a box completely empty to hide it, or empty all of them to remove the strip.</p><div id="admStrip"></div></section>
@@ -170,7 +170,7 @@ label.ghost{display:inline-block}
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
 function cp(o) { return JSON.parse(JSON.stringify(o)); }
-var MAXF = 20, TH0 = {accent: '#fb2f01', bg: '#02070d'};
+var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d'};
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var draft = [], siteDraft = null, saved = '', tab = 'lib';
@@ -256,7 +256,7 @@ function card(it, i) {
   return c;
 }
 function renderLib() {
-  $('hint').textContent = draft.length ? 'Every thumbnail you own. All of them slide across the top. Use "Add to Selected work" on your best ones (up to 20). Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
+  $('hint').textContent = draft.length ? 'Every thumbnail you own. All of them slide across the top. Use "Add to Selected work" on your best ones (up to 21). Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
   var L = $('admList'); L.innerHTML = '';
   draft.forEach(function (it, i) { L.appendChild(card(it, i)); });
 }
