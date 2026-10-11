@@ -14,6 +14,7 @@ function applyTheme(t) {
   r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
   r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
   r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
+  document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
 }
 </script>
 <style>
@@ -141,6 +142,8 @@ label.ghost{display:inline-block}
 .cslot img,.cslot .ph3{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;margin:10px 0}
 .ph3{display:grid;place-items:center;border:2px dashed rgba(255,255,255,.18);color:rgba(255,255,255,.45);font-size:14px}
 .crow2{display:flex;gap:8px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:10px;margin:6px 0 14px;color:rgba(255,255,255,.8);font-weight:600;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--glow)}
 </style>
 </head>
 <body>
@@ -170,7 +173,7 @@ label.ghost{display:inline-block}
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
 function cp(o) { return JSON.parse(JSON.stringify(o)); }
-var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d'};
+var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on'};
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var draft = [], siteDraft = null, saved = '', tab = 'lib';
@@ -317,6 +320,9 @@ function renderColors() {
   var L = $('admColors'); L.innerHTML = '';
   var pv = mk('div', 'cprev'); pv.append(mk('div', 'cname', siteDraft.name || 'Your name'), mk('div', 'cstat', '50M+'));
   L.append(pv, colorRow('Accent color (your name, stat bars, glow and highlights)', 'accent', PA), colorRow('Background color', 'bg', PB));
+  var gl = mk('label', 'chk'), gi = mk('input'); gi.type = 'checkbox'; gi.checked = siteDraft.theme.grid !== 'off';
+  gi.onchange = function () { siteDraft.theme.grid = gi.checked ? 'on' : 'off'; applyTheme(siteDraft.theme); chg(); };
+  gl.append(gi, mk('span', 0, 'Show the soft grid and glow in the background')); L.appendChild(gl);
   L.appendChild(mk('p', 'err', '')).id = 'cnote';
   var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
   rs.onclick = function () { siteDraft.theme = cp(TH0); applyTheme(siteDraft.theme); chg(); renderColors(); };
