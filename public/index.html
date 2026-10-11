@@ -77,15 +77,11 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .sig.rv.in{animation:rise .95s cubic-bezier(.2,.7,.2,1) var(--d,0s) backwards,glow 4.5s ease-in-out 1.3s infinite}
 .row.rv.in{animation-name:inL;animation-duration:1.15s}
 .row.rv:nth-child(even).in{animation-name:inR}
-.strip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.015)}
-.cell{padding:46px 3vw 42px;border-left:1px solid rgba(255,255,255,.09)}
-.cell:first-child{border-left:0}
-.big{font:800 clamp(52px,6vw,86px)/1 Inter,system-ui,sans-serif;letter-spacing:-.04em}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:36px 40px;max-width:1100px;margin:0 auto;padding:4vh 4vw 14vh}
+.big{border-left:3px solid var(--glow);padding-left:18px;font:600 clamp(48px,6.5vw,76px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em}
 .ca{color:var(--glow)}.cw{color:#fff}
-.lab{margin-top:18px;color:var(--glow);font:800 12px/1 Inter,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
-.desc{margin:14px 0 0;color:rgba(255,255,255,.5);font-size:16px;line-height:1.45}
-@media (max-width:900px){.strip{grid-template-columns:repeat(2,1fr)}.cell:nth-child(odd){border-left:0}.cell:nth-child(n+3){border-top:1px solid rgba(255,255,255,.09)}}
-@media (max-width:520px){.strip{grid-template-columns:1fr}.cell{border-left:0}.cell:nth-child(n+2){border-top:1px solid rgba(255,255,255,.09)}}
+.lab{margin-top:10px;padding-left:21px;color:rgba(255,255,255,.65);font-size:17px;line-height:1.5}
+.lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
 @media (prefers-reduced-motion:reduce){.track{animation-duration:400s!important}.hero *,.mark{animation:none!important}}
 @media (max-width:700px){.wall{gap:.8vh}}
 
@@ -149,17 +145,16 @@ var grid = document.getElementById('grid');
 var fi = []; items.forEach(function (it, ix) { if (it.feat) fi.push(ix); });
 if (!fi.length) for (var q0 = 0; q0 < Math.min(N, 10); q0++) fi.push(q0);
 fi.slice(0, 20).forEach(function (ix) { grid.appendChild(tile(ix, 'gcard', true)); });
-var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'a'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'sa'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'na'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'sa'}];
+var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var cells = (Array.isArray(S1.strip) ? S1.strip : STRIP0).filter(function (c) { return c && (c.v || c.t || c.d); });
 if (!cells.length) $('strip').style.display = 'none';
 else {
-  $('strip').style.setProperty('--n', cells.length);
   cells.forEach(function (c) {
-    var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'a';
-    var cell = mk('div', 'cell'), big = mk('div', 'big');
+    var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'w';
+    var cell = mk('div', 'cell'), big = mk('div', 'big'), lab = mk('div', 'lab', c.t || '');
     big.append(mk('span', 'n ' + (st === 'a' || st === 'na' ? 'ca' : 'cw'), num), mk('span', 'sf ' + (st === 'a' || st === 'sa' ? 'ca' : 'cw'), suf));
-    cell.append(big, mk('div', 'lab', c.t || ''), mk('p', 'desc', c.d || ''));
-    $('strip').appendChild(cell);
+    if (c.d) { lab.appendChild(document.createTextNode(' ')); lab.appendChild(mk('em', 0, c.d)); }
+    cell.append(big, lab); $('strip').appendChild(cell);
   });
 }
 /* identity */
