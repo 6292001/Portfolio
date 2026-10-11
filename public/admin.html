@@ -102,11 +102,12 @@ label.ghost{display:inline-block}
 .cname{font:400 clamp(36px,6vw,56px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
 .cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
 .mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
-.hlstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px 28px;margin-bottom:22px;padding:24px 22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.02)}
-.big{border-left:3px solid var(--glow);padding-left:14px;font:600 clamp(34px,4vw,52px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em}
+.hlstrip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:24px 20px;margin-bottom:22px;padding:24px 22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.02)}
+.big{border-left:3px solid var(--glow);padding-left:14px;font:600 clamp(28px,3.4vw,46px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em;white-space:nowrap}
 .ca{color:var(--glow)}.cw{color:#fff}
 .lab{margin-top:8px;padding-left:17px;color:rgba(255,255,255,.65);font-size:15px;line-height:1.5}
 .lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
+@media (max-width:700px){.hlstrip{grid-template-columns:1fr 1fr}}
 .fld select{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
 </style>
 </head>
@@ -324,6 +325,7 @@ function renderSite() {
 function stripPreview(box) {
   box.innerHTML = '';
   var cells = siteDraft.strip.filter(function (c) { return c && (c.v || c.t || c.d); });
+  box.style.setProperty('--n', Math.max(1, Math.min(cells.length, 4)));
   if (!cells.length) { box.appendChild(mk('div', 'lab', 'The strip is hidden (all boxes are empty).')); return; }
   cells.forEach(function (c) {
     var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'w';

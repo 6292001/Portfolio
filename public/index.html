@@ -77,10 +77,12 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .sig.rv.in{animation:rise .95s cubic-bezier(.2,.7,.2,1) var(--d,0s) backwards,glow 4.5s ease-in-out 1.3s infinite}
 .row.rv.in{animation-name:inL;animation-duration:1.15s}
 .row.rv:nth-child(even).in{animation-name:inR}
-.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:36px 40px;max-width:1100px;margin:0 auto;padding:4vh 4vw 14vh}
-.big{border-left:3px solid var(--glow);padding-left:18px;font:600 clamp(48px,6.5vw,76px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em}
+.strip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:36px 24px;max-width:1280px;margin:0 auto;padding:4vh 3vw 14vh}
+@media (max-width:900px){.strip{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.strip{grid-template-columns:1fr}}
+.big{border-left:3px solid var(--glow);padding-left:18px;font:600 clamp(40px,5.2vw,72px)/1.1 Inter,system-ui,sans-serif;letter-spacing:-.03em;white-space:nowrap}
 .ca{color:var(--glow)}.cw{color:#fff}
-.lab{margin-top:10px;padding-left:21px;color:rgba(255,255,255,.65);font-size:17px;line-height:1.5}
+.lab{margin-top:10px;padding-left:21px;color:rgba(255,255,255,.65);font-size:16px;line-height:1.5}
 .lab em{font:400 1.2em/1.2 'Caveat Brush',cursive;font-style:normal;color:var(--glow)}
 @media (prefers-reduced-motion:reduce){.track{animation-duration:400s!important}.hero *,.mark{animation:none!important}}
 @media (max-width:700px){.wall{gap:.8vh}}
@@ -149,6 +151,7 @@ var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w
 var cells = (Array.isArray(S1.strip) ? S1.strip : STRIP0).filter(function (c) { return c && (c.v || c.t || c.d); });
 if (!cells.length) $('strip').style.display = 'none';
 else {
+  $('strip').style.setProperty('--n', Math.min(cells.length, 4));
   cells.forEach(function (c) {
     var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'w';
     var cell = mk('div', 'cell'), big = mk('div', 'big'), lab = mk('div', 'lab', c.t || '');
