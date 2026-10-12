@@ -7,6 +7,11 @@
   to = "/admin.html"
   status = 200
 
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/api/favicon"
+  status = 200
+
 [[headers]]
   for = "/admin*"
   [headers.values]

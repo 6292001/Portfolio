@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Admin</title>
+<link rel="icon" href="/api/favicon?admin=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@500;600;800&display=swap">
 <script>
 function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
@@ -169,6 +170,16 @@ label.ghost{display:inline-block}
 .fp3{font:400 26px/1.2 var(--f-hand);color:var(--glow)}
 .iconprev{border-radius:14px}
 .iconprev img{border-radius:0}
+.mini{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.mini.ghost{position:fixed;width:120px;opacity:.9;pointer-events:none;z-index:60;box-shadow:0 12px 40px rgba(0,0,0,.6);cursor:grabbing}
+.mini.dragging{opacity:.25}
+.strip{min-height:84px;border-radius:10px}
+.strip.over{outline:2px dashed var(--glow);outline-offset:4px}
+.ins{flex:none;width:4px;border-radius:2px;background:var(--glow);margin:0 -3px;box-shadow:0 0 10px var(--glow)}
+.emptyrow{flex:1;display:grid;place-items:center;min-height:72px;border:2px dashed rgba(255,255,255,.18);border-radius:10px;color:rgba(255,255,255,.4);font-size:14px}
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 20px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px}
+.pickgrid .mini{width:auto;cursor:pointer}
+.pickgrid .mini.picked{opacity:.3;cursor:default}
 </style>
 </head>
 <body>
@@ -184,9 +195,13 @@ label.ghost{display:inline-block}
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
-<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top. Each row shows different thumbnails: your library is split into three, in order. Click your best ones to pick them for Selected work (star, up to 21).</p><div id="admSlides"></div></section>
+<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
-<section id="tab-sel" hidden><p class="hint" id="selNote"></p><div class="admgrid" id="admSel"></div></section>
+<section id="tab-sel" hidden><p class="hint" id="selNote"></p>
+<label class="drop" id="dropw"><input type="file" id="filew" accept="image/*" multiple hidden>Drop thumbnails here to add them to Selected work, or click to choose</label>
+<div class="crow2" style="margin:14px 0 18px"><button class="ghost" id="fromSlides" type="button">Add from my slides</button></div>
+<div id="picker" hidden></div>
+<div class="admgrid" id="admSel"></div></section>
 <section id="tab-strip" hidden><p class="hint">Rows of highlights that sit under your Selected work. Add as many strips as you like (up to 5), each with up to 6 boxes. Give a strip a heading if you want one. Leave a strip empty to hide it.</p><div id="admStrip"></div></section>
 <section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
 <section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
@@ -211,8 +226,10 @@ function norm(d) {
   var strips = Array.isArray(s.strips) ? cp(s.strips) : (Array.isArray(s.strip) ? [{t: '', s: '', items: cp(s.strip)}] : [{t: '', s: '', items: cp(STRIP0)}]);
   strips.forEach(function (z) { z.t = z.t || ''; z.s = z.s || ''; z.items = z.items || []; });
   function sc(x) { x = x || {}; return {t: x.t || '', s: x.s || ''}; }
-  return {thumbs: (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; }),
-    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', tabTitle: s.tabTitle || '',
+  var thumbs = (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; });
+  var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
+  return {thumbs: thumbs,
+    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -223,7 +240,7 @@ function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
 function flash(t) { $('msg').textContent = t; }
 function meter() { var d = snap() !== saved; $('msg').textContent = d ? 'Unsaved changes' : 'All changes saved'; $('pub').disabled = !d; $('disc').disabled = !d; }
 function featCount() { return draft.filter(function (t) { return t.feat; }).length; }
-function chips() { var n = draft.length, k = featCount(); $('chips').textContent = n + ' thumbnail' + (n === 1 ? '' : 's') + ' \u00B7 3 sliding rows \u00B7 ' + (k ? k + ' of ' + MAXF + ' picked for Selected work' : 'Selected work shows your first 10 until you pick'); }
+function chips() { var n = draft.length, k = siteDraft ? siteDraft.work.length : 0; $('chips').textContent = n + ' thumbnail' + (n === 1 ? '' : 's') + ' \u00B7 3 slide rows \u00B7 ' + k + ' in Selected work'; }
 function chg() { meter(); chips(); }
 function toggleFeat(it) { if (!it.feat && featCount() >= MAXF) { flash('You can pick up to ' + MAXF + ' for Selected work.'); return false; } it.feat = !it.feat; chg(); return true; }
 addEventListener('beforeunload', function (e) { if (siteDraft && snap() !== saved) { e.preventDefault(); e.returnValue = ''; } });
@@ -238,7 +255,7 @@ async function uploadBlob(blob, icon) {
   return j.id;
 }
 async function save() {
-  $('pub').disabled = true; flash('Saving\u2026');
+  rowsSync(); $('pub').disabled = true; flash('Saving\u2026');
   try {
     var r = await fetch('/api/data', {method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({thumbs: draft, site: siteDraft}), credentials: 'same-origin'});
     var j = {}; try { j = await r.json(); } catch (e) {}
@@ -268,8 +285,9 @@ async function addFiles(fl) {
 }
 
 /* ---------- Library / Slides / Selected work ---------- */
+function rowOf(id) { for (var r = 0; r < 3; r++) if (siteDraft.rows && siteDraft.rows[r].indexOf(id) >= 0) return r; return -1; }
 function card(it, i) {
-  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), c2 = mk('div', 'ctl');
+  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl');
   c.id = 'it-' + i; im.src = '/api/img/' + it.id; im.alt = '';
   ti.placeholder = 'Title (optional)'; ti.value = it.title; ti.oninput = function () { it.title = ti.value; chg(); };
   st.placeholder = 'Views or result (optional)'; st.value = it.stat; st.oninput = function () { it.stat = st.value; chg(); };
@@ -284,53 +302,122 @@ function card(it, i) {
     draft.splice(i, 1); chg(); renderAdm();
   };
   ct.appendChild(del);
-  var star = mk('button', it.feat ? 'on' : 0, it.feat ? '\u2605 In Selected work' : '\u2606 Add to Selected work'); star.type = 'button';
-  star.onclick = function () { if (toggleFeat(it)) renderAdm(); };
-  c2.appendChild(star);
-  if (it.feat) c.appendChild(mk('span', 'tag', 'Selected work'));
+  var r = rowOf(it.id); if (r >= 0) c.appendChild(mk('span', 'tag', 'Row ' + (r + 1)));
   c.appendChild(mk('span', 'num', '#' + (i + 1)));
-  c.append(im, ti, st, c2, ct);
+  c.append(im, ti, st, ct);
   return c;
 }
 function renderLib() {
-  $('hint').textContent = draft.length ? 'Every thumbnail you own. All of them slide across the top. Use "Add to Selected work" on your best ones (up to 21). Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
+  $('hint').textContent = draft.length ? 'Every thumbnail you own. They all slide across the top, in the rows you set on the Slides tab (each card shows its row). Selected work has its own list on the Selected work tab. Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
   var L = $('admList'); L.innerHTML = '';
   draft.forEach(function (it, i) { L.appendChild(card(it, i)); });
 }
 function rowGroup(r, n) { var a = Math.floor(r * n / 3), b = Math.floor((r + 1) * n / 3), g = []; for (var k = a; k < b; k++) g.push(k); return g.length ? g : [r % n]; }
-function mini(it, i, real) {
-  var m = mk('div', 'mini' + (real && it.feat ? ' feat' : ''));
-  m.dataset.i = i;
-  if (it.id) { var im = mk('img'); im.src = '/api/img/' + it.id; im.alt = ''; m.appendChild(im); } else { m.style.background = it.bg; m.appendChild(mk('span', 'ph2', String(it.n))); }
-  m.appendChild(mk('span', 'num', '#' + (i + 1)));
-  if (real) { m.title = 'Click to pick or un-pick for Selected work'; m.onclick = function () { if (toggleFeat(it)) [].forEach.call(document.querySelectorAll('.mini[data-i="' + i + '"]'), function (e) { e.classList.toggle('feat', !!it.feat); }); }; } else m.style.cursor = 'default';
-  return m;
+function rowsAuto() { var n = draft.length, out = [[], [], []]; if (!n) return out; for (var r = 0; r < 3; r++) rowGroup(r, n).forEach(function (ix) { if (draft[ix]) out[r].push(draft[ix].id); }); return out; }
+function rowsSync() {
+  var ids = {}, seen = {}; draft.forEach(function (t) { ids[t.id] = 1; });
+  if (!Array.isArray(siteDraft.rows) || siteDraft.rows.length !== 3) siteDraft.rows = rowsAuto();
+  siteDraft.rows = siteDraft.rows.map(function (r) { return (r || []).filter(function (id) { if (!ids[id] || seen[id]) return false; seen[id] = 1; return true; }); });
+  draft.forEach(function (t) { if (!seen[t.id]) { seen[t.id] = 1; var s = 0; for (var k = 1; k < 3; k++) if (siteDraft.rows[k].length < siteDraft.rows[s].length) s = k; siteDraft.rows[s].push(t.id); } });
+}
+function dropTarget(x, y) {
+  var strips = document.querySelectorAll('#admSlides .strip'), best = null;
+  [].forEach.call(strips, function (st, r) { var b = st.getBoundingClientRect(); if (y >= b.top - 14 && y <= b.bottom + 14) best = r; });
+  if (best === null) return null;
+  var st = strips[best], idx = 0;
+  [].forEach.call(st.querySelectorAll('.mini:not(.dragging)'), function (m) { var b = m.getBoundingClientRect(); if (x > b.left + b.width / 2) idx++; });
+  return {row: best, idx: idx, strip: st};
+}
+function markDrop(t) {
+  [].forEach.call(document.querySelectorAll('#admSlides .strip'), function (s) { s.classList.remove('over'); });
+  var o = document.querySelector('#admSlides .ins'); if (o) o.remove();
+  if (!t) return; t.strip.classList.add('over');
+  var ins = mk('div', 'ins'), ms = t.strip.querySelectorAll('.mini:not(.dragging)'); t.strip.insertBefore(ins, ms[t.idx] || null);
+}
+function moveThumb(id, row, idx) {
+  var rows = siteDraft.rows, from = -1, pos = -1;
+  rows.forEach(function (r, i) { var p = r.indexOf(id); if (p >= 0) { from = i; pos = p; } });
+  if (from < 0) return; rows[from].splice(pos, 1);
+  rows[row].splice(Math.max(0, Math.min(idx, rows[row].length)), 0, id); chg(); renderSlides();
+}
+function dragMini(m, id) {
+  m.addEventListener('pointerdown', function (e) {
+    if (e.button) return; var sx = e.clientX, sy = e.clientY, on = false, gh = null;
+    function mv(ev) {
+      if (!on && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 6) { on = true; gh = m.cloneNode(true); gh.className = 'mini ghost'; document.body.appendChild(gh); m.classList.add('dragging'); }
+      if (on) { gh.style.left = (ev.clientX - 60) + 'px'; gh.style.top = (ev.clientY - 34) + 'px'; markDrop(dropTarget(ev.clientX, ev.clientY)); }
+    }
+    function up(ev) {
+      removeEventListener('pointermove', mv); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+      if (!on) return; gh.remove(); m.classList.remove('dragging');
+      var t = dropTarget(ev.clientX, ev.clientY); markDrop(null); if (t) moveThumb(id, t.row, t.idx);
+    }
+    addEventListener('pointermove', mv); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  });
+}
+function dmini(it) {
+  var m = mk('div', 'mini'), im = mk('img'); m.dataset.id = it.id; im.src = '/api/img/' + it.id; im.alt = ''; m.appendChild(im);
+  m.appendChild(mk('span', 'num', '#' + (draft.indexOf(it) + 1))); m.title = 'Drag to another row or another position';
+  dragMini(m, it.id); return m;
 }
 function renderSlides() {
-  var real = draft.length > 0, N = real ? draft.length : 12, src = [];
-  for (var i = 0; i < N; i++) { var h = (i * 47 + 190) % 360; src.push(real ? draft[i] : {id: null, n: i + 1, bg: 'linear-gradient(135deg,hsl(' + h + ',75%,45%),hsl(' + ((h + 50) % 360) + ',80%,22%))'}); }
-  var L = $('admSlides'); L.innerHTML = '';
+  rowsSync(); var L = $('admSlides'); L.innerHTML = '';
+  if (!draft.length) { L.appendChild(mk('p', 'hint', 'No thumbnails yet. Add some on the Library tab, then arrange them in rows here.')); return; }
+  var byId = {}; draft.forEach(function (t) { byId[t.id] = t; });
   ['moves left', 'moves right', 'moves left'].forEach(function (dir, r) {
-    var row = mk('div', 'srow'), st = mk('div', 'strip'), grp = rowGroup(r, N);
-    row.appendChild(mk('div', 'slab', 'Row ' + (r + 1) + ' \u00B7 ' + dir + ' \u00B7 ' + grp.length + ' thumbnails' + (real ? '' : ' (placeholders)')));
-    grp.forEach(function (ix) { st.appendChild(mini(src[ix], ix, real)); });
+    var row = mk('div', 'srow'), st = mk('div', 'strip');
+    row.appendChild(mk('div', 'slab', 'Row ' + (r + 1) + ' \u00B7 ' + dir + ' \u00B7 ' + siteDraft.rows[r].length + ' thumbnails'));
+    siteDraft.rows[r].forEach(function (id) { st.appendChild(dmini(byId[id])); });
+    if (!siteDraft.rows[r].length) st.appendChild(mk('div', 'emptyrow', 'Drop thumbnails here'));
     row.appendChild(st); L.appendChild(row);
+  });
+  var au = mk('button', 'ghost', 'Arrange evenly (reset)'); au.type = 'button';
+  au.onclick = function () { siteDraft.rows = rowsAuto(); chg(); renderSlides(); }; L.appendChild(au);
+}
+async function addWork(fl) {
+  var files = [].filter.call(fl, function (f) { return /^image\//.test(f.type); }), n = 0, last = '';
+  for (var q = 0; q < files.length; q++) {
+    if (siteDraft.work.length >= 60) { last = 'Selected work can hold up to 60.'; break; }
+    flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
+    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); siteDraft.work.push({id: id, title: '', stat: ''}); n++; renderSel(); }
+    catch (e) { last = e.message; if (last === 'Signed out') return; }
+  }
+  chg(); if (last) flash(n + ' added. ' + last); else if (n) flash(n + ' added to Selected work. Press Save changes to publish.');
+}
+function workCard(w, i) {
+  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), W = siteDraft.work;
+  im.src = '/api/img/' + w.id; im.alt = '';
+  ti.placeholder = 'Title (optional)'; ti.value = w.title || ''; ti.oninput = function () { w.title = ti.value; chg(); };
+  st.placeholder = 'Views or result (optional)'; st.value = w.stat || ''; st.oninput = function () { w.stat = st.value; chg(); };
+  [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
+    var b = mk('button', 0, m[0]); b.type = 'button'; b.setAttribute('aria-label', m[2]);
+    b.onclick = function () { var j = i + m[1]; if (j < 0 || j >= W.length) return; W.splice(j, 0, W.splice(i, 1)[0]); chg(); renderSel(); };
+    ct.appendChild(b);
+  });
+  var del = mk('button', 'del', 'Remove'); del.type = 'button';
+  del.onclick = function () {
+    if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
+    W.splice(i, 1); chg(); renderSel();
+  };
+  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); c.append(im, ti, st, ct); return c;
+}
+function renderPicker() {
+  var P = $('picker'); P.innerHTML = ''; P.className = 'pickgrid';
+  if (!draft.length) { P.appendChild(mk('p', 'hint', 'You have no thumbnails on the Library tab yet.')); return; }
+  var used = {}; siteDraft.work.forEach(function (w) { used[w.id] = 1; });
+  draft.forEach(function (t, i) {
+    var m = mk('div', 'mini' + (used[t.id] ? ' picked' : '')), im = mk('img'); im.src = '/api/img/' + t.id; im.alt = ''; m.appendChild(im); m.appendChild(mk('span', 'num', '#' + (i + 1)));
+    m.title = used[t.id] ? 'Already in Selected work' : 'Click to add to Selected work';
+    m.onclick = function () { if (used[t.id]) return; if (siteDraft.work.length >= 60) { flash('Selected work can hold up to 60.'); return; } siteDraft.work.push({id: t.id, title: t.title, stat: t.stat}); chg(); renderSel(); };
+    P.appendChild(m);
   });
 }
 function renderSel() {
-  var L = $('admSel'), sh = []; L.innerHTML = '';
-  draft.forEach(function (t, i) { if (t.feat) sh.push(i); });
-  var picked = sh.length > 0;
-  if (!picked) for (var q = 0; q < Math.min(draft.length, 10); q++) sh.push(q);
-  $('selNote').textContent = picked ? sh.length + ' of ' + MAXF + ' boxes in use. Un-pick one to remove it, or use the arrows to reorder.' : 'Nothing picked yet, so your site shows your first 10 thumbnails. Pick your best from the Library or Slides tab (up to ' + MAXF + ').';
-  var total = Math.min(MAXF, Math.max(10, sh.length));
-  for (var s2 = 0; s2 < total; s2++) {
-    if (s2 < sh.length) { var c = card(draft[sh[s2]], sh[s2]), tg = c.querySelector('.tag'); if (tg) tg.textContent = 'Box ' + (s2 + 1); else c.appendChild(mk('span', 'tag', 'Box ' + (s2 + 1))); L.appendChild(c); }
-    else { var e = mk('div', 'empty'); e.appendChild(mk('b', 0, 'Box ' + (s2 + 1))); e.appendChild(mk('span', 0, 'Empty. Pick another thumbnail for it.')); L.appendChild(e); }
-  }
+  var L = $('admSel'); L.innerHTML = '';
+  $('selNote').textContent = siteDraft.work.length ? siteDraft.work.length + ' in Selected work (up to 60), shown in this order on your site. Upload new ones below, or add from your slides.' : 'Selected work is empty. Upload thumbnails below, or add some from your slides.';
+  siteDraft.work.forEach(function (w, i) { L.appendChild(workCard(w, i)); });
+  if (!$('picker').hidden) renderPicker();
 }
-
-/* ---------- Colors ---------- */
 var PA = [['Electric Orange', '#fb2f01'], ['Sky Blue', '#38bdf8'], ['Violet', '#8b5cf6'], ['Hot Pink', '#ff2d87'], ['Lime', '#a3e635'], ['Gold', '#fbbf24'], ['Red', '#ef4444'], ['Cyan', '#06b6d4'], ['White', '#ffffff']];
 var PB = [['Midnight', '#02070d'], ['Black', '#000000'], ['Charcoal', '#111114'], ['Deep Navy', '#050b1f'], ['Plum', '#12060f'], ['Forest', '#04100a']];
 function colorRow(title, key, presets) {
@@ -369,6 +456,23 @@ function fld(lb, o, k, ph) {
   inp.oninput = function () { o[k] = inp.value; chg(); };
   w.append(mk('span', 0, lb), inp); return w;
 }
+function iconRow(key, title, text) {
+  var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft[key] ? 'Change icon' : 'Upload icon'), ifi = mk('input');
+  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
+  ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
+  ifi.onchange = async function () {
+    var f = ifi.files[0]; if (!f) return;
+    try {
+      flash('Uploading icon\u2026');
+      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
+      siteDraft[key] = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderSite();
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  var itx = mk('div', 'avtx'); itx.append(mk('b', 0, title), mk('span', 0, text)); ir.append(ip, itx, iu);
+  if (siteDraft[key]) { var rm = mk('button', 'ghost', 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderSite(); }; ir.appendChild(rm); }
+  return ir;
+}
 function renderSite() {
   var L = $('admSite'); L.innerHTML = '';
   var av = mk('div', 'avrow'), pv = mk('div', 'avprev'), up = mk('label', 'ghost', siteDraft.avatarId ? 'Change photo' : 'Upload photo'), fi = mk('input');
@@ -387,22 +491,8 @@ function renderSite() {
   av.append(pv, tx, up);
   if (siteDraft.avatarId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { siteDraft.avatarId = ''; chg(); renderSite(); }; av.appendChild(rm); }
   L.appendChild(av);
-  var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft.iconId ? 'Change icon' : 'Upload icon'), ifi = mk('input');
-  if (siteDraft.iconId) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft.iconId; ii.alt = ''; ip.appendChild(ii); } else ip.textContent = (siteDraft.name || 'S').charAt(0).toUpperCase();
-  ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
-  ifi.onchange = async function () {
-    var f = ifi.files[0]; if (!f) return;
-    try {
-      flash('Uploading icon\u2026');
-      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
-      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
-      siteDraft.iconId = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderSite();
-    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
-  };
-  var itx = mk('div', 'avtx'); itx.append(mk('b', 0, 'Browser tab icon (favicon)'), mk('span', 0, 'The small picture in the browser tab and in bookmarks. Square images work best, and a transparent PNG keeps its transparency. With no icon, your site uses a letter icon in your accent color. Browsers remember tab icons, so a change can take a little while to show.'));
-  ir.append(ip, itx, iu);
-  if (siteDraft.iconId) { var irm = mk('button', 'ghost', 'Use the automatic icon'); irm.type = 'button'; irm.onclick = function () { siteDraft.iconId = ''; chg(); renderSite(); }; ir.appendChild(irm); }
-  L.appendChild(ir);
+  L.appendChild(iconRow('iconId', 'Browser tab icon (favicon)', 'The small picture in the browser tab and in bookmarks. Square images work best, and a transparent PNG keeps its transparency. With no icon, your site uses a letter icon in your accent color (Safari does not show those). Browsers remember tab icons, so a change can take a little while to show.'));
+  L.appendChild(iconRow('adminIconId', 'Admin tab icon', 'The tab icon of this admin page, so you can tell it apart from your site. With none, the admin uses an \u201CA\u201D icon in your accent color.'));
   var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (under your name)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
   siteDraft.stats.forEach(function (s, i) {
     var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Stat ' + (i + 1)));
@@ -618,6 +708,7 @@ function renderText() {
   ff.appendChild(mk('p', 'pwnote', 'Fonts load from Google Fonts. After you save, your site loads the fonts you picked.')); L.appendChild(ff);
 }
 function renderAdm() {
+  rowsSync();
   ['lib', 'slides', 'compare', 'sel', 'strip', 'footer', 'text', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
   ({lib: renderLib, slides: renderSlides, compare: renderCompare, sel: renderSel, strip: renderStrip, footer: renderFooter, text: renderText, colors: renderColors, site: renderSite})[tab]();
@@ -646,7 +737,7 @@ function showLogin(text) {
 async function loadApp() {
   try {
     var r = await fetch('/api/data', {cache: 'no-cache', credentials: 'same-origin'}), d = norm(await r.json());
-    draft = d.thumbs; siteDraft = d.site; saved = snap(); applyTheme(siteDraft.theme);
+    draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme);
     $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
     renderAdm(); checkSeed();
   } catch (e) { gateCard('Could not load your site', e.message); }
@@ -672,6 +763,7 @@ async function importSeed(seed, btn, box) {
     if (seed.avatar) siteDraft.avatarId = await uploadBlob(await (await fetch('/seed/' + seed.avatar)).blob());
     var s = seed.site || {}; siteDraft.name = s.name || siteDraft.name; siteDraft.role = s.role || siteDraft.role;
     if (s.stats && s.stats.length) siteDraft.stats = s.stats; if (s.theme) { siteDraft.theme = Object.assign(cp(TH0), s.theme, {fonts: siteDraft.theme.fonts}); applyTheme(siteDraft.theme); }
+    if (!siteDraft.work.length) siteDraft.work = draft.filter(function (t) { return t.feat; }).slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; });
     await save(); box.remove(); renderAdm(); flash('Imported and saved. Your website is updated.');
   } catch (e) { if (e.message !== 'Signed out') flash('Import stopped: ' + e.message); btn.disabled = false; }
 }
@@ -691,6 +783,12 @@ var drop = $('drop');
 ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
 ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
 drop.addEventListener('drop', function (e) { addFiles(e.dataTransfer.files); });
+$('filew').onchange = function (e) { addWork(e.target.files); e.target.value = ''; };
+var dropw = $('dropw');
+['dragenter', 'dragover'].forEach(function (ev) { dropw.addEventListener(ev, function (e) { e.preventDefault(); dropw.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { dropw.addEventListener(ev, function (e) { e.preventDefault(); dropw.classList.remove('over'); }); });
+dropw.addEventListener('drop', function (e) { addWork(e.dataTransfer.files); });
+$('fromSlides').onclick = function () { var P = $('picker'); P.hidden = !P.hidden; $('fromSlides').textContent = P.hidden ? 'Add from my slides' : 'Hide my slides'; if (!P.hidden) renderPicker(); };
 init();
 </script>
 </body>

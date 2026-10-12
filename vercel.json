@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
+  "rewrites": [{ "source": "/favicon.ico", "destination": "/api/favicon" }],
   "outputDirectory": "public",
   "headers": [
     { "source": "/admin(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
