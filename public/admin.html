@@ -21,6 +21,7 @@ function applyTheme(t) {
   r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
   r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
   r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
+  var tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', toHex(b));
   document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
   var fo = (t && t.fonts) || {};
   [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Caveat Brush'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
@@ -28,6 +29,7 @@ function applyTheme(t) {
   });
 }
 </script>
+<script>try { var av0 = localStorage.getItem('pf-aicv'); if (av0) document.querySelector('link[rel=icon]').setAttribute('href', '/api/favicon?admin=1&v=' + encodeURIComponent(av0)); } catch (e) {}</script>
 <style>
 :root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;--f-body:Inter,system-ui,sans-serif;--f-head:'Caveat Brush',cursive;--f-hand:'Caveat Brush',cursive;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
@@ -236,6 +238,11 @@ function norm(d) {
       footer: {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, links: cp(f.links || [])},
       theme: Object.assign(cp(TH0), th, {fonts: Object.assign({}, TH0.fonts, th.fonts || {})})}};
 }
+function setAdminIcon() {
+  var v = siteDraft.adminIconId || ('auto-' + siteDraft.theme.accent), l = document.querySelector('link[rel=icon]'), u = '/api/favicon?admin=1&v=' + encodeURIComponent(v);
+  if (l && l.getAttribute('href') !== u) l.setAttribute('href', u);
+  try { localStorage.setItem('pf-aicv', v); } catch (e) {}
+}
 function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
 function flash(t) { $('msg').textContent = t; }
 function meter() { var d = snap() !== saved; $('msg').textContent = d ? 'Unsaved changes' : 'All changes saved'; $('pub').disabled = !d; $('disc').disabled = !d; }
@@ -261,7 +268,7 @@ async function save() {
     var j = {}; try { j = await r.json(); } catch (e) {}
     if (r.status === 401) { signedOut(); return; }
     if (!r.ok) throw new Error(j.error || 'Save failed (' + r.status + ')');
-    saved = snap(); meter(); flash('Saved. Your website is updated.');
+    saved = snap(); meter(); setAdminIcon(); flash('Saved. Your website is updated.');
   } catch (e) { flash('Could not save: ' + e.message); $('pub').disabled = false; }
 }
 async function toJpeg(bm, max) {
@@ -547,7 +554,7 @@ function renderStrip() {
 }
 function makeCompare(box, before, after) {
   var af = mk('img'), bf = mk('img', 'bf'), ln = mk('div', 'ln'), hd = mk('div', 'hd'), cur = 50, dragging = false, anim = 0;
-  af.src = after; bf.src = before; af.alt = bf.alt = ''; af.draggable = bf.draggable = false;
+  af.src = after; bf.src = before; af.alt = bf.alt = ''; af.draggable = bf.draggable = false; af.loading = bf.loading = 'lazy'; af.decoding = bf.decoding = 'async';
   hd.tabIndex = 0; hd.setAttribute('role', 'slider'); hd.setAttribute('aria-label', 'Before and after comparison');
   hd.setAttribute('aria-valuemin', '0'); hd.setAttribute('aria-valuemax', '100');
   hd.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>';
@@ -737,7 +744,7 @@ function showLogin(text) {
 async function loadApp() {
   try {
     var r = await fetch('/api/data', {cache: 'no-cache', credentials: 'same-origin'}), d = norm(await r.json());
-    draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme);
+    draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme); setAdminIcon();
     $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
     renderAdm(); checkSeed();
   } catch (e) { gateCard('Could not load your site', e.message); }
