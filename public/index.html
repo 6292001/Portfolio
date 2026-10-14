@@ -160,8 +160,8 @@ a,button,.cmp{touch-action:manipulation}
 .h1{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 
 /* logo (top-left, fixed) */
-.logo{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:18px;z-index:6;display:block;width:clamp(44px,5vw,60px);aspect-ratio:1/1;border-radius:50%;line-height:0;transition:transform .3s cubic-bezier(.22,1,.36,1),filter .3s}
-.logo img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;-webkit-user-select:none;user-select:none}
+.logo{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:18px;z-index:6;display:block;width:clamp(38px,3.3vw,46px);aspect-ratio:1/1;border-radius:10px;line-height:0;transition:transform .3s cubic-bezier(.22,1,.36,1),filter .3s}
+.logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;pointer-events:none;-webkit-user-select:none;user-select:none}
 .logo:hover,.logo:focus-visible{transform:scale(1.08);outline:0;filter:drop-shadow(0 0 12px rgba(var(--ar),.5))}
 @keyframes logoIn{from{opacity:0;transform:scale(.7)}}
 .logo{animation:logoIn .7s cubic-bezier(.2,.8,.2,1) .15s backwards}
