@@ -3,9 +3,9 @@
 Your site and a private admin page that works on its own, with no Claude needed.
 
 - **Your website:** `yoursite.com`
-- **Your admin:** `yoursite.com/admin` (not linked anywhere). Tap your name badge or big name 5 times quickly, or type the letters `admin`, to jump there.
+- **Your admin:** `yoursite.com/admin` (not linked anywhere). Tap the big headline 5 times quickly, or type the letters `admin`, to jump there.
 
-In the admin you can add, remove and reorder thumbnails, pick up to 20 for "Selected work", change colors, and edit your name, photo and stats.
+In the admin you can add, remove and reorder thumbnails, pick up to 20 for "Selected work", change colors, and edit the top headline (Hero tab), the About me section and photo, the How to start cards, the FAQ, your photo and stats.
 Press **Save changes** and your live website updates instantly. No redeploy.
 
 ---

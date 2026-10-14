@@ -6,13 +6,13 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Admin</title>
 <link rel="icon" href="/api/favicon?admin=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@500;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&display=swap">
 <script>
 function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
 function toHex(c) { return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); }
-var GF = {'Inter': ['500;600;800', 's'], 'Poppins': ['500;600;800', 's'], 'Montserrat': ['500;600;800', 's'], 'Space Grotesk': ['500;600;700', 's'], 'Outfit': ['500;600;800', 's'], 'Manrope': ['500;600;800', 's'], 'DM Sans': ['500;600;800', 's'], 'Sora': ['500;600;800', 's'], 'Syne': ['500;600;800', 's'], 'Bebas Neue': ['', 'd'], 'Anton': ['', 'd'], 'Oswald': ['500;600;700', 'd'], 'Archivo Black': ['', 'd'], 'Bangers': ['', 'd'], 'Righteous': ['', 'd'], 'Playfair Display': ['500;600;800', 'f'], 'Caveat Brush': ['', 'h'], 'Caveat': ['500;700', 'h'], 'Permanent Marker': ['', 'h'], 'Kalam': ['400;700', 'h'], 'Shadows Into Light': ['', 'h'], 'Gochi Hand': ['', 'h'], 'Rock Salt': ['', 'h'], 'Patrick Hand': ['', 'h'], 'Gloria Hallelujah': ['', 'h'], 'Nanum Pen Script': ['', 'h'], 'Covered By Your Grace': ['', 'h']}, FB = {s: 'system-ui,sans-serif', d: 'Impact,sans-serif', f: 'Georgia,serif', h: 'cursive'}, LOADED = {};
+var GF = {'Inter': ['500;600;800', 's'], 'Poppins': ['400;500;600;700', 's'], 'Montserrat': ['500;600;800', 's'], 'Space Grotesk': ['500;600;700', 's'], 'Outfit': ['500;600;800', 's'], 'Manrope': ['500;600;800', 's'], 'DM Sans': ['500;600;800', 's'], 'Sora': ['500;600;800', 's'], 'Syne': ['500;600;800', 's'], 'Bebas Neue': ['', 'd'], 'Anton': ['', 'd'], 'Oswald': ['500;600;700', 'd'], 'Archivo Black': ['', 'd'], 'Bangers': ['', 'd'], 'Righteous': ['', 'd'], 'Playfair Display': ['500;600;800', 'f'], 'Caveat Brush': ['', 'h'], 'Caveat': ['500;700', 'h'], 'Permanent Marker': ['', 'h'], 'Kalam': ['400;700', 'h'], 'Shadows Into Light': ['', 'h'], 'Gochi Hand': ['', 'h'], 'Rock Salt': ['', 'h'], 'Patrick Hand': ['', 'h'], 'Gloria Hallelujah': ['', 'h'], 'Nanum Pen Script': ['', 'h'], 'Covered By Your Grace': ['', 'h']}, FB = {s: 'system-ui,sans-serif', d: 'Impact,sans-serif', f: 'Georgia,serif', h: 'cursive'}, LOADED = {};
 function loadFont(n) {
-  if (n === 'Inter' || n === 'Caveat Brush' || LOADED[n] || !GF[n]) return; LOADED[n] = 1;
+  if (n === 'Inter' || n === 'Poppins' || n === 'Caveat Brush' || LOADED[n] || !GF[n]) return; LOADED[n] = 1;
   var l = document.createElement('link'); l.rel = 'stylesheet';
   l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
 }
@@ -24,14 +24,14 @@ function applyTheme(t) {
   var tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', toHex(b));
   document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
   var fo = (t && t.fonts) || {};
-  [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Caveat Brush'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
+  [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Poppins'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
     var n = GF[x[1]] ? x[1] : x[2]; loadFont(n); r.setProperty(x[0], "'" + n + "'," + FB[GF[n][1]]);
   });
 }
 </script>
 <script>try { var av0 = localStorage.getItem('pf-aicv'); if (av0) document.querySelector('link[rel=icon]').setAttribute('href', '/api/favicon?admin=1&v=' + encodeURIComponent(av0)); } catch (e) {}</script>
 <style>
-:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;--f-body:Inter,system-ui,sans-serif;--f-head:'Caveat Brush',cursive;--f-hand:'Caveat Brush',cursive;box-sizing:border-box}
+:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;--f-body:Inter,system-ui,sans-serif;--f-head:'Poppins',system-ui,sans-serif;--f-hand:'Caveat Brush',cursive;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
 html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
 .adm.on a.ghost{text-decoration:none}
@@ -40,7 +40,7 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .adm.on{display:block}
 .adm-in{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 140px}
 .adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.adm h3{margin:0;font:400 clamp(40px,7vw,64px)/1 'Caveat Brush',cursive;color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.4)}
+.adm h3{margin:0;font:500 clamp(34px,6vw,52px)/1.1 var(--f-head);letter-spacing:-.01em;color:#fff}
 .ghost,.pub{font:600 14px Inter,sans-serif;color:#fff;border-radius:999px;padding:.7em 1.4em;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent}
 .pub{border-color:var(--glow);background:rgba(var(--ar),.2)}
 .pub:disabled{opacity:.35;cursor:default}
@@ -113,7 +113,7 @@ label.ghost{display:inline-block}
 .col{width:56px;height:44px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:none;cursor:pointer}
 .crow input:not(.col){width:140px;padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
 .cprev{margin-bottom:6px;padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:var(--bg)}
-.cname{font:400 clamp(36px,6vw,56px)/1 var(--f-head);color:var(--glow);text-shadow:0 0 30px rgba(var(--ar),.5)}
+.cname{font:600 clamp(30px,5vw,48px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff}
 .cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
 .mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 .hlstrip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:24px 20px;margin-bottom:22px;padding:24px 22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.02)}
@@ -159,7 +159,7 @@ label.ghost{display:inline-block}
 .chk input{width:18px;height:18px;accent-color:var(--glow)}
 .fset.sub{margin-top:12px;background:rgba(255,255,255,.02)}
 .fprev{margin:14px 0 18px;padding:26px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}
-.fprev h3{margin:0;font:400 clamp(30px,4vw,44px)/1.1 var(--f-head);color:var(--glow)}
+.fprev h3{margin:0;font:500 clamp(28px,4vw,40px)/1.1 var(--f-head);color:#fff}
 .fprev .fsub{margin:.6em 0 0;color:rgba(255,255,255,.65);line-height:1.5}
 .fprev .flinks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
 .fprev .flinks span{padding:.5em 1.1em;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-size:13px;font-weight:600}
@@ -167,7 +167,7 @@ label.ghost{display:inline-block}
 .lrow{display:grid;grid-template-columns:1fr 1.6fr auto;gap:8px;margin-bottom:8px}
 .lrow input{padding:.6em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
 .fontprev{margin:6px 0 16px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;display:grid;gap:10px}
-.fp1{font:400 clamp(34px,5vw,52px)/1 var(--f-head);color:var(--glow)}
+.fp1{font:600 clamp(30px,4.6vw,46px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff}
 .fp2{font:600 26px/1.2 var(--f-body)}
 .fp3{font:400 26px/1.2 var(--f-hand);color:var(--glow)}
 .iconprev{border-radius:14px}
@@ -182,6 +182,21 @@ label.ghost{display:inline-block}
 .pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 20px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px}
 .pickgrid .mini{width:auto;cursor:pointer}
 .pickgrid .mini.picked{opacity:.3;cursor:default}
+
+.fld textarea{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px/1.5 Inter,sans-serif;resize:vertical;min-height:120px}
+.fld textarea:focus{outline:2px solid var(--glow)}
+.fld.wide{grid-column:1/-1}
+.hprev{display:flex;flex-direction:column;align-items:center;gap:12px;margin:0 0 18px;padding:34px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}
+.ptag{display:inline-flex;align-items:center;gap:8px;color:var(--glow);font:600 15px Inter,sans-serif}
+.ptag svg{width:18px;height:18px}
+.hprev .h1{margin:0;font:600 clamp(28px,4.5vw,46px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff;padding-bottom:.08em}
+.hprev .hsub{margin:0;max-width:560px;color:rgba(255,255,255,.8);font:400 15px/1.6 var(--f-head)}
+.abprev{width:180px;max-width:100%;aspect-ratio:1/1;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:rgba(255,255,255,.45);font-size:13px;text-align:center;padding:8px}
+.abprev img{width:100%;height:100%;object-fit:cover;display:block}
+.icsel{display:flex;align-items:center;gap:10px}
+.icsel .icp{flex:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:var(--glow)}
+.icsel .icp svg{width:24px;height:24px}
+.icsel select{flex:1;min-width:0}
 </style>
 </head>
 <body>
@@ -191,12 +206,13 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
+<section id="tab-hero" hidden><p class="hint">The first thing visitors see, above the sliding rows: a small highlighted line, a big headline and a short paragraph. Leave a field empty to hide it. Your name no longer appears here. Your three stats (Site details tab) sit just below.</p><div id="admHero"></div></section>
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p>
@@ -204,11 +220,14 @@ label.ghost{display:inline-block}
 <div class="crow2" style="margin:14px 0 18px"><button class="ghost" id="fromSlides" type="button">Add from my slides</button></div>
 <div id="picker" hidden></div>
 <div class="admgrid" id="admSel"></div></section>
+<section id="tab-about" hidden><p class="hint">The About section that appears right after Selected work: a heading, a few lines about you, a button and your photo.</p><div id="admAbout"></div></section>
+<section id="tab-how" hidden><p class="hint">The “How to Get Started” step cards. Each card has an icon, a title and a short line of text. Shown after the About section.</p><div id="admHow"></div></section>
+<section id="tab-faq" hidden><p class="hint">Frequently asked questions. They open and close on your site and appear just above the footer.</p><div id="admFaq"></div></section>
 <section id="tab-strip" hidden><p class="hint">Rows of highlights that sit under your Selected work. Add as many strips as you like (up to 5), each with up to 6 boxes. Give a strip a heading if you want one. Leave a strip empty to hide it.</p><div id="admStrip"></div></section>
 <section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
 <section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
-<section id="tab-site" hidden><p class="hint">Your photo, name, role and the three stats at the top of the site.</p><div id="admSite"></div></section>
+<section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
 </div>
 <div class="bar" id="admBar" hidden><span id="msg"></span><span class="bt"><button class="ghost" id="disc" type="button" disabled>Discard</button><button class="pub" id="pub" type="button" disabled>Save changes</button></span></div>
@@ -217,9 +236,36 @@ label.ghost{display:inline-block}
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
 function cp(o) { return JSON.parse(JSON.stringify(o)); }
-var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on', fonts: {body: 'Inter', head: 'Caveat Brush', hand: 'Caveat Brush'}};
+var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on', fonts: {body: 'Inter', head: 'Poppins', hand: 'Caveat Brush'}};
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
+var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
+function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
+var HOW0 = {on: true, tag: 'We keep it smooth, simple, and effective.', t: 'How to Get Started', items: [
+  {icon: 'list', t: '1. Send message', d: 'Send over the project info, and we’ll talk more from there.'},
+  {icon: 'chat', t: '2. Onboarding', d: 'You’ll get your private design board and chat channel.'},
+  {icon: 'check-circle', t: '3. Design Delivered', d: 'Share your video info today, we’ll handle thumbnails.'},
+  {icon: 'check', t: '4. Optimization', d: 'Revisions, fine-tuning, and a thumbnail built to perform.'}]};
+var FAQ0 = {on: true, tag: 'FAQs', t: 'We’ve got the answers', items: [
+  {q: 'What information do you need from me to create a thumbnail?', a: 'Your video title or topic, a short description or script, and any reference images, logos or brand colors you want included. The more context you share, the better the result.'},
+  {q: 'What is the turnaround time for a thumbnail?', a: 'Most thumbnails are delivered within 48 hours. If you’re on a tight deadline, let me know and we’ll work something out.'},
+  {q: 'What’s your step-by-step process when we work together?', a: '1. You send over the project info.\n2. You get a private design board and chat channel.\n3. Your thumbnail design is delivered.\n4. We refine it with revisions until it’s built to perform.'},
+  {q: 'How is A/B testing handled?', a: 'I can design multiple variations of a thumbnail so you can test them against each other on YouTube and keep the one that gets the most clicks.'},
+  {q: 'Do you offer revisions?', a: 'Yes. Revisions and fine-tuning are part of the process until you’re happy with the final thumbnail.'},
+  {q: 'Do you use AI in your process?', a: 'Message me and I’ll walk you through exactly how I work and which tools I use.'},
+  {q: 'What if I don’t like the thumbnail design?', a: 'Tell me what isn’t working and I’ll rework it. The goal is a thumbnail you’re confident publishing.'}]};
+var ICONS = {
+  'list': '<rect x="5" y="10" width="15" height="15" rx="2.5" fill="currentColor" stroke="none"/><rect x="5" y="39" width="15" height="15" rx="2.5" fill="currentColor" stroke="none"/><path d="M28 14h30M28 22h22M28 43h30M28 51h22"/>',
+  'chat': '<path d="M9 10h46a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H30L17 54V42H9a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/><path d="M19 22h26M19 31h16"/>',
+  'check-circle': '<circle cx="32" cy="32" r="25"/><path d="M20 33l9 9 15-18"/>',
+  'check': '<path d="M12 34l14 14 26-30"/>',
+  'star': '<path d="M32 6l7.4 15.6 17 2.2-12.5 11.8 3.2 16.9L32 44.1 16.9 52.5l3.2-16.9L7.6 23.8l17-2.2z"/>',
+  'bolt': '<path d="M37 5L13 37h17l-4 22 25-34H34z"/>',
+  'heart': '<path d="M32 55S7 40 7 23a13 13 0 0 1 25-5 13 13 0 0 1 25 5c0 17-25 32-25 32z"/>',
+  'play': '<rect x="5" y="12" width="54" height="40" rx="11"/><path d="M26 23l17 9-17 9z" fill="currentColor"/>'
+};
+var ICONN = {'list': 'List', 'chat': 'Chat bubble', 'check-circle': 'Check in a circle', 'check': 'Check mark', 'star': 'Star', 'bolt': 'Lightning', 'heart': 'Heart', 'play': 'Play button'};
+function icon(n) { return '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || ICONS.check) + '</svg>'; }
 var draft = [], siteDraft = null, saved = '', tab = 'lib';
 
 function norm(d) {
@@ -232,11 +278,12 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
+      hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
       footer: {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, links: cp(f.links || [])},
-      theme: Object.assign(cp(TH0), th, {fonts: Object.assign({}, TH0.fonts, th.fonts || {})})}};
+      theme: Object.assign(cp(TH0), th, {fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
 }
 function setAdminIcon() {
   var v = siteDraft.adminIconId || ('auto-' + siteDraft.theme.accent), l = document.querySelector('link[rel=icon]'), u = '/api/favicon?admin=1&v=' + encodeURIComponent(v);
@@ -494,13 +541,13 @@ function renderSite() {
       siteDraft.avatarId = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', .85); })); chg(); renderSite();
     } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
   };
-  var tx = mk('div', 'avtx'); tx.append(mk('b', 0, 'Your photo'), mk('span', 0, 'Shows in the round badge at the top-left of your site, next to your name.'));
+  var tx = mk('div', 'avtx'); tx.append(mk('b', 0, 'Your photo'), mk('span', 0, 'Used as the default photo in the About me section, until you upload a separate photo on the About me tab.'));
   av.append(pv, tx, up);
   if (siteDraft.avatarId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { siteDraft.avatarId = ''; chg(); renderSite(); }; av.appendChild(rm); }
   L.appendChild(av);
   L.appendChild(iconRow('iconId', 'Browser tab icon (favicon)', 'The small picture in the browser tab and in bookmarks. Square images work best, and a transparent PNG keeps its transparency. With no icon, your site uses a letter icon in your accent color (Safari does not show those). Browsers remember tab icons, so a change can take a little while to show.'));
   L.appendChild(iconRow('adminIconId', 'Admin tab icon', 'The tab icon of this admin page, so you can tell it apart from your site. With none, the admin uses an \u201CA\u201D icon in your accent color.'));
-  var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (under your name)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
+  var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (not shown on the site any more)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
   siteDraft.stats.forEach(function (s, i) {
     var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Stat ' + (i + 1)));
     g2.append(fld('Number', s, 'v', '50M+'), fld('Label', s, 'l', 'Clicks generated'), fld('Handwritten note (optional)', s, 'n', 'every single time :)'));
@@ -702,23 +749,109 @@ function renderText() {
   var L = $('admText'); L.innerHTML = '';
   var t0 = mk('div', 'fset'); t0.appendChild(mk('b', 0, 'Browser tab'));
   t0.appendChild(fld('Title shown in the browser tab', siteDraft, 'tabTitle', siteDraft.name + ' | Thumbnail designs')); L.appendChild(t0);
-  [['slides', 'Above the sliding rows'], ['compare', 'Above the before / after slider'], ['work', 'Selected work section']].forEach(function (o) {
+  [['slides', 'Heading above the sliding rows (optional)'], ['compare', 'Above the before / after slider'], ['work', 'Selected work section']].forEach(function (o) {
     var f = mk('div', 'fset'), g = mk('div', 'fgrid'); f.appendChild(mk('b', 0, o[1]));
     g.append(fld('Heading', siteDraft.sections[o[0]], 't', ''), fld('Subtitle', siteDraft.sections[o[0]], 's', '')); f.appendChild(g); L.appendChild(f);
   });
-  L.appendChild(mk('p', 'pwnote', 'Headings for your strips are set on the Strips tab. Your name, role and top stats are on Site details.'));
+  L.appendChild(mk('p', 'pwnote', 'Headings for your strips are set on the Strips tab. The top headline is on the Hero tab; About me, How to start and FAQ each have their own tab. Your top stats are on Site details.'));
   var ff = mk('div', 'fset'), g = mk('div', 'fgrid'); ff.appendChild(mk('b', 0, 'Fonts'));
   function fw(lb, key) { var w = mk('label', 'fld'); w.append(mk('span', 0, lb), fontSel(key)); return w; }
-  g.append(fw('Main font (all text and numbers)', 'body'), fw('Title font (your name and big headings)', 'head'), fw('Handwritten font (notes and slider texts)', 'hand')); ff.appendChild(g);
+  g.append(fw('Main font (all text and numbers)', 'body'), fw('Title font (top headline and big headings)', 'head'), fw('Handwritten font (notes and slider texts)', 'hand')); ff.appendChild(g);
   var pv = mk('div', 'fontprev'); pv.append(mk('div', 'fp1', siteDraft.name || 'Your name'), mk('div', 'fp2', '50M+ Clicks generated'), mk('div', 'fp3', 'every single time :)')); ff.appendChild(pv);
   var rs = mk('button', 'ghost', 'Reset fonts'); rs.type = 'button'; rs.onclick = function () { siteDraft.theme.fonts = cp(TH0.fonts); applyTheme(siteDraft.theme); chg(); renderText(); }; ff.appendChild(rs);
   ff.appendChild(mk('p', 'pwnote', 'Fonts load from Google Fonts. After you save, your site loads the fonts you picked.')); L.appendChild(ff);
 }
+/* ---------- Hero / About / How to start / FAQ ---------- */
+function ptag(txt) { var d = mk('div', 'ptag'); d.appendChild(document.createTextNode(txt)); return d; }
+function fldIn(lb, o, k, ph, max, onch, area, wide) {
+  var w = mk('label', 'fld' + (wide ? ' wide' : '')), inp = mk(area ? 'textarea' : 'input'); inp.value = o[k] || ''; inp.placeholder = ph || ''; if (max) inp.maxLength = max;
+  inp.oninput = function () { o[k] = inp.value; chg(); if (onch) onch(); };
+  w.append(mk('span', 0, lb), inp); return w;
+}
+function onBox(label, o, rerender) {
+  var on = mk('label', 'chk'), oi = mk('input'); oi.type = 'checkbox'; oi.checked = !!o.on; oi.onchange = function () { o.on = oi.checked; chg(); if (rerender) rerender(); };
+  on.append(oi, mk('span', 0, label)); return on;
+}
+function renderHero() {
+  var L = $('admHero'), H = siteDraft.hero; L.innerHTML = '';
+  var pv = mk('div', 'hprev');
+  function draw() {
+    pv.innerHTML = '';
+    if (H.tag) pv.appendChild(ptag(H.tag)); if (H.t) pv.appendChild(mk('h1', 'h1', H.t)); if (H.s) pv.appendChild(mk('p', 'hsub', H.s));
+    if (!pv.firstChild) pv.appendChild(mk('p', 'pwnote', 'All three are empty, so nothing shows above your stats.'));
+  }
+  L.appendChild(pv); draw();
+  var g = mk('div', 'fgrid');
+  g.append(fldIn('Small line above the headline (highlighted)', H, 'tag', 'Thumbnails built to get clicked.', 80, draw, false, true), fldIn('Big headline', H, 't', 'YouTube Thumbnail Designer', 120, draw, false, true), fldIn('Paragraph under the headline', H, 's', 'A short sentence about what you do', 300, draw, true, true));
+  L.appendChild(g);
+  var rs = mk('button', 'ghost', 'Reset to the example text'); rs.type = 'button'; rs.style.marginTop = '16px'; rs.onclick = function () { siteDraft.hero = cp(HERO0); chg(); renderHero(); }; L.appendChild(rs);
+  L.appendChild(mk('p', 'pwnote', 'The headline uses the Title font. Change it on the Text & fonts tab.'));
+}
+function renderAbout() {
+  var L = $('admAbout'), A = siteDraft.about; L.innerHTML = '';
+  L.appendChild(onBox('Show the About me section on my website', A));
+  var g = mk('div', 'fgrid');
+  g.append(fldIn('Heading', A, 't', 'About ' + (siteDraft.name || 'me'), 80, null, false, true), fldIn('About text (press Enter for a new paragraph)', A, 'body', 'Tell visitors who you are and what you do', 2000, null, true, true), fldIn('Button text (leave empty for no button)', A, 'btn', 'Let’s talk', 40), fldIn('Button link (empty = scrolls to the footer)', A, 'url', 'https://wa.me/… or mailto:you@mail.com', 300));
+  L.appendChild(g);
+  var pr = mk('div', 'avrow'), pb = mk('div', 'abprev'), tx = mk('div', 'avtx'), up = mk('label', 'ghost', A.photoId ? 'Change photo' : 'Upload photo'), fi = mk('input');
+  pr.style.marginTop = '22px';
+  if (A.photoId) { var im = mk('img'); im.src = '/api/img/' + A.photoId; im.alt = ''; pb.appendChild(im); } else if (siteDraft.avatarId) { var im2 = mk('img'); im2.src = '/api/img/' + siteDraft.avatarId; im2.alt = ''; pb.appendChild(im2); } else pb.textContent = 'No photo yet';
+  tx.append(mk('b', 0, 'About photo'), mk('span', 0, A.photoId ? 'Shown on the right of your About text (square works best).' : siteDraft.avatarId ? 'Using your main photo from Site details. Upload a different one here if you like.' : 'Upload a photo to show it next to your text. Without one, the text is shown on its own.'));
+  fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+  fi.onchange = async function () {
+    var f = fi.files[0]; if (!f) return;
+    try { flash('Uploading photo…'); var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = Math.min(1000, sz);
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, cv.width, cv.height);
+      var blob = await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', .85); }); if (blob.size > 740000) blob = await toJpeg(await createImageBitmap(blob), 800);
+      A.photoId = await uploadBlob(blob); chg(); renderAbout(); flash('Photo added. Press Save changes to publish.');
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  pr.append(pb, tx, up);
+  if (A.photoId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { A.photoId = ''; chg(); renderAbout(); }; pr.appendChild(rm); }
+  L.appendChild(pr);
+  var rs = mk('button', 'ghost', 'Reset text to the example'); rs.type = 'button'; rs.onclick = function () { var ph = A.photoId; siteDraft.about = about0(siteDraft.name || 'me'); siteDraft.about.photoId = ph; chg(); renderAbout(); }; L.appendChild(rs);
+}
+function moveBtns(bar, arr, i, rerender) {
+  [['Move up', -1], ['Move down', 1]].forEach(function (m) { var b = mk('button', 'ghost', m[0]); b.type = 'button'; b.onclick = function () { if (moveIn(arr, i, m[1])) { chg(); rerender(); } }; bar.appendChild(b); });
+}
+function renderHow() {
+  var L = $('admHow'), W = siteDraft.how; L.innerHTML = '';
+  L.appendChild(onBox('Show the “How to Get Started” section on my website', W));
+  var g = mk('div', 'fgrid'); g.append(fldIn('Small line above the heading (highlighted)', W, 'tag', 'We keep it smooth, simple, and effective.', 80), fldIn('Heading', W, 't', 'How to Get Started', 80)); L.appendChild(g);
+  W.items.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Card ' + (i + 1)));
+    var iw = mk('label', 'fld'), box = mk('div', 'icsel'), icp = mk('span', 'icp'), sel = mk('select');
+    icp.innerHTML = icon(it.icon);
+    Object.keys(ICONN).forEach(function (k) { var op = mk('option', 0, ICONN[k]); op.value = k; sel.appendChild(op); }); sel.value = ICONS[it.icon] ? it.icon : 'check';
+    sel.onchange = function () { it.icon = sel.value; icp.innerHTML = icon(it.icon); chg(); };
+    box.append(icp, sel); iw.append(mk('span', 0, 'Icon'), box);
+    g2.append(iw, fldIn('Title', it, 't', '1. Send message', 60), fldIn('Text', it, 'd', 'One short line', 200, null, false, true)); f.appendChild(g2);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, W.items, i, renderHow);
+    var del = mk('button', 'ghost', 'Remove card'); del.type = 'button'; del.onclick = function () { W.items.splice(i, 1); chg(); renderHow(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a card'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (W.items.length >= 6) { flash('You can have up to 6 cards.'); return; } W.items.push({icon: 'check', t: '', d: ''}); chg(); renderHow(); };
+  var rs = mk('button', 'ghost', 'Reset to the example'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.how = cp(HOW0); chg(); renderHow(); };
+  L.append(add, rs);
+}
+function renderFaq() {
+  var L = $('admFaq'), F = siteDraft.faq; L.innerHTML = '';
+  L.appendChild(onBox('Show the FAQ section on my website', F));
+  var g = mk('div', 'fgrid'); g.append(fldIn('Small line above the heading (highlighted)', F, 'tag', 'FAQs', 80), fldIn('Heading', F, 't', 'We’ve got the answers', 80)); L.appendChild(g);
+  F.items.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Question ' + (i + 1)));
+    g2.append(fldIn('Question', it, 'q', 'What do you need from me?', 200, null, false, true), fldIn('Answer', it, 'a', 'Your answer', 1500, null, true, true)); f.appendChild(g2);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, F.items, i, renderFaq);
+    var del = mk('button', 'ghost', 'Delete'); del.type = 'button'; del.onclick = function () { F.items.splice(i, 1); chg(); renderFaq(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a question'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (F.items.length >= 20) { flash('You can have up to 20 questions.'); return; } F.items.push({q: '', a: ''}); chg(); renderFaq(); };
+  var rs = mk('button', 'ghost', 'Reset to the example questions'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.faq = cp(FAQ0); chg(); renderFaq(); };
+  L.append(add, rs, mk('p', 'pwnote', 'Questions left empty are dropped when you save. The example answers are placeholders: edit them so they match how you really work.'));
+}
 function renderAdm() {
   rowsSync();
-  ['lib', 'slides', 'compare', 'sel', 'strip', 'footer', 'text', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, slides: renderSlides, compare: renderCompare, sel: renderSel, strip: renderStrip, footer: renderFooter, text: renderText, colors: renderColors, site: renderSite})[tab]();
+  ({lib: renderLib, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, site: renderSite})[tab]();
   meter();
 }
 
