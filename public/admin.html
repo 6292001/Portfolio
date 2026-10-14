@@ -16,6 +16,7 @@ function loadFont(n) {
   var l = document.createElement('link'); l.rel = 'stylesheet';
   l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
 }
+var CK = ['heroTag','heroT','heroS','statN','statL','workT','workS','aboutT','aboutB','aboutBtn','howTag','howT','stepIcon','stepT','stepD','secT','secS','faqTag','faqT','faqQ','faqA','footT','footS'];
 function applyTheme(t) {
   var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
   r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
@@ -23,6 +24,8 @@ function applyTheme(t) {
   r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
   var tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', toHex(b));
   document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
+  var co = (t && t.colors) || {};
+  CK.forEach(function (k) { if (hexRgb(co[k])) r.setProperty('--c-' + k, co[k]); else r.removeProperty('--c-' + k); });
   var fo = (t && t.fonts) || {};
   [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Poppins'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
     var n = GF[x[1]] ? x[1] : x[2]; loadFont(n); r.setProperty(x[0], "'" + n + "'," + FB[GF[n][1]]);
@@ -197,6 +200,14 @@ label.ghost{display:inline-block}
 .icsel .icp{flex:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:var(--glow)}
 .icsel .icp svg{width:24px;height:24px}
 .icsel select{flex:1;min-width:0}
+
+.tcrow{display:grid;grid-template-columns:34px 1fr 56px 110px 62px auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.07)}
+.tcrow:first-of-type{border-top:0}
+.tcrow input:not(.col){padding:.55em .7em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
+.tcsmp{font:600 20px var(--f-body);text-align:center}
+.tcn{font-size:14px;font-weight:600;color:rgba(255,255,255,.85)}
+.tcs{font-size:12px;color:rgba(255,255,255,.45)}
+@media (max-width:700px){.tcrow{grid-template-columns:30px 1fr 56px}.tcrow .tcs{display:none}.tcrow input:not(.col){grid-column:2}.tcrow .ghost{grid-column:3}}
 </style>
 </head>
 <body>
@@ -206,12 +217,13 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
+<section id="tab-logo" hidden><p class="hint">The small round logo fixed at the top-left of your website. It stays in place while visitors scroll, and clicking it takes them back to the top.</p><div id="admLogo"></div></section>
 <section id="tab-hero" hidden><p class="hint">The first thing visitors see, above the sliding rows: a small highlighted line, a big headline and a short paragraph. Leave a field empty to hide it. Your name no longer appears here. Your three stats (Site details tab) sit just below.</p><div id="admHero"></div></section>
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
@@ -227,6 +239,7 @@ label.ghost{display:inline-block}
 <section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
 <section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
+<section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
 </div>
@@ -278,12 +291,12 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      logoId: s.logoId || '', logoOn: s.logoOn !== false, hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
       footer: {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, links: cp(f.links || [])},
-      theme: Object.assign(cp(TH0), th, {fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
+      theme: Object.assign(cp(TH0), th, {colors: Object.assign({}, th.colors || {}), fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
 }
 function setAdminIcon() {
   var v = siteDraft.adminIconId || ('auto-' + siteDraft.theme.accent), l = document.querySelector('link[rel=icon]'), u = '/api/favicon?admin=1&v=' + encodeURIComponent(v);
@@ -500,7 +513,7 @@ function renderColors() {
   gl.append(gi, mk('span', 0, 'Show the soft grid and glow in the background')); L.appendChild(gl);
   L.appendChild(mk('p', 'err', '')).id = 'cnote';
   var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
-  rs.onclick = function () { siteDraft.theme = Object.assign(cp(TH0), {fonts: siteDraft.theme.fonts}); applyTheme(siteDraft.theme); chg(); renderColors(); };
+  rs.onclick = function () { siteDraft.theme = Object.assign(cp(TH0), {fonts: siteDraft.theme.fonts, colors: siteDraft.theme.colors}); applyTheme(siteDraft.theme); chg(); renderColors(); };
   L.appendChild(rs); note();
 }
 
@@ -512,7 +525,7 @@ function fld(lb, o, k, ph) {
 }
 function iconRow(key, title, text) {
   var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft[key] ? 'Change icon' : 'Upload icon'), ifi = mk('input');
-  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
+  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else if (key === 'logoId') { var dl = mk('img'); dl.src = '/logo.png'; dl.alt = ''; ip.appendChild(dl); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
   ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
   ifi.onchange = async function () {
     var f = ifi.files[0]; if (!f) return;
@@ -520,11 +533,11 @@ function iconRow(key, title, text) {
       flash('Uploading icon\u2026');
       var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
       cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
-      siteDraft[key] = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderSite();
+      siteDraft[key] = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderAdm();
     } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
   };
   var itx = mk('div', 'avtx'); itx.append(mk('b', 0, title), mk('span', 0, text)); ir.append(ip, itx, iu);
-  if (siteDraft[key]) { var rm = mk('button', 'ghost', 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderSite(); }; ir.appendChild(rm); }
+  if (siteDraft[key]) { var rm = mk('button', 'ghost', key === 'logoId' ? 'Use the original logo' : 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderAdm(); }; ir.appendChild(rm); }
   return ir;
 }
 function renderSite() {
@@ -847,11 +860,47 @@ function renderFaq() {
   var rs = mk('button', 'ghost', 'Reset to the example questions'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.faq = cp(FAQ0); chg(); renderFaq(); };
   L.append(add, rs, mk('p', 'pwnote', 'Questions left empty are dropped when you save. The example answers are placeholders: edit them so they match how you really work.'));
 }
+/* ---------- Text colors ---------- */
+var TCOL = [
+  ['Top of the page (Hero)', [['heroTag', 'Small line above the headline', 'accent'], ['heroT', 'Big headline', '#ffffff'], ['heroS', 'Paragraph under the headline', '#d1d1d1'], ['statN', 'Stat numbers', '#ffffff'], ['statL', 'Stat labels', '#a6a6a6']]],
+  ['Selected work', [['workT', 'Heading', '#ffffff'], ['workS', 'Subtitle', '#999999']]],
+  ['About me', [['aboutT', 'Heading', 'accent'], ['aboutB', 'About text', '#9e9e9e'], ['aboutBtn', 'Button text (Let’s talk)', '#b3b3b3']]],
+  ['How to Get Started', [['howTag', 'Small line above the heading', 'accent'], ['howT', 'Heading', '#ffffff'], ['stepIcon', 'Card icons', 'accent'], ['stepT', 'Card titles', '#e0e0e0'], ['stepD', 'Card text', '#808080']]],
+  ['Other section headings (above slides, slider and strips)', [['secT', 'Heading', '#ffffff'], ['secS', 'Subtitle', '#999999']]],
+  ['FAQ', [['faqTag', 'Small line above the heading', 'accent'], ['faqT', 'Heading', '#ffffff'], ['faqQ', 'Questions', '#e0e0e0'], ['faqA', 'Answers', '#949494']]],
+  ['Footer', [['footT', 'Title', '#ffffff'], ['footS', 'Line under the title', '#a6a6a6']]]
+];
+function renderTcol() {
+  var L = $('admTcol'), C = siteDraft.theme.colors; L.innerHTML = '';
+  TCOL.forEach(function (g) {
+    var box = mk('div', 'fset'); box.appendChild(mk('b', 0, g[0]));
+    g[1].forEach(function (it) {
+      var k = it[0], def = it[2] === 'accent' ? siteDraft.theme.accent : it[2];
+      var row = mk('div', 'tcrow'), nm = mk('span', 'tcn', it[1]), pk = mk('input', 'col'), hx = mk('input'), st = mk('span', 'tcs'), rs = mk('button', 'ghost', 'Reset'), smp = mk('span', 'tcsmp', 'Aa');
+      pk.type = 'color'; hx.placeholder = def; hx.maxLength = 7; hx.setAttribute('aria-label', it[1] + ' hex'); rs.type = 'button';
+      function paint() { var v = C[k]; pk.value = v || def; hx.value = v || ''; smp.style.color = v || def; st.textContent = v ? '' : 'Default'; rs.disabled = !v; }
+      function set(v) { v = v.toLowerCase(); C[k] = v; applyTheme(siteDraft.theme); paint(); chg(); }
+      pk.oninput = function () { set(pk.value); };
+      hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { delete C[k]; applyTheme(siteDraft.theme); paint(); chg(); } };
+      rs.onclick = function () { delete C[k]; applyTheme(siteDraft.theme); paint(); chg(); };
+      paint(); row.append(smp, nm, pk, hx, st, rs); box.appendChild(row);
+    });
+    L.appendChild(box);
+  });
+  var all = mk('button', 'ghost', 'Reset all text colors'); all.type = 'button'; all.style.marginTop = '18px';
+  all.onclick = function () { siteDraft.theme.colors = {}; applyTheme(siteDraft.theme); chg(); renderTcol(); }; L.appendChild(all);
+}
+function renderLogo() {
+  var L = $('admLogo'); L.innerHTML = '';
+  var lgOn = mk('label', 'chk'), lgi = mk('input'); lgi.type = 'checkbox'; lgi.checked = siteDraft.logoOn !== false; lgi.onchange = function () { siteDraft.logoOn = lgi.checked; chg(); };
+  lgOn.append(lgi, mk('span', 0, 'Show the logo at the top-left of my website')); L.appendChild(lgOn);
+  L.appendChild(iconRow('logoId', 'Logo image', 'Upload a square PNG with a transparent background for the best result (other images are cropped to a square in the middle). With none uploaded, your original logo is used.'));
+}
 function renderAdm() {
   rowsSync();
-  ['lib', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'logo', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, site: renderSite})[tab]();
+  ({lib: renderLib, logo: renderLogo, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 
