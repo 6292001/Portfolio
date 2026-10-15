@@ -39,7 +39,8 @@ function applyTheme(t) {
 html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
 .adm.on a.ghost{text-decoration:none}
 [hidden]{display:none!important}
-.adm{position:fixed;inset:0;z-index:20;background:rgba(var(--br),.58);-webkit-backdrop-filter:blur(20px) saturate(1.1);backdrop-filter:blur(20px) saturate(1.1);overflow:auto;display:none}
+.adm{position:fixed;inset:0;z-index:20;overflow:auto;display:none}
+.adm-veil{position:fixed;inset:0;z-index:19;pointer-events:none;background:rgba(var(--av-rgb,var(--br)),var(--av-a,.58));-webkit-backdrop-filter:blur(var(--av-b,20px)) saturate(1.1);backdrop-filter:blur(var(--av-b,20px)) saturate(1.1)}
 .bgsite{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:0;pointer-events:none;background:var(--bg)}
 .adm.on{display:block}
 .adm-in{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 140px}
@@ -224,6 +225,7 @@ label.ghost{display:inline-block}
 </head>
 <body>
 <iframe class="bgsite" id="bgsite" src="/" title="" aria-hidden="true" tabindex="-1"></iframe>
+<div class="adm-veil" aria-hidden="true"></div>
 <div class="adm on" id="adm">
 <div class="adm-in">
 <div class="adm-top"><span class="bt"><a class="ghost" href="/" target="_blank" rel="noopener">View site</a><button class="ghost" id="logout" type="button" hidden>Log out</button></span></div>
@@ -305,7 +307,7 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      logoId: s.logoId || '', logoOn: s.logoOn !== false, loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -528,7 +530,7 @@ function renderColors() {
   L.appendChild(mk('p', 'err', '')).id = 'cnote';
   var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
   rs.onclick = function () { siteDraft.theme = Object.assign(cp(TH0), {fonts: siteDraft.theme.fonts, colors: siteDraft.theme.colors}); applyTheme(siteDraft.theme); chg(); renderColors(); };
-  L.appendChild(rs); note();
+  L.appendChild(rs); note(); L.appendChild(adminBgBox());
 }
 
 /* ---------- Site details ---------- */
@@ -933,8 +935,31 @@ function renderLoader() {
   });
   L.appendChild(mk('p', 'pwnote', 'The refresh screen lasts about two seconds (longer only if your site is slow to load). Colors you change here reach a visitor’s browser after their first visit.'));
 }
+function applyAdminBg() {
+  var A = (siteDraft && siteDraft.adminBg) || {}, r = document.documentElement.style, rgb = hexRgb(A.c);
+  if (rgb) r.setProperty('--av-rgb', rgb.join(',')); else r.removeProperty('--av-rgb');
+  r.setProperty('--av-a', String((A.a == null ? 58 : A.a) / 100)); r.setProperty('--av-b', (A.b == null ? 20 : A.b) + 'px');
+}
+function adminBgBox() {
+  var A = siteDraft.adminBg, box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset');
+  box.appendChild(mk('b', 0, 'Admin panel background (the blurred look of this panel)'));
+  box.appendChild(mk('p', 'pwnote', 'The blurred copy of your website behind this panel. Pick a tint color and set how strong the tint and the blur are. Leave the color empty to follow your background color. This only changes the admin panel, not your website.'));
+  pk.type = 'color'; hx.maxLength = 7; hx.placeholder = 'Tint color'; rs.type = 'button';
+  function paint() { pk.value = A.c || siteDraft.theme.bg; hx.value = A.c || ''; applyAdminBg(); }
+  function set(v) { A.c = v.toLowerCase(); paint(); chg(); }
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { A.c = ''; paint(); chg(); } };
+  rs.onclick = function () { siteDraft.adminBg = {c: '', a: 58, b: 20}; chg(); renderColors(); applyAdminBg(); };
+  line.append(pk, hx); box.appendChild(line);
+  var bar = mk('div', 'nbar');
+  function rng(lb, k, min, max, unit) {
+    var l = mk('label', 0, lb + ' '), i = mk('input'), v = mk('span', 0, A[k] + unit); i.type = 'range'; i.min = min; i.max = max; i.step = 1; i.value = A[k];
+    i.oninput = function () { A[k] = +i.value; v.textContent = A[k] + unit; applyAdminBg(); chg(); }; l.append(i, v); return l;
+  }
+  bar.append(rng('Tint strength', 'a', 0, 95, '%'), rng('Blur', 'b', 0, 40, 'px'), rs); box.appendChild(bar); paint(); return box;
+}
 function renderAdm() {
-  rowsSync();
+  rowsSync(); applyAdminBg();
   ['lib', 'logo', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
   ({lib: renderLib, logo: renderLogo, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
