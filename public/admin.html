@@ -39,10 +39,11 @@ function applyTheme(t) {
 html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
 .adm.on a.ghost{text-decoration:none}
 [hidden]{display:none!important}
-.adm{position:fixed;inset:0;z-index:20;background:rgba(var(--br),.97);overflow:auto;display:none}
+.adm{position:fixed;inset:0;z-index:20;background:rgba(var(--br),.58);-webkit-backdrop-filter:blur(20px) saturate(1.1);backdrop-filter:blur(20px) saturate(1.1);overflow:auto;display:none}
+.bgsite{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:0;pointer-events:none;background:var(--bg)}
 .adm.on{display:block}
 .adm-in{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 140px}
-.adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.adm-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:24px}
 .adm h3{margin:0;font:500 clamp(34px,6vw,52px)/1.1 var(--f-head);letter-spacing:-.01em;color:#fff}
 .ghost,.pub{font:600 14px Inter,sans-serif;color:#fff;border-radius:999px;padding:.7em 1.4em;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent}
 .pub{border-color:var(--glow);background:rgba(var(--ar),.2)}
@@ -62,9 +63,9 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 .ctl button{flex:1;padding:.5em;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;font:600 13px Inter,sans-serif;cursor:pointer}
 .ctl .del{flex:3;border-color:rgba(248,113,113,.5);color:#fca5a5}
 .tag{position:absolute;top:8px;left:8px;padding:.25em .7em;border-radius:99px;background:rgba(var(--br),.8);font:600 11px Inter,sans-serif;color:var(--glow)}
-.bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));background:rgba(var(--br),.96);border-top:1px solid rgba(var(--ar),.3);font-size:14px;color:rgba(255,255,255,.75)}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));background:rgba(var(--br),.8);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid rgba(var(--ar),.3);font-size:14px;color:rgba(255,255,255,.75)}
 .chips{margin-bottom:16px;color:rgba(255,255,255,.7);font-weight:600;font-size:14px}
-.tabs{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding:10px 0;background:rgba(var(--br),.97)}
+.tabs{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding:10px 0;background:rgba(var(--br),.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .tabs button{padding:.65em 1.3em;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font:600 14px Inter,sans-serif;cursor:pointer}
 .tabs button.on{border-color:var(--glow);background:rgba(var(--ar),.2)}
 .srow{margin-bottom:26px}
@@ -208,22 +209,35 @@ label.ghost{display:inline-block}
 .tcn{font-size:14px;font-weight:600;color:rgba(255,255,255,.85)}
 .tcs{font-size:12px;color:rgba(255,255,255,.45)}
 @media (max-width:700px){.tcrow{grid-template-columns:30px 1fr 56px}.tcrow .tcs{display:none}.tcrow input:not(.col){grid-column:2}.tcrow .ghost{grid-column:3}}
+
+.ldst{position:relative;aspect-ratio:16/9;max-width:600px;border-radius:14px;overflow:hidden;background:var(--lb,#fff);border:1px solid rgba(255,255,255,.15);margin:0 0 14px}
+.ldst img,.ldst .ln,.ldst .pn{position:absolute;inset:0;margin:auto}
+.ldst img{width:52px;height:52px;object-fit:cover;border-radius:16%;z-index:2;animation:ldDrop .34s cubic-bezier(.45,.05,.35,1) .35s backwards,ldGone .08s linear .88s forwards}
+.ldst .ln{width:52px;height:3px;border-radius:3px;background:var(--glow);z-index:3;opacity:0;animation:ldLine .5s ease-in .88s forwards}
+.ldst .pn{width:100%;height:100%;background:var(--lp,#111);border-radius:18px;z-index:1;opacity:0;animation:ldPS .24s cubic-bezier(.2,.7,.25,1) .88s forwards,ldPO .24s linear .88s forwards}
+@keyframes ldDrop{from{transform:translateY(-220px)}}
+@keyframes ldGone{to{transform:scale(1.04,.03);opacity:0}}
+@keyframes ldLine{0%{opacity:1;transform:scaleX(1)}60%{opacity:1}100%{opacity:0;transform:scaleX(.04)}}
+@keyframes ldPS{from{transform:scale(.16,.2)}to{transform:scale(1.03)}}
+@keyframes ldPO{from{opacity:.05}to{opacity:1}}
 </style>
 </head>
 <body>
+<iframe class="bgsite" id="bgsite" src="/" title="" aria-hidden="true" tabindex="-1"></iframe>
 <div class="adm on" id="adm">
 <div class="adm-in">
-<div class="adm-top"><h3>Admin</h3><span class="bt"><a class="ghost" href="/" target="_blank" rel="noopener">View site</a><button class="ghost" id="logout" type="button" hidden>Log out</button></span></div>
+<div class="adm-top"><span class="bt"><a class="ghost" href="/" target="_blank" rel="noopener">View site</a><button class="ghost" id="logout" type="button" hidden>Log out</button></span></div>
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
 <div class="admgrid" id="admList"></div>
 </section>
 <section id="tab-logo" hidden><p class="hint">The small round logo fixed at the top-left of your website. It stays in place while visitors scroll, and clicking it takes them back to the top.</p><div id="admLogo"></div></section>
+<section id="tab-loader" hidden><p class="hint">The refresh screen: every time your website opens or is refreshed, your icon drops down on a plain screen, squashes into a thin line, a rounded dark panel grows out of it and fills the screen, then it fades away to reveal your site.</p><div id="admLoader"></div></section>
 <section id="tab-hero" hidden><p class="hint">The first thing visitors see, above the sliding rows: a small highlighted line, a big headline and a short paragraph. Leave a field empty to hide it. Your name no longer appears here. Your three stats (Site details tab) sit just below.</p><div id="admHero"></div></section>
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
@@ -291,7 +305,7 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      logoId: s.logoId || '', logoOn: s.logoOn !== false, hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      logoId: s.logoId || '', logoOn: s.logoOn !== false, loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -328,7 +342,7 @@ async function save() {
     var j = {}; try { j = await r.json(); } catch (e) {}
     if (r.status === 401) { signedOut(); return; }
     if (!r.ok) throw new Error(j.error || 'Save failed (' + r.status + ')');
-    saved = snap(); meter(); setAdminIcon(); flash('Saved. Your website is updated.');
+    saved = snap(); meter(); setAdminIcon(); flash('Saved. Your website is updated.'); try { $('bgsite').contentWindow.location.reload(); } catch (e) {}
   } catch (e) { flash('Could not save: ' + e.message); $('pub').disabled = false; }
 }
 async function toJpeg(bm, max) {
@@ -525,7 +539,7 @@ function fld(lb, o, k, ph) {
 }
 function iconRow(key, title, text) {
   var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft[key] ? 'Change icon' : 'Upload icon'), ifi = mk('input');
-  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else if (key === 'logoId') { var dl = mk('img'); dl.src = '/logo.png'; dl.alt = ''; ip.appendChild(dl); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
+  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else if (key === 'logoId' || key === 'loaderId') { var dl = mk('img'); dl.src = key === 'loaderId' && siteDraft.logoId ? '/api/img/' + siteDraft.logoId : '/logo.png'; dl.alt = ''; ip.appendChild(dl); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
   ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
   ifi.onchange = async function () {
     var f = ifi.files[0]; if (!f) return;
@@ -537,7 +551,7 @@ function iconRow(key, title, text) {
     } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
   };
   var itx = mk('div', 'avtx'); itx.append(mk('b', 0, title), mk('span', 0, text)); ir.append(ip, itx, iu);
-  if (siteDraft[key]) { var rm = mk('button', 'ghost', key === 'logoId' ? 'Use the original logo' : 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderAdm(); }; ir.appendChild(rm); }
+  if (siteDraft[key]) { var rm = mk('button', 'ghost', key === 'logoId' ? 'Use the original logo' : key === 'loaderId' ? 'Use my top-left logo' : 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderAdm(); }; ir.appendChild(rm); }
   return ir;
 }
 function renderSite() {
@@ -896,11 +910,34 @@ function renderLogo() {
   lgOn.append(lgi, mk('span', 0, 'Show the logo at the top-left of my website')); L.appendChild(lgOn);
   L.appendChild(iconRow('logoId', 'Logo image', 'Upload a square PNG with a transparent background for the best result (other images are cropped to a square in the middle). With none uploaded, your original logo is used.'));
 }
+function renderLoader() {
+  var L = $('admLoader'); L.innerHTML = '';
+  var on = mk('label', 'chk'), oi = mk('input'); oi.type = 'checkbox'; oi.checked = siteDraft.loaderOn !== false; oi.onchange = function () { siteDraft.loaderOn = oi.checked; chg(); };
+  on.append(oi, mk('span', 0, 'Show the refresh screen (your icon) when the website opens or refreshes')); L.appendChild(on);
+  /* live preview of the animation */
+  var stage = mk('div', 'ldst'), rp = mk('button', 'ghost', 'Replay animation'); rp.type = 'button'; rp.style.marginBottom = '22px';
+  function iconSrc() { var id = siteDraft.loaderId || siteDraft.logoId; return id ? '/api/img/' + id : '/logo.png'; }
+  function colors() { stage.style.setProperty('--lb', siteDraft.loaderBg || '#ffffff'); stage.style.setProperty('--lp', siteDraft.loaderPanel || '#111111'); }
+  function play() { stage.innerHTML = ''; colors(); var pn = mk('div', 'pn'), im = mk('img'), ln = mk('div', 'ln'); im.src = iconSrc(); im.alt = ''; stage.append(pn, im, ln); }
+  rp.onclick = play; L.append(stage, rp); play();
+  L.appendChild(iconRow('loaderId', 'Refresh icon', 'Upload a square PNG (transparent background looks best; other images are cropped to a square in the middle). With none uploaded, your top-left logo is used.'));
+  [['loaderBg', 'Background color of the refresh screen', '#ffffff'], ['loaderPanel', 'Color of the panel that fills the screen', '#111111']].forEach(function (c) {
+    var k = c[0], box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset');
+    pk.type = 'color'; hx.maxLength = 7; hx.placeholder = c[2]; rs.type = 'button';
+    function paint() { pk.value = siteDraft[k] || c[2]; hx.value = siteDraft[k] || ''; rs.disabled = !siteDraft[k]; colors(); }
+    function set(v) { siteDraft[k] = v.toLowerCase(); paint(); chg(); }
+    pk.oninput = function () { set(pk.value); };
+    hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { siteDraft[k] = ''; paint(); chg(); } };
+    rs.onclick = function () { siteDraft[k] = ''; paint(); chg(); };
+    box.appendChild(mk('b', 0, c[1])); line.append(pk, hx, rs); box.appendChild(line); paint(); L.appendChild(box);
+  });
+  L.appendChild(mk('p', 'pwnote', 'The refresh screen lasts about two seconds (longer only if your site is slow to load). Colors you change here reach a visitor’s browser after their first visit.'));
+}
 function renderAdm() {
   rowsSync();
-  ['lib', 'logo', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['lib', 'logo', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, logo: renderLogo, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  ({lib: renderLib, logo: renderLogo, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 
