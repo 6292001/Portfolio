@@ -595,6 +595,18 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
 /* image protection: no right-click menu or drag on pictures */
 document.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest('img,.card,.gcard,.cmpstage,.about-ph,.logo')) e.preventDefault(); });
 document.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });
+/* visitor counter: one visit per browser session, a heartbeat while the tab is open (the admin preview is never counted) */
+(function () {
+  try { if (window.top !== window.self) return; } catch (e) { return; }
+  var v = '', nw = 0, first = 0;
+  try { v = localStorage.getItem('pf-vid') || ''; } catch (e) {}
+  if (!/^[a-f0-9]{20}$/.test(v)) { v = ''; for (var i = 0; i < 20; i++) v += Math.floor(Math.random() * 16).toString(16); nw = 1; try { localStorage.setItem('pf-vid', v); } catch (e) {} }
+  try { if (!sessionStorage.getItem('pf-sess')) { sessionStorage.setItem('pf-sess', '1'); first = 1; } } catch (e) { first = 1; }
+  function ping(s) { try { fetch('/api/ping', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({v: v, s: s ? 1 : 0, n: s && nw ? 1 : 0}), keepalive: true}).catch(function () {}); } catch (e) {} }
+  ping(first);
+  setInterval(function () { if (!document.hidden) ping(0); }, 25000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) ping(0); });
+})();
 /* refreshing: draw the last known version immediately (no blank page, scroll position kept), then check for changes */
 (function () {
   var CK = 'pf-data', rawOld = null, shown = false;

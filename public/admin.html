@@ -232,7 +232,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -255,6 +255,7 @@ label.ghost{display:inline-block}
 <section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
 <section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
+<section id="tab-stats" hidden><div id="admStats"></div></section>
 <section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
@@ -958,11 +959,45 @@ function adminBgBox() {
   }
   bar.append(rng('Tint strength', 'a', 0, 95, '%'), rng('Blur', 'b', 0, 40, 'px'), rs); box.appendChild(bar); paint(); return box;
 }
+
+var statTimer = 0;
+function renderStats() {
+  var L = $('admStats'); clearInterval(statTimer);
+  L.innerHTML = '<p class="hint">Loading visitor numbers…</p>';
+  async function load() {
+    if (tab !== 'stats') { clearInterval(statTimer); return; }
+    var d; try { var r = await fetch('/api/stats', {cache: 'no-store', credentials: 'same-origin'}); if (!r.ok) throw 0; d = await r.json(); } catch (e) { if (!L.querySelector('.stg')) L.innerHTML = '<p class="hint">Could not load the numbers. Check that your storage is connected.</p>'; return; }
+    var today = d.days[d.days.length - 1].n, week = d.days.slice(-7).reduce(function (a, x) { return a + x.n; }, 0), mx = Math.max.apply(null, d.days.map(function (x) { return x.n; }).concat(1));
+    L.innerHTML = '';
+    var g = mk('div', 'stg'); g.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px';
+    [['On your site now', d.online, 'live', 'People with your site open right now'], ['Total visits', d.visits, '', 'Since counting started'], ['Visitors', d.people, '', 'Different people (browsers)'], ['Today', today, '', 'Visits (UTC day)'], ['Last 7 days', week, '', 'Visits']].forEach(function (c) {
+      var b = mk('div'); b.style.cssText = 'padding:16px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(var(--br),.6)';
+      var h = mk('div', 0, c[0]); h.style.cssText = 'font:600 13px Inter,sans-serif;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px';
+      if (c[2]) { var dot = mk('i'); dot.style.cssText = 'width:9px;height:9px;border-radius:50%;background:#2ee66b;box-shadow:0 0 0 4px rgba(46,230,107,.2)'; h.prepend(dot); }
+      var n = mk('div', 0, String(c[1])); n.style.cssText = 'font:700 34px Poppins,Inter,sans-serif;margin:6px 0 2px';
+      var s = mk('div', 0, c[3]); s.style.cssText = 'font:500 12px Inter,sans-serif;color:rgba(255,255,255,.45)';
+      b.append(h, n, s); g.appendChild(b);
+    });
+    L.appendChild(g);
+    var t = mk('b', 0, 'Visits per day (last 14 days)'); t.style.cssText = 'display:block;margin-bottom:10px';
+    var ch = mk('div'); ch.style.cssText = 'display:flex;align-items:flex-end;gap:6px;height:150px;padding:14px 12px 0;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(var(--br),.6)';
+    d.days.forEach(function (x) {
+      var col = mk('div'); col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0'; col.title = x.d + ': ' + x.n;
+      var v = mk('span', 0, x.n ? String(x.n) : ''); v.style.cssText = 'font:600 11px Inter,sans-serif;color:rgba(255,255,255,.7)';
+      var bar = mk('div'); bar.style.cssText = 'width:100%;max-width:34px;border-radius:5px 5px 0 0;background:var(--accent,#fb2f01);min-height:' + (x.n ? 3 : 1) + 'px;height:' + Math.round(x.n / mx * 92) + 'px;opacity:' + (x.n ? 1 : .25);
+      var dl = mk('span', 0, x.d.slice(8)); dl.style.cssText = 'font:500 10px Inter,sans-serif;color:rgba(255,255,255,.45);padding-bottom:6px';
+      col.append(v, bar, dl); ch.appendChild(col);
+    });
+    L.append(t, ch);
+    var nt = mk('p', 'hint', 'Updates by itself every few seconds. You and the admin preview are never counted, and neither are search-engine bots. One visit = one browser session. “On your site now” means the site was open in a visible tab in the last minute.'); nt.style.marginTop = '14px'; L.appendChild(nt);
+  }
+  load(); statTimer = setInterval(load, 8000);
+}
 function renderAdm() {
   rowsSync(); applyAdminBg();
-  ['lib', 'logo', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['stats', 'lib', 'logo', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({lib: renderLib, logo: renderLogo, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  ({stats: renderStats, lib: renderLib, logo: renderLogo, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 
