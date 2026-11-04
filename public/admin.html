@@ -315,7 +315,7 @@ function norm(d) {
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
-      footer: {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, links: cp(f.links || [])},
+      footer: s.footer ? {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, btn: f.btn ? Object.assign({l: '', u: ''}, f.btn) : {l: 'Book a Free Call', u: '#about'}, st: f.st == null ? 'Currently accepting new projects' : f.st, em: f.em || '', links: cp(f.links || [])} : {on: true, t: 'Ready to Make Your Next Video Stand Out?', s: 'Let\u2019s Create Something That Gets Clicked.', c: '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.', btn: {l: 'Book a Free Call', u: '#about'}, st: 'Currently accepting new projects', em: '', links: []},
       theme: Object.assign(cp(TH0), th, {colors: Object.assign({}, th.colors || {}), fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
 }
 function setAdminIcon() {
@@ -746,15 +746,22 @@ function renderFooter() {
     pv.innerHTML = '';
     if (!F.on) { pv.appendChild(mk('p', 'pwnote', 'The footer is hidden. Tick the box above to show it on your site.')); return; }
     if (F.t) pv.appendChild(mk('h3', 0, F.t)); if (F.s) pv.appendChild(mk('p', 'fsub', F.s));
+    if (F.btn && F.btn.l) { var pb = mk('div', 0, F.btn.l + '  \u2197'); pb.style.cssText = 'display:inline-block;margin-top:16px;padding:.7em 1.4em;border-radius:999px;background:#f3f3ef;color:#111;font-weight:700;font-size:14px'; pv.appendChild(pb); }
+    if (F.st) { var ps = mk('div', 0, '\u25CF  ' + F.st); ps.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.75)'; pv.appendChild(ps); }
     var ls = F.links.filter(function (l) { return l.l; }); if (ls.length) { var ln = mk('div', 'flinks'); ls.forEach(function (l) { ln.appendChild(mk('span', 0, l.l)); }); pv.appendChild(ln); }
+    if (F.em) { var pe = mk('div', 0, F.em); pe.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.5)'; pv.appendChild(pe); }
     if (F.c) pv.appendChild(mk('div', 'fcopy', F.c));
     if (!pv.firstChild) pv.appendChild(mk('p', 'pwnote', 'The footer is empty. Add a title, a line, links or a copyright line.'));
   }
   oi.type = 'checkbox'; oi.checked = !!F.on; oi.onchange = function () { F.on = oi.checked; chg(); draw(); };
   on.append(oi, mk('span', 0, 'Show a footer at the bottom of my website')); L.append(on, pv);
   function ff(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = F[k] || ''; inp.placeholder = ph; inp.oninput = function () { F[k] = inp.value; chg(); draw(); }; w.append(mk('span', 0, lb), inp); return w; }
-  var g = mk('div', 'fgrid'); g.append(ff('Title (optional)', 't', 'Let\u2019s work together'), ff('Line under the title (optional)', 's', 'Open for new projects'), ff('Copyright line (optional)', 'c', '\u00A9 2026 Your Name. All rights reserved.')); L.appendChild(g);
-  var lh = mk('b', 0, 'Links'); lh.style.cssText = 'display:block;margin:22px 0 10px;color:var(--glow)'; L.appendChild(lh);
+  var g = mk('div', 'fgrid'); g.append(ff('Big heading', 't', 'Ready to Make Your Next Video Stand Out?'), ff('Line under the heading', 's', 'Let\u2019s Create Something That Gets Clicked.')); L.appendChild(g);
+  var bx = mk('div', 'fset'); bx.appendChild(mk('b', 0, 'Big button (leave the text empty to hide it)'));
+  var bg2 = mk('div', 'fgrid'), bu = fldIn('Goes to', F.btn, 'u', '#about  or  https://\u2026', 300, draw); bu.querySelector('input').setAttribute('list', 'navAnchors');
+  bg2.append(fldIn('Button text', F.btn, 'l', 'Book a Free Call', 40, draw), bu); bx.appendChild(bg2); L.appendChild(bx);
+  var g3 = mk('div', 'fgrid'); g3.style.marginTop = '18px'; g3.append(ff('Status line with the green dot (leave empty to hide)', 'st', 'Currently accepting new projects'), ff('Email shown at the bottom of the card (optional)', 'em', 'you@gmail.com'), ff('Copyright line at the very bottom', 'c', '\u00A9 2026 Your Name. All rights reserved.')); L.appendChild(g3);
+  var lh = mk('b', 0, 'Social icons'); lh.style.cssText = 'display:block;margin:22px 0 10px;color:var(--glow)'; L.appendChild(lh);
   var lst = mk('div');
   function rows() {
     lst.innerHTML = '';
@@ -767,8 +774,8 @@ function renderFooter() {
     });
   }
   rows(); L.appendChild(lst);
-  var add = mk('button', 'ghost', 'Add a link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 8) { flash('You can add up to 8 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
-  L.append(add, mk('p', 'pwnote', 'Links must start with https://, mailto: or tel: to work. Anything else is dropped when you save.')); draw();
+  var add = mk('button', 'ghost', 'Add a social link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 8) { flash('You can add up to 8 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
+  L.append(add, mk('p', 'pwnote', 'Each link becomes an icon, chosen automatically from the name or the link (YouTube, Instagram, X / Twitter, LinkedIn, TikTok, Facebook, or mailto: for email). Anything else shows as a small text link. Links must start with https://, mailto: or tel: to work.')); draw();
 }
 var FG = [['s', 'Clean sans-serif'], ['d', 'Bold display'], ['f', 'Serif'], ['h', 'Handwritten']];
 function fontSel(key) {
