@@ -174,6 +174,42 @@ html.is-pre .rv.in{animation-play-state:paused}
 @keyframes prePanelS{from{transform:scale(.16,.2)}to{transform:scale(1.03)}}
 @keyframes prePanelO{from{opacity:.05}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.pre img,.pre-line,.pre-panel{animation:none}.pre-line,.pre-panel{display:none}}
+/* menu bar (top, fixed) */
+.nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:0;right:0;margin:0 auto;width:min(1180px,calc(100% - 28px));z-index:7;display:flex;align-items:center;gap:14px;padding:12px 14px 12px 22px;border-radius:999px;background:linear-gradient(180deg,color-mix(in srgb,var(--nav-c,#1b1b1b) 86%,#fff),var(--nav-c,#1b1b1b));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 36px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1);animation:navIn .7s cubic-bezier(.2,.8,.2,1) .15s backwards}
+@keyframes navIn{from{opacity:0;transform:translateY(-26px)}}
+.nav-logo{display:block;width:38px;height:38px;border-radius:10px;line-height:0;flex:none;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.nav-logo:hover,.nav-logo:focus-visible{transform:scale(1.08);outline:0}
+.nav-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;pointer-events:none;-webkit-user-select:none;user-select:none}
+.nav-links{flex:1;display:flex;align-items:center;justify-content:center;gap:4px}
+.nav-links a{padding:10px 15px;border-radius:999px;color:#fff;font:600 15px var(--f-body);text-decoration:none;white-space:nowrap;opacity:.9;transition:background .25s,opacity .25s}
+.nav-links a:hover,.nav-links a:focus-visible{background:rgba(255,255,255,.1);opacity:1;outline:0}
+.nav-links a.on{background:rgba(255,255,255,.15);opacity:1}
+.nav-cta{margin-left:auto;padding:13px 26px;border-radius:999px;background:var(--glow);color:#fff;font:700 15px var(--f-body);text-decoration:none;white-space:nowrap;box-shadow:inset 0 -2px 0 rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px rgba(var(--ar),.35);transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s}
+.nav-cta:hover,.nav-cta:focus-visible{transform:translateY(-1px) scale(1.04);filter:brightness(1.08);outline:0}
+.nav-links+.nav-cta{margin-left:0}
+.nav-burger{display:none;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.1);cursor:pointer;flex:none;padding:0;position:relative;-webkit-tap-highlight-color:transparent}
+.nav-burger i,.nav-burger i:before,.nav-burger i:after{position:absolute;left:12px;width:18px;height:2px;border-radius:2px;background:#fff;transition:transform .3s,opacity .2s}
+.nav-burger i{top:20px}.nav-burger i:before,.nav-burger i:after{content:"";left:0}.nav-burger i:before{top:-6px}.nav-burger i:after{top:6px}
+.nav.open .nav-burger i{background:transparent}.nav.open .nav-burger i:before{transform:translateY(6px) rotate(45deg)}.nav.open .nav-burger i:after{transform:translateY(-6px) rotate(-45deg)}
+.slots{position:relative;z-index:4;display:flex;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 4vw 0}
+html.has-nav .slots{padding-top:calc(env(safe-area-inset-top,0px) + 98px)}
+.slots span{display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border:1px dashed rgba(255,255,255,.3);border-radius:999px;background:rgba(255,255,255,.03);color:#ececec;font:500 14px var(--f-body);animation:navIn .7s cubic-bezier(.2,.8,.2,1) .3s backwards}
+.slots i{width:8px;height:8px;border-radius:50%;background:#1ec94c;box-shadow:0 0 0 0 rgba(30,201,76,.5);animation:slotP 2s ease-out infinite}
+@keyframes slotP{70%{box-shadow:0 0 0 8px rgba(30,201,76,0)}100%{box-shadow:0 0 0 0 rgba(30,201,76,0)}}
+html.has-nav .hero{padding-top:calc(env(safe-area-inset-top,0px) + max(13vh,125px))}
+html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
+@media (max-width:760px){
+  .nav{padding:8px 8px 8px 14px;gap:10px}
+  .nav-logo{width:34px;height:34px}
+  .nav-burger{display:block;margin-left:auto}
+  .nav-cta{margin-left:0;padding:11px 18px;font-size:14px}
+  .nav-burger+.nav-cta{margin-left:0}
+  .nav-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;flex-direction:column;align-items:stretch;gap:2px;padding:10px;border-radius:26px;background:var(--nav-c,#1b1b1b);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+  .nav.open .nav-links{display:flex}
+  .nav-links a{padding:14px 18px;font-size:16px;border-radius:16px}
+  html.has-nav .slots{padding-top:calc(env(safe-area-inset-top,0px) + 82px)}
+}
+@media (prefers-reduced-motion:reduce){.nav,.slots span,.slots i{animation:none}}
 /* logo (top-left, fixed) */
 .logo{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:18px;z-index:6;display:block;width:clamp(38px,3.3vw,46px);aspect-ratio:1/1;border-radius:10px;line-height:0;transition:transform .3s cubic-bezier(.22,1,.36,1),filter .3s}
 .logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;pointer-events:none;-webkit-user-select:none;user-select:none}
@@ -256,6 +292,8 @@ html.is-pre .rv.in{animation-play-state:paused}
 </script>
 <div class="bglow" aria-hidden="true"></div><div class="bgrid" aria-hidden="true"></div>
 <a class="logo" id="logo" href="#" aria-label="Back to top" style="display:none"></a>
+<nav class="nav" id="nav" aria-label="Main" style="display:none"></nav>
+<div class="slots" id="slots" style="display:none"></div>
 <header class="hero">
 <div id="h-tag"></div>
 <h1 class="h1" id="h-t"></h1>
@@ -266,7 +304,7 @@ html.is-pre .rv.in{animation-play-state:paused}
 <main class="wall" id="wall" aria-label="Thumbnail designs"></main>
 <div id="hd-compare"></div>
 <section class="compare" id="compare"><div class="cmpstage" id="cmp"></div></section>
-<section class="work">
+<section class="work" id="work">
 <h2 id="wk-t">Selected work</h2>
 <p id="wk-s">A few of my favourites.</p>
 <div class="grid" id="grid"></div>
@@ -456,7 +494,9 @@ if (FT && FT.on) {
   try { localStorage.setItem('pf-icv', v); } catch (e) {}
 })();
 /* logo */
-if (S1.logoOn !== false) {
+var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: ''};
+var NV = S1.nav ? Object.assign({}, NAV0, S1.nav) : NAV0;
+if (S1.logoOn !== false && NV.on === false) {
   var lg = $('logo'), li = mk('img'); li.src = S1.logoId ? '/api/img/' + S1.logoId : '/logo.png'; li.alt = ''; li.draggable = false; lg.appendChild(li); lg.style.display = '';
   lg.addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({top: 0, behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'}); });
 }
@@ -576,6 +616,54 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   function tap() { var n = Date.now(); taps = taps.filter(function (x) { return n - x < 3000; }); taps.push(n); if (taps.length >= 5) go(); }
   ['h-t'].forEach(function (id) { var el = $(id); if (el) el.addEventListener('click', tap); });
   addEventListener('keydown', function (e) { typed = (typed + (e.key || '')).toLowerCase().slice(-5); if (typed === 'admin') go(); });
+})();
+
+/* menu bar */
+(function () {
+  if (NV.on === false) return;
+  var nv = $('nav'), html = document.documentElement, reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  nv.style.display = ''; html.classList.add('has-nav'); if (NV.bg) nv.style.setProperty('--nav-c', NV.bg);
+  var targets = [];
+  function go(u) {
+    var id = u.slice(1), y = 0;
+    if (id && id !== 'top') { var el = $(id); if (!el) return; y = el.getBoundingClientRect().top + window.pageYOffset - 96; }
+    window.scrollTo({top: Math.max(0, y), behavior: reduced ? 'auto' : 'smooth'});
+  }
+  function link(cls, l, u) {
+    var a = mk('a', cls, l); a.href = u;
+    if (u.charAt(0) === '#') a.addEventListener('click', function (e) { e.preventDefault(); nv.classList.remove('open'); go(u); });
+    else if (/^https?:/i.test(u)) { var o = ''; try { o = new URL(u).origin; } catch (x) {} if (o !== location.origin) { a.target = '_blank'; a.rel = 'noopener'; } }
+    return a;
+  }
+  if (S1.logoOn !== false) {
+    var lo = mk('a', 'nav-logo'), im = mk('img'); lo.href = '#top'; lo.setAttribute('aria-label', 'Back to top'); im.src = S1.logoId ? '/api/img/' + S1.logoId : '/logo.png'; im.alt = ''; im.draggable = false; lo.appendChild(im);
+    lo.addEventListener('click', function (e) { e.preventDefault(); nv.classList.remove('open'); go('#top'); }); nv.appendChild(lo);
+  }
+  var box = mk('div', 'nav-links');
+  (NV.links || []).forEach(function (l) {
+    if (!l || !l.l || !l.u) return;
+    if (l.u.charAt(0) === '#' && l.u.length > 1 && l.u !== '#top') { var el = $(l.u.slice(1)); if (!el || el.style.display === 'none') return; }
+    var a = link('', l.l, l.u); box.appendChild(a); if (l.u.charAt(0) === '#') targets.push({a: a, id: l.u.slice(1)});
+  });
+  var hasLinks = !!box.children.length;
+  if (hasLinks) nv.appendChild(box);
+  var cta = NV.cta || {}; if (cta.l && cta.u) nv.appendChild(link('nav-cta', cta.l, cta.u));
+  if (hasLinks) {
+    var bg = mk('button', 'nav-burger'); bg.type = 'button'; bg.setAttribute('aria-label', 'Menu'); bg.appendChild(mk('i'));
+    bg.onclick = function () { nv.classList.toggle('open'); }; nv.insertBefore(bg, nv.querySelector('.nav-cta') || null);
+    document.addEventListener('click', function (e) { if (!nv.contains(e.target)) nv.classList.remove('open'); });
+  }
+  if (!nv.children.length) { nv.style.display = 'none'; html.classList.remove('has-nav'); }
+  /* highlight the link of the section you are looking at */
+  var tk = 0;
+  function spy() {
+    tk = 0; var cur = null, y = window.pageYOffset;
+    targets.forEach(function (t) { var el = t.id && t.id !== 'top' ? $(t.id) : null; if (!el) { if (y < 200) cur = t; return; } if (el.getBoundingClientRect().top <= window.innerHeight * .35 && y >= 200) cur = t; });
+    targets.forEach(function (t) { t.a.classList.toggle('on', t === cur); });
+  }
+  addEventListener('scroll', function () { if (!tk) tk = requestAnimationFrame(spy); }, {passive: true}); spy();
+  /* "slots left" pill */
+  var sl = NV.slots || {}; if (sl.on && sl.t) { var se = $('slots'), sp = mk('span'); sp.append(mk('i'), document.createTextNode(sl.t)); se.appendChild(sp); se.style.display = ''; html.classList.add('has-slots'); }
 })();
 }
 /* loading screen: runs about 2 seconds (longer only if the site is slow), then fades away */

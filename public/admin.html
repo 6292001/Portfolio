@@ -232,7 +232,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -256,10 +256,12 @@ label.ghost{display:inline-block}
 <section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
 <section id="tab-stats" hidden><div id="admStats"></div></section>
+<section id="tab-nav" hidden><p class="hint">The menu bar at the top of your website. Add, rename, reorder or remove menu items, and set the orange button on the right. Press Save changes to make it live.</p><div id="admNav"></div></section>
 <section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
 </div>
+<datalist id="navAnchors"><option value="#top">Top of the page (Home)</option><option value="#wall">Thumbnail slides</option><option value="#compare">Before / After</option><option value="#work">Selected work</option><option value="#how">How to Get Started</option><option value="#about">About me</option><option value="#faq">FAQ</option><option value="#foot">Footer</option></datalist>
 <div class="bar" id="admBar" hidden><span id="msg"></span><span class="bt"><button class="ghost" id="disc" type="button" disabled>Discard</button><button class="pub" id="pub" type="button" disabled>Save changes</button></span></div>
 </div>
 <script>
@@ -271,6 +273,7 @@ var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', 
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
 function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
+var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: ''};
 var HOW0 = {on: true, tag: 'We keep it smooth, simple, and effective.', t: 'How to Get Started', items: [
   {icon: 'list', t: '1. Send message', d: 'Send over the project info, and we’ll talk more from there.'},
   {icon: 'chat', t: '2. Onboarding', d: 'You’ll get your private design board and chat channel.'},
@@ -308,7 +311,7 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || ''} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -910,7 +913,7 @@ function renderTcol() {
 function renderLogo() {
   var L = $('admLogo'); L.innerHTML = '';
   var lgOn = mk('label', 'chk'), lgi = mk('input'); lgi.type = 'checkbox'; lgi.checked = siteDraft.logoOn !== false; lgi.onchange = function () { siteDraft.logoOn = lgi.checked; chg(); };
-  lgOn.append(lgi, mk('span', 0, 'Show the logo at the top-left of my website')); L.appendChild(lgOn);
+  lgOn.append(lgi, mk('span', 0, 'Show my logo on my website (inside the menu bar, or top-left if the menu bar is off)')); L.appendChild(lgOn);
   L.appendChild(iconRow('logoId', 'Logo image', 'Upload a square PNG with a transparent background for the best result (other images are cropped to a square in the middle). With none uploaded, your original logo is used.'));
 }
 function renderLoader() {
@@ -960,6 +963,36 @@ function adminBgBox() {
   bar.append(rng('Tint strength', 'a', 0, 95, '%'), rng('Blur', 'b', 0, 40, 'px'), rs); box.appendChild(bar); paint(); return box;
 }
 
+function renderNav() {
+  var L = $('admNav'), N = siteDraft.nav; L.innerHTML = '';
+  L.appendChild(onBox('Show the menu bar on my website', N));
+  var hl = mk('p', 'pwnote', 'For each item, write the name and where it goes. Pick a section from the list (like #about, which jumps to the About me section) or paste a full link such as https://example.com or mailto:you@email.com. Items that point to a section you switched off are hidden automatically.'); L.appendChild(hl);
+  N.links.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Menu item ' + (i + 1)));
+    var lk = fldIn('Goes to', it, 'u', '#about  or  https://…', 300); lk.querySelector('input').setAttribute('list', 'navAnchors');
+    g.append(fldIn('Name', it, 'l', 'About', 30), lk); f.appendChild(g);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, N.links, i, renderNav);
+    var del = mk('button', 'ghost', 'Delete'); del.type = 'button'; del.onclick = function () { N.links.splice(i, 1); chg(); renderNav(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a menu item'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (N.links.length >= 8) { flash('You can have up to 8 menu items.'); return; } N.links.push({l: '', u: ''}); chg(); renderNav(); };
+  L.appendChild(add);
+  var cb = mk('div', 'fset'); cb.appendChild(mk('b', 0, 'Button on the right (leave the name empty to hide it)'));
+  var cg = mk('div', 'fgrid'), cu = fldIn('Goes to', N.cta, 'u', '#about  or  https://…', 300); cu.querySelector('input').setAttribute('list', 'navAnchors');
+  cg.append(fldIn('Button text', N.cta, 'l', 'Let’s Work', 30), cu); cb.appendChild(cg); L.appendChild(cb);
+  var sb = mk('div', 'fset'); sb.appendChild(mk('b', 0, 'Small pill under the menu bar'));
+  sb.appendChild(onBox('Show it (a green dot with a short line, like “3 slots left this month”)', N.slots));
+  sb.appendChild(fldIn('Text', N.slots, 't', '3 slots left this month', 60)); L.appendChild(sb);
+  var cl = mk('div', 'fset'); cl.appendChild(mk('b', 0, 'Menu bar color'));
+  var line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset'); pk.type = 'color'; hx.maxLength = 7; hx.placeholder = '#1b1b1b'; rs.type = 'button';
+  function paint() { pk.value = N.bg || '#1b1b1b'; hx.value = N.bg || ''; rs.disabled = !N.bg; }
+  function set(v) { N.bg = v.toLowerCase(); paint(); chg(); }
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { var v = hx.value.trim(); if (v && v.charAt(0) !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) { N.bg = v.toLowerCase(); pk.value = N.bg; rs.disabled = false; chg(); } else if (!v) { N.bg = ''; pk.value = '#1b1b1b'; rs.disabled = true; chg(); } };
+  rs.onclick = function () { N.bg = ''; paint(); chg(); };
+  line.append(pk, hx, rs); cl.appendChild(line); L.appendChild(cl); paint();
+  var rst = mk('button', 'ghost', 'Reset to the example menu'); rst.type = 'button'; rst.style.marginTop = '18px'; rst.onclick = function () { siteDraft.nav = cp(NAV0); chg(); renderNav(); }; L.appendChild(rst);
+}
+
 var statTimer = 0;
 function renderStats() {
   var L = $('admStats'); clearInterval(statTimer);
@@ -995,9 +1028,9 @@ function renderStats() {
 }
 function renderAdm() {
   rowsSync(); applyAdminBg();
-  ['stats', 'lib', 'logo', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['stats', 'lib', 'logo', 'nav', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({stats: renderStats, lib: renderLib, logo: renderLogo, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 
