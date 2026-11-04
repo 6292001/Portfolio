@@ -16,7 +16,7 @@ function loadFont(n) {
   var l = document.createElement('link'); l.rel = 'stylesheet';
   l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
 }
-var CK = ['heroTag','heroT','heroS','statN','statL','workT','workS','aboutT','aboutB','aboutBtn','howTag','howT','stepIcon','stepT','stepD','secT','secS','faqTag','faqT','faqQ','faqA','footT','footS'];
+var CK = ['heroTag','heroT','heroS','statN','statL','workT','workS','aboutT','aboutB','aboutBtn','howTag','howT','stepIcon','stepT','stepD','secT','secS','faqTag','faqT','faqQ','faqA','footT','footS','footSt','footEm','footC'];
 function applyTheme(t) {
   var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
   r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
@@ -273,7 +273,7 @@ var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', 
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
 function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
-var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: ''};
+var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: '', name: '', a: 55, b: 18};
 var HOW0 = {on: true, tag: 'We keep it smooth, simple, and effective.', t: 'How to Get Started', items: [
   {icon: 'list', t: '1. Send message', d: 'Send over the project info, and we’ll talk more from there.'},
   {icon: 'chat', t: '2. Onboarding', d: 'You’ll get your private design board and chat channel.'},
@@ -311,11 +311,11 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || ''} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: s.how ? Object.assign({on: true, tag: '', t: ''}, cp(s.how), {items: cp(s.how.items || [])}) : cp(HOW0), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
-      footer: s.footer ? {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, btn: f.btn ? Object.assign({l: '', u: ''}, f.btn) : {l: 'Book a Free Call', u: '#about'}, st: f.st == null ? 'Currently accepting new projects' : f.st, em: f.em || '', links: cp(f.links || [])} : {on: true, t: 'Ready to Make Your Next Video Stand Out?', s: 'Let\u2019s Create Something That Gets Clicked.', c: '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.', btn: {l: 'Book a Free Call', u: '#about'}, st: 'Currently accepting new projects', em: '', links: []},
+      footer: s.footer ? {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, btn: f.btn ? Object.assign({l: '', u: ''}, f.btn) : {l: 'Book a Free Call', u: '#about'}, st: f.st == null ? 'Currently accepting new projects' : f.st, em: f.em || '', bg: f.bg || '', btnBg: f.btnBg || '', btnC: f.btnC || '', arBg: f.arBg || '', links: cp(f.links || [])} : {on: true, t: 'Ready to Make Your Next Video Stand Out?', s: 'Let\u2019s Create Something That Gets Clicked.', c: '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.', btn: {l: 'Book a Free Call', u: '#about'}, st: 'Currently accepting new projects', em: '', bg: '', btnBg: '', btnC: '', arBg: '', links: []},
       theme: Object.assign(cp(TH0), th, {colors: Object.assign({}, th.colors || {}), fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
 }
 function setAdminIcon() {
@@ -743,10 +743,10 @@ function renderFooter() {
   var L = $('admFooter'), F = siteDraft.footer; L.innerHTML = '';
   var on = mk('label', 'chk'), oi = mk('input'), pv = mk('div', 'fprev');
   function draw() {
-    pv.innerHTML = '';
+    pv.innerHTML = ''; pv.style.background = F.bg || '';
     if (!F.on) { pv.appendChild(mk('p', 'pwnote', 'The footer is hidden. Tick the box above to show it on your site.')); return; }
     if (F.t) pv.appendChild(mk('h3', 0, F.t)); if (F.s) pv.appendChild(mk('p', 'fsub', F.s));
-    if (F.btn && F.btn.l) { var pb = mk('div', 0, F.btn.l + '  \u2197'); pb.style.cssText = 'display:inline-block;margin-top:16px;padding:.7em 1.4em;border-radius:999px;background:#f3f3ef;color:#111;font-weight:700;font-size:14px'; pv.appendChild(pb); }
+    if (F.btn && F.btn.l) { var pb = mk('div', 0, F.btn.l + '  \u2197'); pb.style.cssText = 'display:inline-block;margin-top:16px;padding:.7em 1.4em;border-radius:999px;font-weight:700;font-size:14px;background:' + (F.btnBg || '#f3f3ef') + ';color:' + (F.btnC || '#111') + ';'; pv.appendChild(pb); }
     if (F.st) { var ps = mk('div', 0, '\u25CF  ' + F.st); ps.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.75)'; pv.appendChild(ps); }
     var ls = F.links.filter(function (l) { return l.l; }); if (ls.length) { var ln = mk('div', 'flinks'); ls.forEach(function (l) { ln.appendChild(mk('span', 0, l.l)); }); pv.appendChild(ln); }
     if (F.em) { var pe = mk('div', 0, F.em); pe.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.5)'; pv.appendChild(pe); }
@@ -761,6 +761,8 @@ function renderFooter() {
   var bg2 = mk('div', 'fgrid'), bu = fldIn('Goes to', F.btn, 'u', '#about  or  https://\u2026', 300, draw); bu.querySelector('input').setAttribute('list', 'navAnchors');
   bg2.append(fldIn('Button text', F.btn, 'l', 'Book a Free Call', 40, draw), bu); bx.appendChild(bg2); L.appendChild(bx);
   var g3 = mk('div', 'fgrid'); g3.style.marginTop = '18px'; g3.append(ff('Status line with the green dot (leave empty to hide)', 'st', 'Currently accepting new projects'), ff('Email shown at the bottom of the card (optional)', 'em', 'you@gmail.com'), ff('Copyright line at the very bottom', 'c', '\u00A9 2026 Your Name. All rights reserved.')); L.appendChild(g3);
+  var fcx = mk('div', 'fset'); fcx.appendChild(mk('b', 0, 'Footer colors (text colors are on the Text colors tab)'));
+  var fcg = mk('div', 'fgrid'); fcg.append(cpick('Card color', F, 'bg', '#0d1117', draw), cpick('Button color', F, 'btnBg', '#f3f3ef', draw), cpick('Button text color', F, 'btnC', '#111111', draw), cpick('Arrow circle color', F, 'arBg', '#fb2f01', draw)); fcx.appendChild(fcg); L.appendChild(fcx);
   var lh = mk('b', 0, 'Social icons'); lh.style.cssText = 'display:block;margin:22px 0 10px;color:var(--glow)'; L.appendChild(lh);
   var lst = mk('div');
   function rows() {
@@ -895,7 +897,7 @@ var TCOL = [
   ['How to Get Started', [['howTag', 'Small line above the heading', 'accent'], ['howT', 'Heading', '#ffffff'], ['stepIcon', 'Card icons', 'accent'], ['stepT', 'Card titles', '#e0e0e0'], ['stepD', 'Card text', '#808080']]],
   ['Other section headings (above slides, slider and strips)', [['secT', 'Heading', '#ffffff'], ['secS', 'Subtitle', '#999999']]],
   ['FAQ', [['faqTag', 'Small line above the heading', 'accent'], ['faqT', 'Heading', '#ffffff'], ['faqQ', 'Questions', '#e0e0e0'], ['faqA', 'Answers', '#949494']]],
-  ['Footer', [['footT', 'Title', '#ffffff'], ['footS', 'Line under the title', '#a6a6a6']]]
+  ['Footer', [['footT', 'Title', '#ffffff'], ['footS', 'Line under the title', '#a6a6a6'], ['footSt', 'Status line (green dot)', '#d1d1d1'], ['footEm', 'Email', '#808080'], ['footC', 'Copyright line', '#737373']]]
 ];
 function renderTcol() {
   var L = $('admTcol'), C = siteDraft.theme.colors; L.innerHTML = '';
@@ -970,6 +972,20 @@ function adminBgBox() {
   bar.append(rng('Tint strength', 'a', 0, 95, '%'), rng('Blur', 'b', 0, 40, 'px'), rs); box.appendChild(bar); paint(); return box;
 }
 
+function cpick(lb, o, k, def, cb) {
+  var box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset'); pk.type = 'color'; hx.maxLength = 7; hx.placeholder = def; rs.type = 'button'; box.appendChild(mk('b', 0, lb));
+  function paint() { pk.value = o[k] || def; hx.value = o[k] || ''; rs.disabled = !o[k]; }
+  function set(v) { o[k] = v; paint(); chg(); if (cb) cb(); }
+  pk.oninput = function () { set(pk.value.toLowerCase()); };
+  hx.oninput = function () { var v = hx.value.trim(); if (v && v.charAt(0) !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) { o[k] = v.toLowerCase(); pk.value = o[k]; rs.disabled = false; chg(); if (cb) cb(); } else if (!v) { o[k] = ''; pk.value = def; rs.disabled = true; chg(); if (cb) cb(); } };
+  rs.onclick = function () { set(''); };
+  line.append(pk, hx, rs); box.appendChild(line); paint(); return box;
+}
+function rngRow(lb, o, k, lo, hi, unit) {
+  var w = mk('label', 'fld'), v = mk('span', 0, lb + ': ' + o[k] + unit), r = mk('input'); r.type = 'range'; r.min = lo; r.max = hi; r.value = o[k];
+  r.oninput = function () { o[k] = +r.value; v.textContent = lb + ': ' + o[k] + unit; chg(); }; w.append(v, r); return w;
+}
+
 function renderNav() {
   var L = $('admNav'), N = siteDraft.nav; L.innerHTML = '';
   L.appendChild(onBox('Show the menu bar on my website', N));
@@ -989,6 +1005,10 @@ function renderNav() {
   var sb = mk('div', 'fset'); sb.appendChild(mk('b', 0, 'Small pill under the menu bar'));
   sb.appendChild(onBox('Show it (a green dot with a short line, like “3 slots left this month”)', N.slots));
   sb.appendChild(fldIn('Text', N.slots, 't', '3 slots left this month', 60)); L.appendChild(sb);
+  var nmb = mk('div', 'fset'); nmb.appendChild(mk('b', 0, 'Name next to the logo (optional)'));
+  nmb.appendChild(fldIn('Text shown right after your logo in the bar', N, 'name', 'e.g. Shehroz Khan', 30)); L.appendChild(nmb);
+  var gl = mk('div', 'fset'); gl.appendChild(mk('b', 0, 'Frosted glass look'));
+  var gg = mk('div', 'fgrid'); gg.append(rngRow('Color strength (lower = more see-through)', N, 'a', 15, 100, '%'), rngRow('Blur', N, 'b', 0, 30, 'px')); gl.appendChild(gg); L.appendChild(gl);
   var cl = mk('div', 'fset'); cl.appendChild(mk('b', 0, 'Menu bar color'));
   var line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset'); pk.type = 'color'; hx.maxLength = 7; hx.placeholder = '#1b1b1b'; rs.type = 'button';
   function paint() { pk.value = N.bg || '#1b1b1b'; hx.value = N.bg || ''; rs.disabled = !N.bg; }
