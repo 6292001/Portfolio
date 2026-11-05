@@ -863,12 +863,14 @@ function renderHow() {
   W.items.forEach(function (it, i) {
     var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Step ' + (i + 1)));
     g2.append(fldIn('Step name (shown on the orange pill)', it, 't', 'Send message', 60), fldIn('Text', it, 'd', 'What happens in this step', 240, null, true, true)); f.appendChild(g2);
+    var cg2 = mk('div', 'fgrid'); cg2.style.marginTop = '8px';
+    cg2.append(cpick('Card color when this step is current', it, 'bg', '#f4f4f1'), cpick('Card color while waiting', it, 'off', '#0d1218'), cpick('Pill color', it, 'pill', siteDraft.theme.accent), cpick('Text color (current step)', it, 'txt', '#1b1b1b')); f.appendChild(cg2);
     var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, W.items, i, renderHow);
     var del = mk('button', 'ghost', 'Remove step'); del.type = 'button'; del.onclick = function () { W.items.splice(i, 1); chg(); renderHow(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
   });
   var add = mk('button', 'pub', 'Add a step'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (W.items.length >= 6) { flash('You can have up to 6 steps.'); return; } W.items.push({icon: 'check', t: '', d: ''}); chg(); renderHow(); };
   var rs = mk('button', 'ghost', 'Reset to the example'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.how = cp(HOW0); chg(); renderHow(); };
-  L.append(add, rs);
+  L.append(add, rs, mk('p', 'pwnote', 'Each step can have its own colors. Left on default, a step follows the colors on the Text colors tab.'));
 }
 function renderFaq() {
   var L = $('admFaq'), F = siteDraft.faq; L.innerHTML = '';
