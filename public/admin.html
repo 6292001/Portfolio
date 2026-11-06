@@ -1032,8 +1032,8 @@ function renderMusic() {
   up.onclick = function () { fi.click(); };
   fi.onchange = async function () {
     var f = fi.files && fi.files[0]; fi.value = ''; if (!f) return;
-    var CH = 524288, n = Math.ceil(f.size / CH);
-    if (n > 24) { flash('That file is too big. The limit is 12 MB.'); return; }
+    var CH = 262144, n = Math.ceil(f.size / CH);
+    if (n > 48) { flash('That file is too big. The limit is 12 MB.'); return; }
     var id = ''; for (var q = 0; q < 20; q++) id += Math.floor(Math.random() * 16).toString(16);
     up.disabled = true;
     try {

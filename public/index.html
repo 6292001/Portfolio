@@ -748,21 +748,24 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   }
   function pause(user) { if (user) { optOut = true; lsSet('pf-mus', 'off'); } clearInterval(fade); a.pause(); paint(); }
   a.addEventListener('play', paint); a.addEventListener('pause', paint);
-  btn.onclick = function () { var o = box.classList.toggle('open'); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); };
+  btn.onclick = function () { var o = box.classList.toggle('open'); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); if (o && a.paused && !optOut) play(true); };
   document.addEventListener('pointerdown', function (e) { if (!box.contains(e.target)) { box.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') { box.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
   pp.onclick = function () { a.paused ? play(true) : pause(true); };
   mu.onclick = function () { a.muted = !a.muted; lsSet('pf-mute', a.muted ? '1' : '0'); if (!a.muted && vol === 0) { vol = 35; a.volume = .35; lsSet('pf-vol', 35); } if (a.paused && !a.muted) play(true); paint(); };
   rg.oninput = function () { vol = +rg.value; clearInterval(fade); a.volume = vol / 100; if (vol > 0 && a.muted) { a.muted = false; lsSet('pf-mute', '0'); } lsSet('pf-vol', vol); if (vol > 0 && a.paused) play(true); paint(); };
-  /* browsers only allow sound after a tap or click, so the music starts with the visitor's first one */
+  /* browsers only allow sound after a tap or click, so the music starts with the visitor's first one (we keep trying until a real tap works) */
+  var EV = ['pointerup', 'mousedown', 'click', 'touchend', 'keydown'];
+  function unarm() { EV.forEach(function (t) { document.removeEventListener(t, go, true); }); }
+  function go(e) {
+    if (box.contains(e.target) || optOut) return;
+    var p; try { p = a.play(); } catch (x) {}
+    if (p && p.then) p.then(function () { unarm(); ramp(vol); paint(); }, function () {}); else { unarm(); paint(); }
+  }
+  a.addEventListener('error', function () { st.textContent = 'Could not load this music'; });
   if (M.auto !== false && !optOut) {
-    var go = function (e) {
-      if (box.contains(e.target)) return;
-      ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { document.removeEventListener(t, go, true); });
-      if (a.paused && !optOut) play(false);
-    };
-    ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { document.addEventListener(t, go, true); });
-    var tryNow = a.play(); if (tryNow && tryNow.then) tryNow.then(function () { ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { document.removeEventListener(t, go, true); }); ramp(vol); paint(); }, function () {});
+    EV.forEach(function (t) { document.addEventListener(t, go, true); });
+    var tryNow; try { tryNow = a.play(); } catch (x) {} if (tryNow && tryNow.then) tryNow.then(function () { unarm(); ramp(vol); paint(); }, function () {});
   }
   document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!a.paused) { back = true; clearInterval(fade); a.pause(); } } else if (back) { back = false; if (!optOut) play(false); } });
   paint();
