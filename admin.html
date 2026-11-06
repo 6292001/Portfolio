@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin</title>
+<link rel="icon" href="/api/favicon?admin=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&display=swap">
+<script>
+function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
+function toHex(c) { return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); }
+var GF = {'Inter': ['500;600;800', 's'], 'Poppins': ['400;500;600;700', 's'], 'Montserrat': ['500;600;800', 's'], 'Space Grotesk': ['500;600;700', 's'], 'Outfit': ['500;600;800', 's'], 'Manrope': ['500;600;800', 's'], 'DM Sans': ['500;600;800', 's'], 'Sora': ['500;600;800', 's'], 'Syne': ['500;600;800', 's'], 'Bebas Neue': ['', 'd'], 'Anton': ['', 'd'], 'Oswald': ['500;600;700', 'd'], 'Archivo Black': ['', 'd'], 'Bangers': ['', 'd'], 'Righteous': ['', 'd'], 'Playfair Display': ['500;600;800', 'f'], 'Caveat Brush': ['', 'h'], 'Caveat': ['500;700', 'h'], 'Permanent Marker': ['', 'h'], 'Kalam': ['400;700', 'h'], 'Shadows Into Light': ['', 'h'], 'Gochi Hand': ['', 'h'], 'Rock Salt': ['', 'h'], 'Patrick Hand': ['', 'h'], 'Gloria Hallelujah': ['', 'h'], 'Nanum Pen Script': ['', 'h'], 'Covered By Your Grace': ['', 'h']}, FB = {s: 'system-ui,sans-serif', d: 'Impact,sans-serif', f: 'Georgia,serif', h: 'cursive'}, LOADED = {};
+function loadFont(n) {
+  if (n === 'Inter' || n === 'Poppins' || n === 'Caveat Brush' || LOADED[n] || !GF[n]) return; LOADED[n] = 1;
+  var l = document.createElement('link'); l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
+}
+var CK = ['heroTag','heroT','heroS','statN','statL','workT','workS','aboutT','aboutB','aboutBtn','howTag','howT','stepIcon','stepT','stepD','howS','stepBg','stepBgOff','secT','secS','faqTag','faqT','faqQ','faqA','footT','footS','footSt','footEm','footC'];
+function applyTheme(t) {
+  var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
+  r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
+  r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
+  r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
+  var tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', toHex(b));
+  document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
+  var co = (t && t.colors) || {};
+  CK.forEach(function (k) { if (hexRgb(co[k])) r.setProperty('--c-' + k, co[k]); else r.removeProperty('--c-' + k); });
+  var fo = (t && t.fonts) || {};
+  [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Poppins'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
+    var n = GF[x[1]] ? x[1] : x[2]; loadFont(n); r.setProperty(x[0], "'" + n + "'," + FB[GF[n][1]]);
+  });
+}
+</script>
+<script>try { var av0 = localStorage.getItem('pf-aicv'); if (av0) document.querySelector('link[rel=icon]').setAttribute('href', '/api/favicon?admin=1&v=' + encodeURIComponent(av0)); } catch (e) {}</script>
+<style>
+:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;--f-body:Inter,system-ui,sans-serif;--f-head:'Poppins',system-ui,sans-serif;--f-hand:'Caveat Brush',cursive;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;color:#fff}
+.adm.on a.ghost{text-decoration:none}
+[hidden]{display:none!important}
+.adm{position:fixed;inset:0;z-index:20;overflow:auto;display:none}
+.adm-veil{position:fixed;inset:0;z-index:19;pointer-events:none;background:rgba(var(--av-rgb,var(--br)),var(--av-a,.58));-webkit-backdrop-filter:blur(var(--av-b,20px)) saturate(1.1);backdrop-filter:blur(var(--av-b,20px)) saturate(1.1)}
+.bgsite{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:0;pointer-events:none;background:var(--bg)}
+.adm.on{display:block}
+.adm-in{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 140px}
+.adm-top{display:flex;justify-content:flex-end;align-items:center;margin-bottom:24px}
+.adm h3{margin:0;font:500 clamp(34px,6vw,52px)/1.1 var(--f-head);letter-spacing:-.01em;color:#fff}
+.ghost,.pub{font:600 14px Inter,sans-serif;color:#fff;border-radius:999px;padding:.7em 1.4em;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:transparent}
+.pub{border-color:var(--glow);background:rgba(var(--ar),.2)}
+.pub:disabled{opacity:.35;cursor:default}
+.ghost:hover,.pub:not(:disabled):hover{background:rgba(var(--ar),.3)}
+.gate{max-width:440px;margin:10vh auto;text-align:center;padding:32px;border:1px solid rgba(var(--ar),.35);border-radius:18px;background:rgba(var(--ar),.05)}
+.gate b{font-size:20px}.gate p{color:rgba(255,255,255,.65);line-height:1.5}
+.drop{display:grid;place-items:center;min-height:130px;padding:16px;text-align:center;border:2px dashed rgba(var(--ar),.5);border-radius:16px;color:rgba(255,255,255,.8);font-weight:600;cursor:pointer;transition:background .2s}
+.drop:hover,.drop.over{background:rgba(var(--ar),.12)}
+.hint{color:rgba(255,255,255,.55);font-size:14px;line-height:1.5;margin:14px 0 22px}
+.admgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.it{position:relative;display:flex;flex-direction:column;gap:8px;padding-bottom:10px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.03)}
+.it img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.it input{margin:0 10px;padding:.55em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 13px Inter,sans-serif}
+.it input:focus{outline:2px solid var(--glow)}
+.ctl{display:flex;gap:6px;margin:0 10px}
+.ctl button{flex:1;padding:.5em;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;font:600 13px Inter,sans-serif;cursor:pointer}
+.ctl .del{flex:3;border-color:rgba(248,113,113,.5);color:#fca5a5}
+.tag{position:absolute;top:8px;left:8px;padding:.25em .7em;border-radius:99px;background:rgba(var(--br),.8);font:600 11px Inter,sans-serif;color:var(--glow)}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));background:rgba(var(--br),.8);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-top:1px solid rgba(var(--ar),.3);font-size:14px;color:rgba(255,255,255,.75)}
+.chips{margin-bottom:16px;color:rgba(255,255,255,.7);font-weight:600;font-size:14px}
+.tabs{position:sticky;top:0;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding:10px 0;background:rgba(var(--br),.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.tabs button{padding:.65em 1.3em;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font:600 14px Inter,sans-serif;cursor:pointer}
+.tabs button.on{border-color:var(--glow);background:rgba(var(--ar),.2)}
+.srow{margin-bottom:26px}
+.slab{margin-bottom:8px;color:var(--glow);font-weight:600;font-size:14px}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}
+.mini{position:relative;flex:none;width:170px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111;cursor:pointer;border:1px solid rgba(255,255,255,.12)}
+.mini img{width:100%;height:100%;object-fit:cover;display:block}
+.mini:hover{outline:2px solid var(--glow)}
+.ph2{position:absolute;inset:0;display:grid;place-items:center;font:800 26px Inter,sans-serif}
+.num{position:absolute;top:8px;right:8px;z-index:1;padding:.25em .65em;border-radius:99px;background:rgba(var(--br),.8);font:600 11px Inter,sans-serif}
+.mini .num{top:6px;right:6px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:200px;padding:16px;text-align:center;border:2px dashed rgba(255,255,255,.18);border-radius:14px;color:rgba(255,255,255,.5);font-size:13px}
+.empty b{color:#fff;font-size:15px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.fset{margin-top:22px;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:14px}
+.fset>b{display:block;margin-bottom:12px;color:var(--glow)}
+.fld{display:flex;flex-direction:column;gap:6px;color:rgba(255,255,255,.65);font-weight:600;font-size:13px}
+.fld input{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.fld input:focus{outline:2px solid var(--glow)}
+.flash{animation:fl 1.7s}
+@keyframes fl{0%,60%{box-shadow:0 0 0 3px var(--glow),0 0 40px rgba(var(--ar),.6)}}
+.bt{display:flex;gap:10px}
+.ghost:disabled{opacity:.35;cursor:default}
+.ctl .on{border-color:var(--glow);background:rgba(var(--ar),.2);color:var(--glow)}
+.mini.feat{outline:2px solid var(--glow)}
+.mini.feat::after{content:"\2605";position:absolute;top:6px;left:6px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--glow);color:var(--bg);font-size:13px}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+.adm.on{animation:fade .25s}
+.adm section{animation:up .35s}
+.it,.mini,.empty,.fset{animation:up .4s backwards}
+.avrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.avprev{flex:none;width:88px;height:88px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,var(--glow),var(--glow2));font:800 34px Inter,sans-serif;border:2px solid rgba(var(--ar),.6)}
+.avprev img{width:100%;height:100%;object-fit:cover}
+.avtx{flex:1;min-width:200px;display:flex;flex-direction:column;gap:4px}
+.avtx span{color:rgba(255,255,255,.55);font-size:13px;line-height:1.4}
+label.ghost{display:inline-block}
+.gate input{width:100%;margin:8px 0 14px;padding:.8em 1em;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(var(--br),.8);color:#fff;font:500 16px Inter,sans-serif;text-align:center}
+.gate input:focus{outline:2px solid var(--glow)}
+.gate .pub{width:100%}
+.err{min-height:1.3em;margin:12px 0 0;color:#fca5a5;font-size:14px}
+.pwnote{margin:0 0 14px;color:rgba(255,255,255,.65);font-size:14px;line-height:1.5}
+.pwbtn{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.swatches{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.sw{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0}
+.sw:hover{transform:scale(1.1)}
+.sw.on{border-color:#fff;box-shadow:0 0 0 3px var(--glow)}
+.crow{display:flex;gap:10px;align-items:center}
+.col{width:56px;height:44px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:none;cursor:pointer}
+.crow input:not(.col){width:140px;padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.cprev{margin-bottom:6px;padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:var(--bg)}
+.cname{font:600 clamp(30px,5vw,48px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff}
+.cstat{margin-top:14px;border-left:3px solid var(--glow);padding-left:14px;font:600 30px Inter,sans-serif}
+.mark,.sig{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.hlstrip{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:24px 20px;margin-bottom:22px;padding:24px 22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.02)}
+.big{border-left:3px solid var(--glow);padding-left:14px;font:600 clamp(28px,3.4vw,46px)/1.1 var(--f-body);letter-spacing:-.03em;white-space:nowrap}
+.ca{color:var(--glow)}.cw{color:#fff}
+.lab{margin-top:8px;padding-left:17px;color:rgba(255,255,255,.65);font-size:15px;line-height:1.5}
+.lab em{font:400 1.2em/1.2 var(--f-hand);font-style:normal;color:var(--glow)}
+@media (max-width:700px){.hlstrip{grid-template-columns:1fr 1fr}}
+.fld select{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px Inter,sans-serif}
+.cmp{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--p:50%}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cmp .bf{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.cmp .ln{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff;pointer-events:none}
+.cmp .hd{position:absolute;top:50%;left:var(--p);width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;box-shadow:0 4px 18px rgba(0,0,0,.45);cursor:ew-resize}
+.cmp .hd:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+.cmpstage{position:relative;padding:8% 9%;font-size:var(--fs,18px);--nc:#ffe14d;max-width:900px;margin-bottom:18px;border:1px solid rgba(255,255,255,.1);border-radius:14px}
+.notes{position:absolute;inset:0;pointer-events:none;z-index:3}
+.an{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r));font:400 1em/1.1 var(--f-hand);color:#fff;white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.75);opacity:0}
+.an .ul{position:absolute;left:-3%;bottom:-.3em;width:106%;height:.45em;overflow:visible}
+.an .ar{position:absolute;width:2.5em;height:2.5em;left:calc(50% + var(--dx) * (50% + 1.4em));top:calc(50% + var(--dy) * (50% + .95em));margin:-1.25em 0 0 -1.25em;transform:rotate(var(--rot));overflow:visible}
+.an path{fill:none;stroke:var(--nc);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.an .ul path{stroke-width:3}
+.notes.on .an{animation:anin .55s cubic-bezier(.2,.8,.2,1) calc(var(--i) * .3s) both}
+.notes.on .an .ul path{animation:draw .6s ease calc(var(--i) * .3s + .35s) both}
+.notes.on .an .ar path{animation:draw .55s ease calc(var(--i) * .3s + .6s) both}
+.notes.edit .an{opacity:1;pointer-events:auto;cursor:grab;outline:1px dashed rgba(255,255,255,.4);outline-offset:6px;touch-action:none;user-select:none}
+.notes.edit .an:active{cursor:grabbing}
+.notes.edit .an path{stroke-dashoffset:0}
+@keyframes anin{from{opacity:0;transform:translate(-50%,-20%) rotate(var(--r)) scale(.9)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--r))}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.notes .an{opacity:1!important;animation:none!important}.notes .an path{stroke-dashoffset:0!important;animation:none!important}}
+.nrow{display:grid;grid-template-columns:1fr 150px auto;gap:8px;margin-bottom:8px}
+.nrow input,.nrow select{padding:.6em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
+.nbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0 22px}
+.nbar label{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:13px;font-weight:600}
+.nbar input[type=range]{width:140px}
+.nbar input[type=color]{width:42px;height:34px;padding:0;border:1px solid rgba(255,255,255,.25);border-radius:8px;background:none;cursor:pointer}
+.cslots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.cslot img,.cslot .ph3{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;margin:10px 0}
+.ph3{display:grid;place-items:center;border:2px dashed rgba(255,255,255,.18);color:rgba(255,255,255,.45);font-size:14px}
+.crow2{display:flex;gap:8px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:10px;margin:6px 0 14px;color:rgba(255,255,255,.8);font-weight:600;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--glow)}
+.fset.sub{margin-top:12px;background:rgba(255,255,255,.02)}
+.fprev{margin:14px 0 18px;padding:26px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}
+.fprev h3{margin:0;font:500 clamp(28px,4vw,40px)/1.1 var(--f-head);color:#fff}
+.fprev .fsub{margin:.6em 0 0;color:rgba(255,255,255,.65);line-height:1.5}
+.fprev .flinks{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+.fprev .flinks span{padding:.5em 1.1em;border:1px solid rgba(255,255,255,.22);border-radius:999px;font-size:13px;font-weight:600}
+.fprev .fcopy{margin-top:20px;color:rgba(255,255,255,.45);font-size:12px}
+.lrow{display:grid;grid-template-columns:1fr 1.6fr auto;gap:8px;margin-bottom:8px}
+.lrow input{padding:.6em .8em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
+.fontprev{margin:6px 0 16px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;display:grid;gap:10px}
+.fp1{font:600 clamp(30px,4.6vw,46px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff}
+.fp2{font:600 26px/1.2 var(--f-body)}
+.fp3{font:400 26px/1.2 var(--f-hand);color:var(--glow)}
+.iconprev{border-radius:14px}
+.iconprev img{border-radius:0}
+.mini{cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.mini.ghost{position:fixed;width:120px;opacity:.9;pointer-events:none;z-index:60;box-shadow:0 12px 40px rgba(0,0,0,.6);cursor:grabbing}
+.mini.dragging{opacity:.25}
+.strip{min-height:84px;border-radius:10px}
+.strip.over{outline:2px dashed var(--glow);outline-offset:4px}
+.ins{flex:none;width:4px;border-radius:2px;background:var(--glow);margin:0 -3px;box-shadow:0 0 10px var(--glow)}
+.emptyrow{flex:1;display:grid;place-items:center;min-height:72px;border:2px dashed rgba(255,255,255,.18);border-radius:10px;color:rgba(255,255,255,.4);font-size:14px}
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:0 0 20px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:14px}
+.pickgrid .mini{width:auto;cursor:pointer}
+.pickgrid .mini.picked{opacity:.3;cursor:default}
+
+.fld textarea{padding:.7em .9em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 15px/1.5 Inter,sans-serif;resize:vertical;min-height:120px}
+.fld textarea:focus{outline:2px solid var(--glow)}
+.fld.wide{grid-column:1/-1}
+.hprev{display:flex;flex-direction:column;align-items:center;gap:12px;margin:0 0 18px;padding:34px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;text-align:center}
+.ptag{display:inline-flex;align-items:center;gap:8px;color:var(--glow);font:600 15px Inter,sans-serif}
+.ptag svg{width:18px;height:18px}
+.hprev .h1{margin:0;font:600 clamp(28px,4.5vw,46px)/1.1 var(--f-head);letter-spacing:-.02em;color:#fff;padding-bottom:.08em}
+.hprev .hsub{margin:0;max-width:560px;color:rgba(255,255,255,.8);font:400 15px/1.6 var(--f-head)}
+.abprev{width:180px;max-width:100%;aspect-ratio:1/1;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:rgba(255,255,255,.45);font-size:13px;text-align:center;padding:8px}
+.abprev img{width:100%;height:100%;object-fit:cover;display:block}
+.icsel{display:flex;align-items:center;gap:10px}
+.icsel .icp{flex:none;width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:var(--glow)}
+.icsel .icp svg{width:24px;height:24px}
+.icsel select{flex:1;min-width:0}
+
+.tcrow{display:grid;grid-template-columns:34px 1fr 56px 110px 62px auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,.07)}
+.tcrow:first-of-type{border-top:0}
+.tcrow input:not(.col){padding:.55em .7em;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(var(--br),.8);color:#fff;font:500 14px Inter,sans-serif;min-width:0}
+.tcsmp{font:600 20px var(--f-body);text-align:center}
+.tcn{font-size:14px;font-weight:600;color:rgba(255,255,255,.85)}
+.tcs{font-size:12px;color:rgba(255,255,255,.45)}
+@media (max-width:700px){.tcrow{grid-template-columns:30px 1fr 56px}.tcrow .tcs{display:none}.tcrow input:not(.col){grid-column:2}.tcrow .ghost{grid-column:3}}
+
+.ldst{position:relative;aspect-ratio:16/9;max-width:600px;border-radius:14px;overflow:hidden;background:var(--lb,#fff);border:1px solid rgba(255,255,255,.15);margin:0 0 14px}
+.ldst img,.ldst .ln,.ldst .pn{position:absolute;inset:0;margin:auto}
+.ldst img{width:52px;height:52px;object-fit:cover;border-radius:16%;z-index:2;animation:ldDrop .34s cubic-bezier(.45,.05,.35,1) .35s backwards,ldGone .08s linear .88s forwards}
+.ldst .ln{width:52px;height:3px;border-radius:3px;background:var(--glow);z-index:3;opacity:0;animation:ldLine .5s ease-in .88s forwards}
+.ldst .pn{width:100%;height:100%;background:var(--lp,#111);border-radius:18px;z-index:1;opacity:0;animation:ldPS .24s cubic-bezier(.2,.7,.25,1) .88s forwards,ldPO .24s linear .88s forwards}
+@keyframes ldDrop{from{transform:translateY(-220px)}}
+@keyframes ldGone{to{transform:scale(1.04,.03);opacity:0}}
+@keyframes ldLine{0%{opacity:1;transform:scaleX(1)}60%{opacity:1}100%{opacity:0;transform:scaleX(.04)}}
+@keyframes ldPS{from{transform:scale(.16,.2)}to{transform:scale(1.03)}}
+@keyframes ldPO{from{opacity:.05}to{opacity:1}}
+</style>
+</head>
+<body>
+<iframe class="bgsite" id="bgsite" src="/" title="" aria-hidden="true" tabindex="-1"></iframe>
+<div class="adm-veil" aria-hidden="true"></div>
+<div class="adm on" id="adm">
+<div class="adm-in">
+<div class="adm-top"><span class="bt"><a class="ghost" href="/" target="_blank" rel="noopener">View site</a><button class="ghost" id="logout" type="button" hidden>Log out</button></span></div>
+<div id="admGate"><div class="gate"><b>Loading…</b></div></div>
+<div id="admPanel" hidden>
+<div class="chips" id="chips"></div>
+<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-music" data-t="music">Music</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<section id="tab-lib">
+<label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
+<p class="hint" id="hint"></p>
+<div class="admgrid" id="admList"></div>
+</section>
+<section id="tab-logo" hidden><p class="hint">The small round logo fixed at the top-left of your website. It stays in place while visitors scroll, and clicking it takes them back to the top.</p><div id="admLogo"></div></section>
+<section id="tab-loader" hidden><p class="hint">The refresh screen: every time your website opens or is refreshed, your icon drops down on a plain screen, squashes into a thin line, a rounded dark panel grows out of it and fills the screen, then it fades away to reveal your site.</p><div id="admLoader"></div></section>
+<section id="tab-hero" hidden><p class="hint">The first thing visitors see, above the sliding rows: a small highlighted line, a big headline and a short paragraph. Leave a field empty to hide it. Your name no longer appears here. Your three stats (Site details tab) sit just below.</p><div id="admHero"></div></section>
+<section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
+<section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
+<section id="tab-sel" hidden><p class="hint" id="selNote"></p>
+<label class="drop" id="dropw"><input type="file" id="filew" accept="image/*" multiple hidden>Drop thumbnails here to add them to Selected work, or click to choose</label>
+<div class="crow2" style="margin:14px 0 18px"><button class="ghost" id="fromSlides" type="button">Add from my slides</button></div>
+<div id="picker" hidden></div>
+<div class="admgrid" id="admSel"></div></section>
+<section id="tab-about" hidden><p class="hint">The About section that appears right after Selected work: a heading, a few lines about you, a button and your photo.</p><div id="admAbout"></div></section>
+<section id="tab-how" hidden><p class="hint">The “How to Get Started” section: a stack of steps that stays in view while visitors scroll, lighting up one step at a time. Each step has a name (shown on the orange pill) and a short text. Shown after the About section.</p><div id="admHow"></div></section>
+<section id="tab-faq" hidden><p class="hint">Frequently asked questions. They open and close on your site and appear just above the footer.</p><div id="admFaq"></div></section>
+<section id="tab-strip" hidden><p class="hint">Rows of highlights that sit under your Selected work. Add as many strips as you like (up to 5), each with up to 6 boxes. Give a strip a heading if you want one. Leave a strip empty to hide it.</p><div id="admStrip"></div></section>
+<section id="tab-footer" hidden><p class="hint">An optional footer at the very bottom of your site: a title, a line of text, links (Instagram, YouTube, email) and a copyright line.</p><div id="admFooter"></div></section>
+<section id="tab-text" hidden><p class="hint">Change the words on your site and its fonts. Leave a heading empty to hide it.</p><div id="admText"></div></section>
+<section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
+<section id="tab-stats" hidden><div id="admStats"></div></section>
+<section id="tab-nav" hidden><p class="hint">The menu bar at the top of your website. Add, rename, reorder or remove menu items, and set the orange button on the right. Press Save changes to make it live.</p><div id="admNav"></div></section>
+<section id="tab-music" hidden><p class="hint">Background music for your website. Visitors see an orange music button at the bottom-left; tapping it opens the volume control. Press Save changes to make it live.</p><div id="admMusic"></div></section>
+<section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
+<section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
+</div>
+</div>
+<datalist id="navAnchors"><option value="#top">Top of the page (Home)</option><option value="#wall">Thumbnail slides</option><option value="#compare">Before / After</option><option value="#work">Selected work</option><option value="#how">How to Get Started</option><option value="#about">About me</option><option value="#faq">FAQ</option><option value="#foot">Footer</option></datalist>
+<div class="bar" id="admBar" hidden><span id="msg"></span><span class="bt"><button class="ghost" id="disc" type="button" disabled>Discard</button><button class="pub" id="pub" type="button" disabled>Save changes</button></span></div>
+</div>
+<script>
+function $(i) { return document.getElementById(i); }
+function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
+function cp(o) { return JSON.parse(JSON.stringify(o)); }
+var MAXF = 21, TH0 = {accent: '#fb2f01', bg: '#02070d', grid: 'on', fonts: {body: 'Inter', head: 'Poppins', hand: 'Caveat Brush'}};
+var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]};
+var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
+var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
+function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
+var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: '', name: '', a: 55, b: 18};
+var HOW0 = {on: true, v: 2, tag: 'Thumbnails, made simple and fast.', t: 'How to Get Started', s: 'Great thumbnails start with a clear process. Here\u2019s how we go from your video idea to a thumbnail built to get clicks.', items: [
+  {icon: 'list', t: 'Send message', d: 'Send over your video title, topic and any references, and we\u2019ll talk more from there.'},
+  {icon: 'chat', t: 'Onboarding', d: 'You\u2019ll get your private design board and chat channel, so everything stays in one place.'},
+  {icon: 'check-circle', t: 'Design Delivered', d: 'Your thumbnail is designed and delivered, ready for you to review.'},
+  {icon: 'check', t: 'Optimization', d: 'Revisions, fine-tuning, and a thumbnail built to perform.'}]};
+var FAQ0 = {on: true, tag: 'FAQs', t: 'We’ve got the answers', items: [
+  {q: 'What information do you need from me to create a thumbnail?', a: 'Your video title or topic, a short description or script, and any reference images, logos or brand colors you want included. The more context you share, the better the result.'},
+  {q: 'What is the turnaround time for a thumbnail?', a: 'Most thumbnails are delivered within 48 hours. If you’re on a tight deadline, let me know and we’ll work something out.'},
+  {q: 'What’s your step-by-step process when we work together?', a: '1. You send over the project info.\n2. You get a private design board and chat channel.\n3. Your thumbnail design is delivered.\n4. We refine it with revisions until it’s built to perform.'},
+  {q: 'How is A/B testing handled?', a: 'I can design multiple variations of a thumbnail so you can test them against each other on YouTube and keep the one that gets the most clicks.'},
+  {q: 'Do you offer revisions?', a: 'Yes. Revisions and fine-tuning are part of the process until you’re happy with the final thumbnail.'},
+  {q: 'Do you use AI in your process?', a: 'Message me and I’ll walk you through exactly how I work and which tools I use.'},
+  {q: 'What if I don’t like the thumbnail design?', a: 'Tell me what isn’t working and I’ll rework it. The goal is a thumbnail you’re confident publishing.'}]};
+var ICONS = {
+  'list': '<rect x="5" y="10" width="15" height="15" rx="2.5" fill="currentColor" stroke="none"/><rect x="5" y="39" width="15" height="15" rx="2.5" fill="currentColor" stroke="none"/><path d="M28 14h30M28 22h22M28 43h30M28 51h22"/>',
+  'chat': '<path d="M9 10h46a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H30L17 54V42H9a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/><path d="M19 22h26M19 31h16"/>',
+  'check-circle': '<circle cx="32" cy="32" r="25"/><path d="M20 33l9 9 15-18"/>',
+  'check': '<path d="M12 34l14 14 26-30"/>',
+  'star': '<path d="M32 6l7.4 15.6 17 2.2-12.5 11.8 3.2 16.9L32 44.1 16.9 52.5l3.2-16.9L7.6 23.8l17-2.2z"/>',
+  'bolt': '<path d="M37 5L13 37h17l-4 22 25-34H34z"/>',
+  'heart': '<path d="M32 55S7 40 7 23a13 13 0 0 1 25-5 13 13 0 0 1 25 5c0 17-25 32-25 32z"/>',
+  'play': '<rect x="5" y="12" width="54" height="40" rx="11"/><path d="M26 23l17 9-17 9z" fill="currentColor"/>'
+};
+var ICONN = {'list': 'List', 'chat': 'Chat bubble', 'check-circle': 'Check in a circle', 'check': 'Check mark', 'star': 'Star', 'bolt': 'Lightning', 'heart': 'Heart', 'play': 'Play button'};
+function icon(n) { return '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || ICONS.check) + '</svg>'; }
+var draft = [], siteDraft = null, saved = '', tab = 'lib';
+
+function norm(d) {
+  d = d || {}; var s = d.site || {}, st = (s.stats && s.stats.length ? cp(s.stats) : cp(S0.stats)), cm = s.compare || {}, th = s.theme || {}, sec = s.sections || {}, f = s.footer || {}, name = s.name || S0.name;
+  while (st.length < 3) st.push({v: '', l: '', n: ''});
+  var strips = Array.isArray(s.strips) ? cp(s.strips) : (Array.isArray(s.strip) ? [{t: '', s: '', items: cp(s.strip)}] : [{t: '', s: '', items: cp(STRIP0)}]);
+  strips.forEach(function (z) { z.t = z.t || ''; z.s = z.s || ''; z.items = z.items || []; });
+  function sc(x) { x = x || {}; return {t: x.t || '', s: x.s || ''}; }
+  var thumbs = (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; });
+  var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
+  return {thumbs: thumbs,
+    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
+      music: Object.assign({on: true, auto: true, id: '', n: 0, name: '', url: '', vol: 35}, cp(s.music || {})), nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
+      strips: strips,
+      sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
+      footer: s.footer ? {on: !!f.on, t: f.t || '', s: f.s || '', c: f.c == null ? '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.' : f.c, btn: f.btn ? Object.assign({l: '', u: ''}, f.btn) : {l: 'Book a Free Call', u: '#about'}, st: f.st == null ? 'Currently accepting new projects' : f.st, em: f.em || '', bg: f.bg || '', btnBg: f.btnBg || '', btnC: f.btnC || '', arBg: f.arBg || '', links: cp(f.links || [])} : {on: true, t: 'Ready to Make Your Next Video Stand Out?', s: 'Let\u2019s Create Something That Gets Clicked.', c: '\u00A9 ' + new Date().getFullYear() + ' ' + name + '. All rights reserved.', btn: {l: 'Book a Free Call', u: '#about'}, st: 'Currently accepting new projects', em: '', bg: '', btnBg: '', btnC: '', arBg: '', links: []},
+      theme: Object.assign(cp(TH0), th, {colors: Object.assign({}, th.colors || {}), fonts: Object.assign({}, TH0.fonts, th.fonts || {}, s.fv ? {} : {head: 'Poppins'})})}};
+}
+function setAdminIcon() {
+  var v = siteDraft.adminIconId || ('auto-' + siteDraft.theme.accent), l = document.querySelector('link[rel=icon]'), u = '/api/favicon?admin=1&v=' + encodeURIComponent(v);
+  if (l && l.getAttribute('href') !== u) l.setAttribute('href', u);
+  try { localStorage.setItem('pf-aicv', v); } catch (e) {}
+}
+function snap() { return JSON.stringify({thumbs: draft, site: siteDraft}); }
+function flash(t) { $('msg').textContent = t; }
+function meter() { var d = snap() !== saved; $('msg').textContent = d ? 'Unsaved changes' : 'All changes saved'; $('pub').disabled = !d; $('disc').disabled = !d; }
+function featCount() { return draft.filter(function (t) { return t.feat; }).length; }
+function chips() { var n = draft.length, k = siteDraft ? siteDraft.work.length : 0; $('chips').textContent = n + ' thumbnail' + (n === 1 ? '' : 's') + ' \u00B7 3 slide rows \u00B7 ' + k + ' in Selected work'; }
+function chg() { meter(); chips(); }
+function toggleFeat(it) { if (!it.feat && featCount() >= MAXF) { flash('You can pick up to ' + MAXF + ' for Selected work.'); return false; } it.feat = !it.feat; chg(); return true; }
+addEventListener('beforeunload', function (e) { if (siteDraft && snap() !== saved) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- server ---------- */
+function signedOut() { $('admPanel').hidden = true; $('admBar').hidden = true; $('logout').hidden = true; showLogin('You were signed out. Sign in again (unsaved changes on this page are kept only until you reload).'); }
+async function uploadBlob(blob, icon) {
+  var r = await fetch('/api/upload' + (icon ? '?icon=1' : ''), {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: blob, credentials: 'same-origin'});
+  var j = {}; try { j = await r.json(); } catch (e) {}
+  if (r.status === 401) { signedOut(); throw new Error('Signed out'); }
+  if (!r.ok) throw new Error(j.error || 'Upload failed (' + r.status + ')');
+  return j.id;
+}
+async function save() {
+  rowsSync(); $('pub').disabled = true; flash('Saving\u2026');
+  try {
+    var r = await fetch('/api/data', {method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({thumbs: draft, site: siteDraft}), credentials: 'same-origin'});
+    var j = {}; try { j = await r.json(); } catch (e) {}
+    if (r.status === 401) { signedOut(); return; }
+    if (!r.ok) throw new Error(j.error || 'Save failed (' + r.status + ')');
+    saved = snap(); meter(); setAdminIcon(); flash('Saved. Your website is updated.'); try { $('bgsite').contentWindow.location.reload(); } catch (e) {}
+  } catch (e) { flash('Could not save: ' + e.message); $('pub').disabled = false; }
+}
+async function toJpeg(bm, max) {
+  var tries = [[max, .82], [max, .7], [Math.round(max * .8), .65], [Math.round(max * .6), .6]], blob;
+  for (var k = 0; k < tries.length; k++) {
+    var w = Math.min(tries[k][0], bm.width), h = Math.round(bm.height * w / bm.width), cv = document.createElement('canvas');
+    cv.width = w; cv.height = h; var cx = cv.getContext('2d'); cx.fillStyle = '#000'; cx.fillRect(0, 0, w, h); cx.drawImage(bm, 0, 0, w, h);
+    blob = await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', tries[k][1]); });
+    if (blob && blob.size <= 700000) return blob;
+  }
+  throw new Error('That image is too large to shrink.');
+}
+async function addFiles(fl) {
+  var files = [].filter.call(fl, function (f) { return /^image\//.test(f.type); }), n = 0, last = '';
+  for (var q = 0; q < files.length; q++) {
+    flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
+    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); draft.push({id: id, title: '', stat: '', feat: false}); n++; renderAdm(); }
+    catch (e) { last = e.message; if (last === 'Signed out') return; }
+  }
+  chg(); if (last) flash(n + ' added. Problem: ' + last); else if (n) flash(n + ' added. Press Save changes to publish.');
+}
+
+/* ---------- Library / Slides / Selected work ---------- */
+function rowOf(id) { for (var r = 0; r < 3; r++) if (siteDraft.rows && siteDraft.rows[r].indexOf(id) >= 0) return r; return -1; }
+function card(it, i) {
+  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl');
+  c.id = 'it-' + i; im.src = '/api/img/' + it.id; im.alt = '';
+  ti.placeholder = 'Title (optional)'; ti.value = it.title; ti.oninput = function () { it.title = ti.value; chg(); };
+  st.placeholder = 'Views or result (optional)'; st.value = it.stat; st.oninput = function () { it.stat = st.value; chg(); };
+  [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
+    var b = mk('button', 0, m[0]); b.type = 'button'; b.setAttribute('aria-label', m[2]);
+    b.onclick = function () { var j = i + m[1]; if (j < 0 || j >= draft.length) return; draft.splice(j, 0, draft.splice(i, 1)[0]); chg(); renderAdm(); };
+    ct.appendChild(b);
+  });
+  var del = mk('button', 'del', 'Remove'); del.type = 'button';
+  del.onclick = function () {
+    if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
+    draft.splice(i, 1); chg(); renderAdm();
+  };
+  ct.appendChild(del);
+  var r = rowOf(it.id); if (r >= 0) c.appendChild(mk('span', 'tag', 'Row ' + (r + 1)));
+  c.appendChild(mk('span', 'num', '#' + (i + 1)));
+  c.append(im, ti, st, ct);
+  return c;
+}
+function renderLib() {
+  $('hint').textContent = draft.length ? 'Every thumbnail you own. They all slide across the top, in the rows you set on the Slides tab (each card shows its row). Selected work has its own list on the Selected work tab. Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
+  var L = $('admList'); L.innerHTML = '';
+  draft.forEach(function (it, i) { L.appendChild(card(it, i)); });
+}
+function rowGroup(r, n) { var a = Math.floor(r * n / 3), b = Math.floor((r + 1) * n / 3), g = []; for (var k = a; k < b; k++) g.push(k); return g.length ? g : [r % n]; }
+function rowsAuto() { var n = draft.length, out = [[], [], []]; if (!n) return out; for (var r = 0; r < 3; r++) rowGroup(r, n).forEach(function (ix) { if (draft[ix]) out[r].push(draft[ix].id); }); return out; }
+function rowsSync() {
+  var ids = {}, seen = {}; draft.forEach(function (t) { ids[t.id] = 1; });
+  if (!Array.isArray(siteDraft.rows) || siteDraft.rows.length !== 3) siteDraft.rows = rowsAuto();
+  siteDraft.rows = siteDraft.rows.map(function (r) { return (r || []).filter(function (id) { if (!ids[id] || seen[id]) return false; seen[id] = 1; return true; }); });
+  draft.forEach(function (t) { if (!seen[t.id]) { seen[t.id] = 1; var s = 0; for (var k = 1; k < 3; k++) if (siteDraft.rows[k].length < siteDraft.rows[s].length) s = k; siteDraft.rows[s].push(t.id); } });
+}
+function dropTarget(x, y) {
+  var strips = document.querySelectorAll('#admSlides .strip'), best = null;
+  [].forEach.call(strips, function (st, r) { var b = st.getBoundingClientRect(); if (y >= b.top - 14 && y <= b.bottom + 14) best = r; });
+  if (best === null) return null;
+  var st = strips[best], idx = 0;
+  [].forEach.call(st.querySelectorAll('.mini:not(.dragging)'), function (m) { var b = m.getBoundingClientRect(); if (x > b.left + b.width / 2) idx++; });
+  return {row: best, idx: idx, strip: st};
+}
+function markDrop(t) {
+  [].forEach.call(document.querySelectorAll('#admSlides .strip'), function (s) { s.classList.remove('over'); });
+  var o = document.querySelector('#admSlides .ins'); if (o) o.remove();
+  if (!t) return; t.strip.classList.add('over');
+  var ins = mk('div', 'ins'), ms = t.strip.querySelectorAll('.mini:not(.dragging)'); t.strip.insertBefore(ins, ms[t.idx] || null);
+}
+function moveThumb(id, row, idx) {
+  var rows = siteDraft.rows, from = -1, pos = -1;
+  rows.forEach(function (r, i) { var p = r.indexOf(id); if (p >= 0) { from = i; pos = p; } });
+  if (from < 0) return; rows[from].splice(pos, 1);
+  rows[row].splice(Math.max(0, Math.min(idx, rows[row].length)), 0, id); chg(); renderSlides();
+}
+function dragMini(m, id) {
+  m.addEventListener('pointerdown', function (e) {
+    if (e.button) return; var sx = e.clientX, sy = e.clientY, on = false, gh = null;
+    function mv(ev) {
+      if (!on && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 6) { on = true; gh = m.cloneNode(true); gh.className = 'mini ghost'; document.body.appendChild(gh); m.classList.add('dragging'); }
+      if (on) { gh.style.left = (ev.clientX - 60) + 'px'; gh.style.top = (ev.clientY - 34) + 'px'; markDrop(dropTarget(ev.clientX, ev.clientY)); }
+    }
+    function up(ev) {
+      removeEventListener('pointermove', mv); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+      if (!on) return; gh.remove(); m.classList.remove('dragging');
+      var t = dropTarget(ev.clientX, ev.clientY); markDrop(null); if (t) moveThumb(id, t.row, t.idx);
+    }
+    addEventListener('pointermove', mv); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  });
+}
+function dmini(it) {
+  var m = mk('div', 'mini'), im = mk('img'); m.dataset.id = it.id; im.src = '/api/img/' + it.id; im.alt = ''; m.appendChild(im);
+  m.appendChild(mk('span', 'num', '#' + (draft.indexOf(it) + 1))); m.title = 'Drag to another row or another position';
+  dragMini(m, it.id); return m;
+}
+function renderSlides() {
+  rowsSync(); var L = $('admSlides'); L.innerHTML = '';
+  if (!draft.length) { L.appendChild(mk('p', 'hint', 'No thumbnails yet. Add some on the Library tab, then arrange them in rows here.')); return; }
+  var byId = {}; draft.forEach(function (t) { byId[t.id] = t; });
+  ['moves left', 'moves right', 'moves left'].forEach(function (dir, r) {
+    var row = mk('div', 'srow'), st = mk('div', 'strip');
+    row.appendChild(mk('div', 'slab', 'Row ' + (r + 1) + ' \u00B7 ' + dir + ' \u00B7 ' + siteDraft.rows[r].length + ' thumbnails'));
+    siteDraft.rows[r].forEach(function (id) { st.appendChild(dmini(byId[id])); });
+    if (!siteDraft.rows[r].length) st.appendChild(mk('div', 'emptyrow', 'Drop thumbnails here'));
+    row.appendChild(st); L.appendChild(row);
+  });
+  var au = mk('button', 'ghost', 'Arrange evenly (reset)'); au.type = 'button';
+  au.onclick = function () { siteDraft.rows = rowsAuto(); chg(); renderSlides(); }; L.appendChild(au);
+}
+async function addWork(fl) {
+  var files = [].filter.call(fl, function (f) { return /^image\//.test(f.type); }), n = 0, last = '';
+  for (var q = 0; q < files.length; q++) {
+    if (siteDraft.work.length >= 60) { last = 'Selected work can hold up to 60.'; break; }
+    flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
+    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); siteDraft.work.push({id: id, title: '', stat: ''}); n++; renderSel(); }
+    catch (e) { last = e.message; if (last === 'Signed out') return; }
+  }
+  chg(); if (last) flash(n + ' added. ' + last); else if (n) flash(n + ' added to Selected work. Press Save changes to publish.');
+}
+function workCard(w, i) {
+  var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), W = siteDraft.work;
+  im.src = '/api/img/' + w.id; im.alt = '';
+  ti.placeholder = 'Title (optional)'; ti.value = w.title || ''; ti.oninput = function () { w.title = ti.value; chg(); };
+  st.placeholder = 'Views or result (optional)'; st.value = w.stat || ''; st.oninput = function () { w.stat = st.value; chg(); };
+  [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
+    var b = mk('button', 0, m[0]); b.type = 'button'; b.setAttribute('aria-label', m[2]);
+    b.onclick = function () { var j = i + m[1]; if (j < 0 || j >= W.length) return; W.splice(j, 0, W.splice(i, 1)[0]); chg(); renderSel(); };
+    ct.appendChild(b);
+  });
+  var del = mk('button', 'del', 'Remove'); del.type = 'button';
+  del.onclick = function () {
+    if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
+    W.splice(i, 1); chg(); renderSel();
+  };
+  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); c.append(im, ti, st, ct); return c;
+}
+function renderPicker() {
+  var P = $('picker'); P.innerHTML = ''; P.className = 'pickgrid';
+  if (!draft.length) { P.appendChild(mk('p', 'hint', 'You have no thumbnails on the Library tab yet.')); return; }
+  var used = {}; siteDraft.work.forEach(function (w) { used[w.id] = 1; });
+  draft.forEach(function (t, i) {
+    var m = mk('div', 'mini' + (used[t.id] ? ' picked' : '')), im = mk('img'); im.src = '/api/img/' + t.id; im.alt = ''; m.appendChild(im); m.appendChild(mk('span', 'num', '#' + (i + 1)));
+    m.title = used[t.id] ? 'Already in Selected work' : 'Click to add to Selected work';
+    m.onclick = function () { if (used[t.id]) return; if (siteDraft.work.length >= 60) { flash('Selected work can hold up to 60.'); return; } siteDraft.work.push({id: t.id, title: t.title, stat: t.stat}); chg(); renderSel(); };
+    P.appendChild(m);
+  });
+}
+function renderSel() {
+  var L = $('admSel'); L.innerHTML = '';
+  $('selNote').textContent = siteDraft.work.length ? siteDraft.work.length + ' in Selected work (up to 60), shown in this order on your site. Upload new ones below, or add from your slides.' : 'Selected work is empty. Upload thumbnails below, or add some from your slides.';
+  siteDraft.work.forEach(function (w, i) { L.appendChild(workCard(w, i)); });
+  if (!$('picker').hidden) renderPicker();
+}
+var PA = [['Electric Orange', '#fb2f01'], ['Sky Blue', '#38bdf8'], ['Violet', '#8b5cf6'], ['Hot Pink', '#ff2d87'], ['Lime', '#a3e635'], ['Gold', '#fbbf24'], ['Red', '#ef4444'], ['Cyan', '#06b6d4'], ['White', '#ffffff']];
+var PB = [['Midnight', '#02070d'], ['Black', '#000000'], ['Charcoal', '#111114'], ['Deep Navy', '#050b1f'], ['Plum', '#12060f'], ['Forest', '#04100a']];
+function colorRow(title, key, presets) {
+  var box = mk('div', 'fset'), sw = mk('div', 'swatches'), pk = mk('input', 'col'), hx = mk('input'), line = mk('div', 'crow');
+  pk.type = 'color'; hx.placeholder = '#fb2f01'; hx.maxLength = 7; hx.setAttribute('aria-label', title + ' hex');
+  function paint() { [].forEach.call(sw.children, function (b) { b.classList.toggle('on', b.dataset.v === siteDraft.theme[key].toLowerCase()); }); }
+  function set(v) { v = v.toLowerCase(); siteDraft.theme[key] = v; applyTheme(siteDraft.theme); pk.value = v; hx.value = v; paint(); chg(); note(); }
+  presets.forEach(function (p) { var b = mk('button', 'sw'); b.type = 'button'; b.title = p[0]; b.setAttribute('aria-label', p[0]); b.dataset.v = p[1]; b.style.background = p[1]; b.onclick = function () { set(p[1]); }; sw.appendChild(b); });
+  pk.value = hx.value = siteDraft.theme[key];
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); };
+  box.appendChild(mk('b', 0, title)); line.append(pk, hx); box.append(sw, line); paint();
+  return box;
+}
+function note() {
+  var n = $('cnote'); if (!n) return;
+  var c = hexRgb(siteDraft.theme.bg) || [2, 7, 13], lum = (c[0] * .299 + c[1] * .587 + c[2] * .114) / 255;
+  n.textContent = lum > .45 ? 'This background is quite light. Your text is white, so it may be hard to read. A darker background works best.' : '';
+}
+function renderColors() {
+  var L = $('admColors'); L.innerHTML = '';
+  var pv = mk('div', 'cprev'); pv.append(mk('div', 'cname', siteDraft.name || 'Your name'), mk('div', 'cstat', '50M+'));
+  L.append(pv, colorRow('Accent color (your name, stat bars, glow and highlights)', 'accent', PA), colorRow('Background color', 'bg', PB));
+  var gl = mk('label', 'chk'), gi = mk('input'); gi.type = 'checkbox'; gi.checked = siteDraft.theme.grid !== 'off';
+  gi.onchange = function () { siteDraft.theme.grid = gi.checked ? 'on' : 'off'; applyTheme(siteDraft.theme); chg(); };
+  gl.append(gi, mk('span', 0, 'Show the soft grid and glow in the background')); L.appendChild(gl);
+  L.appendChild(mk('p', 'err', '')).id = 'cnote';
+  var rs = mk('button', 'ghost', 'Reset to original colors'); rs.type = 'button';
+  rs.onclick = function () { siteDraft.theme = Object.assign(cp(TH0), {fonts: siteDraft.theme.fonts, colors: siteDraft.theme.colors}); applyTheme(siteDraft.theme); chg(); renderColors(); };
+  L.appendChild(rs); note(); L.appendChild(adminBgBox());
+}
+
+/* ---------- Site details ---------- */
+function fld(lb, o, k, ph) {
+  var w = mk('label', 'fld'), inp = mk('input'); inp.value = o[k] || ''; inp.placeholder = ph || '';
+  inp.oninput = function () { o[k] = inp.value; chg(); };
+  w.append(mk('span', 0, lb), inp); return w;
+}
+function iconRow(key, title, text) {
+  var ir = mk('div', 'avrow'), ip = mk('div', 'avprev iconprev'), iu = mk('label', 'ghost', siteDraft[key] ? 'Change icon' : 'Upload icon'), ifi = mk('input');
+  if (siteDraft[key]) { var ii = mk('img'); ii.src = '/api/img/' + siteDraft[key]; ii.alt = ''; ip.appendChild(ii); } else if (key === 'logoId' || key === 'loaderId') { var dl = mk('img'); dl.src = key === 'loaderId' && siteDraft.logoId ? '/api/img/' + siteDraft.logoId : '/logo.png'; dl.alt = ''; ip.appendChild(dl); } else ip.textContent = key === 'adminIconId' ? 'A' : (siteDraft.name || 'S').charAt(0).toUpperCase();
+  ifi.type = 'file'; ifi.accept = 'image/*'; ifi.hidden = true; iu.appendChild(ifi);
+  ifi.onchange = async function () {
+    var f = ifi.files[0]; if (!f) return;
+    try {
+      flash('Uploading icon\u2026');
+      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
+      siteDraft[key] = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/png'); }), true); chg(); renderAdm();
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  var itx = mk('div', 'avtx'); itx.append(mk('b', 0, title), mk('span', 0, text)); ir.append(ip, itx, iu);
+  if (siteDraft[key]) { var rm = mk('button', 'ghost', key === 'logoId' ? 'Use the original logo' : key === 'loaderId' ? 'Use my top-left logo' : 'Use the automatic icon'); rm.type = 'button'; rm.onclick = function () { siteDraft[key] = ''; chg(); renderAdm(); }; ir.appendChild(rm); }
+  return ir;
+}
+function renderSite() {
+  var L = $('admSite'); L.innerHTML = '';
+  var av = mk('div', 'avrow'), pv = mk('div', 'avprev'), up = mk('label', 'ghost', siteDraft.avatarId ? 'Change photo' : 'Upload photo'), fi = mk('input');
+  if (siteDraft.avatarId) { var pi = mk('img'); pi.src = '/api/img/' + siteDraft.avatarId; pi.alt = ''; pv.appendChild(pi); } else pv.textContent = (siteDraft.name || 'S').charAt(0).toUpperCase();
+  fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+  fi.onchange = async function () {
+    var f = fi.files[0]; if (!f) return;
+    try {
+      flash('Uploading photo\u2026');
+      var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, 256, 256);
+      siteDraft.avatarId = await uploadBlob(await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', .85); })); chg(); renderSite();
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  var tx = mk('div', 'avtx'); tx.append(mk('b', 0, 'Your photo'), mk('span', 0, 'Used as the default photo in the About me section, until you upload a separate photo on the About me tab.'));
+  av.append(pv, tx, up);
+  if (siteDraft.avatarId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { siteDraft.avatarId = ''; chg(); renderSite(); }; av.appendChild(rm); }
+  L.appendChild(av);
+  L.appendChild(iconRow('iconId', 'Browser tab icon (favicon)', 'The small picture in the browser tab and in bookmarks. Square images work best, and a transparent PNG keeps its transparency. With no icon, your site uses a letter icon in your accent color (Safari does not show those). Browsers remember tab icons, so a change can take a little while to show.'));
+  L.appendChild(iconRow('adminIconId', 'Admin tab icon', 'The tab icon of this admin page, so you can tell it apart from your site. With none, the admin uses an \u201CA\u201D icon in your accent color.'));
+  var g = mk('div', 'fgrid'); g.append(fld('Your name', siteDraft, 'name', 'Shehroz Khan'), fld('Role (not shown on the site any more)', siteDraft, 'role', 'Thumbnail designer')); L.appendChild(g);
+  siteDraft.stats.forEach(function (s, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Stat ' + (i + 1)));
+    g2.append(fld('Number', s, 'v', '50M+'), fld('Label', s, 'l', 'Clicks generated'), fld('Handwritten note (optional)', s, 'n', 'every single time :)'));
+    f.appendChild(g2); L.appendChild(f);
+  });
+  L.appendChild(mk('p', 'pwnote', 'Your admin password is set in your hosting dashboard (the ADMIN_PASSWORD variable). To change it, edit that variable and redeploy.'));
+}
+function stripPreview(box, items) {
+  box.innerHTML = '';
+  var cells = (items || []).filter(function (c) { return c && (c.v || c.t || c.d); });
+  box.style.setProperty('--n', Math.max(1, Math.min(cells.length, 4)));
+  if (!cells.length) { box.appendChild(mk('div', 'lab', 'This strip has no boxes yet.')); return; }
+  cells.forEach(function (c) {
+    var m = /^([\d.,]+)(.*)$/.exec(c.v || ''), num = m ? m[1] : '', suf = m ? m[2] : (c.v || ''), st = c.s || 'w';
+    var cell = mk('div', 'cell'), big = mk('div', 'big'), lab = mk('div', 'lab', c.t || '');
+    big.append(mk('span', 'n ' + (st === 'a' || st === 'na' ? 'ca' : 'cw'), num), mk('span', 'sf ' + (st === 'a' || st === 'sa' ? 'ca' : 'cw'), suf));
+    if (c.d) { lab.appendChild(document.createTextNode(' ')); lab.appendChild(mk('em', 0, c.d)); }
+    cell.append(big, lab); box.appendChild(cell);
+  });
+}
+function moveIn(arr, i, d) { var j = i + d; if (j < 0 || j >= arr.length) return false; arr.splice(j, 0, arr.splice(i, 1)[0]); return true; }
+function renderStrip() {
+  var L = $('admStrip'); L.innerHTML = '';
+  siteDraft.strips.forEach(function (z, zi) {
+    var box = mk('div', 'fset'), pv = mk('div', 'hlstrip');
+    function live() { chg(); stripPreview(pv, z.items); }
+    box.appendChild(mk('b', 0, 'Strip ' + (zi + 1)));
+    var hg = mk('div', 'fgrid'); hg.append(fld('Heading (optional)', z, 't', 'e.g. Why work with me'), fld('Subtitle (optional)', z, 's', 'A short line under the heading')); box.appendChild(hg);
+    box.appendChild(pv); stripPreview(pv, z.items);
+    z.items.forEach(function (c, i) {
+      var f = mk('div', 'fset sub'), g = mk('div', 'fgrid');
+      f.appendChild(mk('b', 0, 'Box ' + (i + 1)));
+      function tf(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = c[k] || ''; inp.placeholder = ph; inp.oninput = function () { c[k] = inp.value; live(); }; w.append(mk('span', 0, lb), inp); return w; }
+      var sw = mk('label', 'fld'), sel = mk('select');
+      [['w', 'All white'], ['a', 'All accent color'], ['na', 'Number accent, symbol white'], ['sa', 'Number white, symbol accent']].forEach(function (o) { var op = mk('option', 0, o[1]); op.value = o[0]; sel.appendChild(op); });
+      sel.value = c.s || 'w'; sel.onchange = function () { c.s = sel.value; live(); };
+      sw.append(mk('span', 0, 'Number colors'), sel);
+      g.append(tf('Number', 'v', '800+'), tf('Label', 't', 'Creators served'), tf('Handwritten note (optional)', 'd', 'every single time :)'), sw); f.appendChild(g);
+      var rm = mk('button', 'ghost', 'Remove box'); rm.type = 'button'; rm.style.marginTop = '12px'; rm.onclick = function () { z.items.splice(i, 1); chg(); renderStrip(); }; f.appendChild(rm); box.appendChild(f);
+    });
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '14px';
+    function btn(txt, fn) { var b = mk('button', 'ghost', txt); b.type = 'button'; b.onclick = fn; bar.appendChild(b); }
+    btn('Add a box', function () { if (z.items.length >= 6) { flash('A strip can have up to 6 boxes.'); return; } z.items.push({v: '', t: '', d: '', s: 'w'}); chg(); renderStrip(); });
+    btn('Move strip up', function () { if (moveIn(siteDraft.strips, zi, -1)) { chg(); renderStrip(); } });
+    btn('Move strip down', function () { if (moveIn(siteDraft.strips, zi, 1)) { chg(); renderStrip(); } });
+    btn('Delete this strip', function () { siteDraft.strips.splice(zi, 1); chg(); renderStrip(); });
+    box.appendChild(bar); L.appendChild(box);
+  });
+  var add = mk('button', 'pub', 'Add a new strip'); add.type = 'button'; add.onclick = function () { if (siteDraft.strips.length >= 5) { flash('You can have up to 5 strips.'); return; } siteDraft.strips.push({t: '', s: '', items: [{v: '', t: '', d: '', s: 'w'}]}); chg(); renderStrip(); };
+  L.appendChild(add);
+}
+function makeCompare(box, before, after) {
+  var af = mk('img'), bf = mk('img', 'bf'), ln = mk('div', 'ln'), hd = mk('div', 'hd'), cur = 50, dragging = false, anim = 0;
+  af.src = after; bf.src = before; af.alt = bf.alt = ''; af.draggable = bf.draggable = false; af.loading = bf.loading = 'lazy'; af.decoding = bf.decoding = 'async';
+  hd.tabIndex = 0; hd.setAttribute('role', 'slider'); hd.setAttribute('aria-label', 'Before and after comparison');
+  hd.setAttribute('aria-valuemin', '0'); hd.setAttribute('aria-valuemax', '100');
+  hd.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>';
+  box.innerHTML = ''; box.append(af, bf, ln, hd);
+  function set(p) { cur = Math.max(0, Math.min(100, p)); box.style.setProperty('--p', cur + '%'); hd.setAttribute('aria-valuenow', Math.round(cur)); }
+  function fromX(x) { var r = box.getBoundingClientRect(); if (r.width) set((x - r.left) / r.width * 100); }
+  box.addEventListener('pointerdown', function (e) { cancelAnimationFrame(anim); dragging = true; try { box.setPointerCapture(e.pointerId); } catch (x) {} fromX(e.clientX); });
+  box.addEventListener('pointermove', function (e) { if (dragging) fromX(e.clientX); });
+  ['pointerup', 'pointercancel'].forEach(function (ev) { box.addEventListener(ev, function () { dragging = false; }); });
+  hd.addEventListener('keydown', function (e) {
+    var d = e.key === 'ArrowLeft' ? -4 : e.key === 'ArrowRight' ? 4 : 0;
+    if (d) { e.preventDefault(); set(cur + d); }
+  });
+  box.sweep = function () {
+    cancelAnimationFrame(anim); var t0 = performance.now();
+    (function f(t) { var k = Math.min(1, (t - t0) / 2200); set(50 + 26 * Math.sin(k * Math.PI * 2)); if (k < 1) anim = requestAnimationFrame(f); else set(50); })(t0);
+  };
+  set(50);
+}
+var NOTES0 = [{t: 'High Curiosity', x: 19, y: 9, a: 'se'}, {t: 'Strong Contrast', x: 80, y: 7, a: 'sw'}, {t: 'Trust Factor', x: 17, y: 76, a: 'ne'}, {t: 'Clear Value', x: 41, y: 93, a: 'ne'}, {t: 'Bold Text', x: 82, y: 90, a: 'nw'}];
+var DIRV = {n: [0, -1], ne: [1, -1], e: [1, 0], se: [1, 1], s: [0, 1], sw: [-1, 1], w: [-1, 0], nw: [-1, -1]}, TILT = [-6, 4, -4, 5, -5, 3, -3, 6];
+function svgEl(tag, attrs) { var e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+function noteEl(n, i) {
+  var el = mk('div', 'an'); el.style.setProperty('--x', n.x + '%'); el.style.setProperty('--y', n.y + '%'); el.style.setProperty('--r', TILT[i % 8] + 'deg'); el.style.setProperty('--i', i);
+  el.appendChild(mk('span', 0, n.t));
+  var u = svgEl('svg', {'class': 'ul', viewBox: '0 0 100 10', preserveAspectRatio: 'none'}); u.appendChild(svgEl('path', {d: 'M2 6 C 18 2, 34 9, 52 4 S 86 6, 98 3', pathLength: '1'})); el.appendChild(u);
+  var d = DIRV[n.a];
+  if (d) {
+    var a = svgEl('svg', {'class': 'ar', viewBox: '0 0 50 50'});
+    a.style.setProperty('--dx', d[0]); a.style.setProperty('--dy', d[1]); a.style.setProperty('--rot', (Math.atan2(d[1], d[0]) * 180 / Math.PI - 45) + 'deg');
+    a.append(svgEl('path', {d: 'M6 8 C 2 28, 24 24, 40 40', pathLength: '1'}), svgEl('path', {d: 'M37.7 27.2 L40 40 L27.2 37.7', pathLength: '1', 'class': 'hd2'}));
+    el.appendChild(a);
+  }
+  return el;
+}
+function makeStage(stage, cfg, urls, opt) {
+  opt = opt || {}; stage.innerHTML = '';
+  var box = mk('div', 'cmp'), layer = mk('div', 'notes' + (opt.edit ? ' edit' : '')), tm = 0;
+  stage.append(box, layer);
+  if (urls.before && urls.after) makeCompare(box, urls.before, urls.after);
+  else { box.style.cursor = 'default'; var ph = mk('div', 'ph3', 'Add both images to see the slider here'); ph.style.cssText = 'position:absolute;inset:0'; box.appendChild(ph); }
+  stage.sweep = box.sweep;
+  stage.style.setProperty('--nc', cfg.color || '#ffe14d');
+  stage.fit = function () { var w = stage.clientWidth; if (w) stage.style.setProperty('--fs', Math.max(11, w * (cfg.size || 3) / 100) + 'px'); };
+  stage.fit(); if (stage._ro) stage._ro.disconnect();
+  if (window.ResizeObserver) { stage._ro = new ResizeObserver(stage.fit); stage._ro.observe(stage); } else addEventListener('resize', stage.fit);
+  function dragify(el, n) {
+    el.addEventListener('pointerdown', function (e) { e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (x) {} el.dataset.d = 1; });
+    el.addEventListener('pointermove', function (e) {
+      if (!el.dataset.d) return; var r = stage.getBoundingClientRect(); if (!r.width) return;
+      n.x = Math.round(Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)) * 10) / 10; n.y = Math.round(Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100)) * 10) / 10;
+      el.style.setProperty('--x', n.x + '%'); el.style.setProperty('--y', n.y + '%');
+    });
+    ['pointerup', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, function () { if (el.dataset.d) { delete el.dataset.d; if (opt.onChange) opt.onChange(); } }); });
+  }
+  stage.drawNotes = function () { layer.innerHTML = ''; (cfg.notes || []).forEach(function (n, i) { var el = noteEl(n, i); if (opt.edit) dragify(el, n); layer.appendChild(el); }); };
+  stage.reveal = function (on) { clearTimeout(tm); if (on) tm = setTimeout(function () { layer.classList.add('on'); }, 1300); else layer.classList.remove('on'); };
+  stage.drawNotes();
+  if (!opt.edit && !('IntersectionObserver' in window)) layer.classList.add('on');
+}
+function renderCompare() {
+  var L = $('admCompare'), c = siteDraft.compare; L.innerHTML = '';
+  var stage = mk('div', 'cmpstage');
+  function draw() { makeStage(stage, c, {before: c.beforeId ? '/api/img/' + c.beforeId : '', after: c.afterId ? '/api/img/' + c.afterId : ''}, {edit: true, onChange: chg}); }
+  L.appendChild(stage); draw();
+  L.appendChild(mk('p', 'hint', 'Drag a text with your mouse to place it. On your live site the texts appear one by one a moment after visitors see the thumbnail.'));
+  var nl = mk('div', 'nlist');
+  function rows() {
+    nl.innerHTML = '';
+    c.notes.forEach(function (n, i) {
+      var r = mk('div', 'nrow'), ti = mk('input'), sel = mk('select'), del = mk('button', 'ghost', 'Delete'); del.type = 'button';
+      ti.value = n.t; ti.placeholder = 'Text'; ti.maxLength = 40; ti.oninput = function () { n.t = ti.value; stage.drawNotes(); chg(); };
+      [['', 'No arrow'], ['n', 'Arrow \u2191 up'], ['ne', 'Arrow \u2197 up-right'], ['e', 'Arrow \u2192 right'], ['se', 'Arrow \u2198 down-right'], ['s', 'Arrow \u2193 down'], ['sw', 'Arrow \u2199 down-left'], ['w', 'Arrow \u2190 left'], ['nw', 'Arrow \u2196 up-left']].forEach(function (o) { var op = mk('option', 0, o[1]); op.value = o[0]; sel.appendChild(op); });
+      sel.value = n.a || ''; sel.onchange = function () { n.a = sel.value; stage.drawNotes(); chg(); };
+      del.onclick = function () { c.notes.splice(i, 1); rows(); stage.drawNotes(); chg(); };
+      r.append(ti, sel, del); nl.appendChild(r);
+    });
+  }
+  rows(); L.appendChild(nl);
+  var bar = mk('div', 'nbar'), add = mk('button', 'ghost', 'Add text'); add.type = 'button';
+  add.onclick = function () { if (c.notes.length >= 8) { flash('You can add up to 8 texts.'); return; } c.notes.push({t: 'New text', x: 50, y: 50, a: ''}); rows(); stage.drawNotes(); chg(); };
+  var cl = mk('label', 0, 'Color '), ci = mk('input'); ci.type = 'color'; ci.value = c.color; ci.oninput = function () { c.color = ci.value; stage.style.setProperty('--nc', c.color); chg(); }; cl.appendChild(ci);
+  var sl = mk('label', 0, 'Size '), si = mk('input'); si.type = 'range'; si.min = 1.5; si.max = 5; si.step = .1; si.value = c.size; si.oninput = function () { c.size = +si.value; stage.fit(); chg(); }; sl.appendChild(si);
+  var rs = mk('button', 'ghost', 'Reset to the example texts'); rs.type = 'button'; rs.onclick = function () { c.notes = cp(NOTES0); rows(); stage.drawNotes(); chg(); };
+  bar.append(add, cl, sl, rs); L.appendChild(bar);
+  var g = mk('div', 'cslots');
+  [['beforeId', 'Before image'], ['afterId', 'After image']].forEach(function (o) {
+    var k = o[0], f = mk('div', 'fset cslot'), row = mk('div', 'crow2');
+    f.appendChild(mk('b', 0, o[1]));
+    if (c[k]) { var im = mk('img'); im.src = '/api/img/' + c[k]; im.alt = ''; f.appendChild(im); } else f.appendChild(mk('div', 'ph3', 'No image yet'));
+    var up = mk('label', 'ghost', c[k] ? 'Change image' : 'Upload image'), fi = mk('input');
+    fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+    fi.onchange = async function () {
+      var file = fi.files[0]; if (!file) return;
+      try { flash('Uploading\u2026'); c[k] = await uploadBlob(await toJpeg(await createImageBitmap(file), 1400)); chg(); renderCompare(); }
+      catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+    };
+    row.appendChild(up);
+    if (c[k]) { var rm = mk('button', 'ghost', 'Remove'); rm.type = 'button'; rm.onclick = function () { c[k] = ''; chg(); renderCompare(); }; row.appendChild(rm); }
+    f.appendChild(row); g.appendChild(f);
+  });
+  L.appendChild(g);
+  if (c.beforeId || c.afterId) { var sw = mk('button', 'ghost', 'Swap before and after'); sw.type = 'button'; sw.style.marginTop = '16px'; sw.onclick = function () { var t = c.beforeId; c.beforeId = c.afterId; c.afterId = t; chg(); renderCompare(); }; L.appendChild(sw); }
+}
+function renderFooter() {
+  var L = $('admFooter'), F = siteDraft.footer; L.innerHTML = '';
+  var on = mk('label', 'chk'), oi = mk('input'), pv = mk('div', 'fprev');
+  function draw() {
+    pv.innerHTML = ''; pv.style.background = F.bg || '';
+    if (!F.on) { pv.appendChild(mk('p', 'pwnote', 'The footer is hidden. Tick the box above to show it on your site.')); return; }
+    if (F.t) pv.appendChild(mk('h3', 0, F.t)); if (F.s) pv.appendChild(mk('p', 'fsub', F.s));
+    if (F.btn && F.btn.l) { var pb = mk('div', 0, F.btn.l + '  \u2197'); pb.style.cssText = 'display:inline-block;margin-top:16px;padding:.7em 1.4em;border-radius:999px;font-weight:700;font-size:14px;background:' + (F.btnBg || '#f3f3ef') + ';color:' + (F.btnC || '#111') + ';'; pv.appendChild(pb); }
+    if (F.st) { var ps = mk('div', 0, '\u25CF  ' + F.st); ps.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.75)'; pv.appendChild(ps); }
+    var ls = F.links.filter(function (l) { return l.l; }); if (ls.length) { var ln = mk('div', 'flinks'); ls.forEach(function (l) { ln.appendChild(mk('span', 0, l.l)); }); pv.appendChild(ln); }
+    if (F.em) { var pe = mk('div', 0, F.em); pe.style.cssText = 'margin-top:14px;font-size:13px;color:rgba(255,255,255,.5)'; pv.appendChild(pe); }
+    if (F.c) pv.appendChild(mk('div', 'fcopy', F.c));
+    if (!pv.firstChild) pv.appendChild(mk('p', 'pwnote', 'The footer is empty. Add a title, a line, links or a copyright line.'));
+  }
+  oi.type = 'checkbox'; oi.checked = !!F.on; oi.onchange = function () { F.on = oi.checked; chg(); draw(); };
+  on.append(oi, mk('span', 0, 'Show a footer at the bottom of my website')); L.append(on, pv);
+  function ff(lb, k, ph) { var w = mk('label', 'fld'), inp = mk('input'); inp.value = F[k] || ''; inp.placeholder = ph; inp.oninput = function () { F[k] = inp.value; chg(); draw(); }; w.append(mk('span', 0, lb), inp); return w; }
+  var g = mk('div', 'fgrid'); g.append(ff('Big heading', 't', 'Ready to Make Your Next Video Stand Out?'), ff('Line under the heading', 's', 'Let\u2019s Create Something That Gets Clicked.')); L.appendChild(g);
+  var bx = mk('div', 'fset'); bx.appendChild(mk('b', 0, 'Big button (leave the text empty to hide it)'));
+  var bg2 = mk('div', 'fgrid'), bu = fldIn('Goes to', F.btn, 'u', '#about  or  https://\u2026', 300, draw); bu.querySelector('input').setAttribute('list', 'navAnchors');
+  bg2.append(fldIn('Button text', F.btn, 'l', 'Book a Free Call', 40, draw), bu); bx.appendChild(bg2); L.appendChild(bx);
+  var g3 = mk('div', 'fgrid'); g3.style.marginTop = '18px'; g3.append(ff('Status line with the green dot (leave empty to hide)', 'st', 'Currently accepting new projects'), ff('Email shown at the bottom of the card (optional)', 'em', 'you@gmail.com'), ff('Copyright line at the very bottom', 'c', '\u00A9 2026 Your Name. All rights reserved.')); L.appendChild(g3);
+  var fcx = mk('div', 'fset'); fcx.appendChild(mk('b', 0, 'Footer colors (text colors are on the Text colors tab)'));
+  var fcg = mk('div', 'fgrid'); fcg.append(cpick('Card color', F, 'bg', '#0d1117', draw), cpick('Button color', F, 'btnBg', '#f3f3ef', draw), cpick('Button text color', F, 'btnC', '#111111', draw), cpick('Arrow circle color', F, 'arBg', '#fb2f01', draw)); fcx.appendChild(fcg); L.appendChild(fcx);
+  var lh = mk('b', 0, 'Social icons'); lh.style.cssText = 'display:block;margin:22px 0 10px;color:var(--glow)'; L.appendChild(lh);
+  var lst = mk('div');
+  function rows() {
+    lst.innerHTML = '';
+    F.links.forEach(function (l, i) {
+      var r = mk('div', 'lrow'), a1 = mk('input'), a2 = mk('input'), del = mk('button', 'ghost', 'Delete'); del.type = 'button';
+      a1.placeholder = 'Label, e.g. YouTube'; a1.value = l.l || ''; a1.oninput = function () { l.l = a1.value; chg(); draw(); };
+      a2.placeholder = 'https://youtube.com/@you or mailto:you@mail.com'; a2.value = l.u || ''; a2.oninput = function () { l.u = a2.value; chg(); };
+      del.onclick = function () { F.links.splice(i, 1); chg(); rows(); draw(); };
+      r.append(a1, a2, del); lst.appendChild(r);
+    });
+  }
+  rows(); L.appendChild(lst);
+  var add = mk('button', 'ghost', 'Add a social link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 12) { flash('You can add up to 12 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
+  L.append(add, mk('p', 'pwnote', 'Each link becomes an icon on your website, chosen automatically from the link or the name: Fiverr, Upwork, LinkedIn, Instagram, YouTube, X / Twitter, TikTok, Facebook, GitHub, Dribbble, Telegram, WhatsApp, email (mailto:), or \u201CWebsite\u201D for a globe. Any other name gets a round icon with its first letter. Every link needs a name and a link. Links must start with https://, mailto: or tel: to work.')); draw();
+}
+var FG = [['s', 'Clean sans-serif'], ['d', 'Bold display'], ['f', 'Serif'], ['h', 'Handwritten']];
+function fontSel(key) {
+  var sel = mk('select');
+  FG.forEach(function (g) { var og = document.createElement('optgroup'); og.label = g[1]; Object.keys(GF).forEach(function (n) { if (GF[n][1] === g[0]) { var op = mk('option', 0, n); op.value = n; og.appendChild(op); } }); sel.appendChild(og); });
+  sel.value = siteDraft.theme.fonts[key];
+  sel.onchange = function () { siteDraft.theme.fonts[key] = sel.value; applyTheme(siteDraft.theme); chg(); };
+  return sel;
+}
+function renderText() {
+  var L = $('admText'); L.innerHTML = '';
+  var t0 = mk('div', 'fset'); t0.appendChild(mk('b', 0, 'Browser tab'));
+  t0.appendChild(fld('Title shown in the browser tab', siteDraft, 'tabTitle', siteDraft.name + ' | Thumbnail designs')); L.appendChild(t0);
+  [['slides', 'Heading above the sliding rows (optional)'], ['compare', 'Above the before / after slider'], ['work', 'Selected work section']].forEach(function (o) {
+    var f = mk('div', 'fset'), g = mk('div', 'fgrid'); f.appendChild(mk('b', 0, o[1]));
+    g.append(fld('Heading', siteDraft.sections[o[0]], 't', ''), fld('Subtitle', siteDraft.sections[o[0]], 's', '')); f.appendChild(g); L.appendChild(f);
+  });
+  L.appendChild(mk('p', 'pwnote', 'Headings for your strips are set on the Strips tab. The top headline is on the Hero tab; About me, How to start and FAQ each have their own tab. Your top stats are on Site details.'));
+  var ff = mk('div', 'fset'), g = mk('div', 'fgrid'); ff.appendChild(mk('b', 0, 'Fonts'));
+  function fw(lb, key) { var w = mk('label', 'fld'); w.append(mk('span', 0, lb), fontSel(key)); return w; }
+  g.append(fw('Main font (all text and numbers)', 'body'), fw('Title font (top headline and big headings)', 'head'), fw('Handwritten font (notes and slider texts)', 'hand')); ff.appendChild(g);
+  var pv = mk('div', 'fontprev'); pv.append(mk('div', 'fp1', siteDraft.name || 'Your name'), mk('div', 'fp2', '50M+ Clicks generated'), mk('div', 'fp3', 'every single time :)')); ff.appendChild(pv);
+  var rs = mk('button', 'ghost', 'Reset fonts'); rs.type = 'button'; rs.onclick = function () { siteDraft.theme.fonts = cp(TH0.fonts); applyTheme(siteDraft.theme); chg(); renderText(); }; ff.appendChild(rs);
+  ff.appendChild(mk('p', 'pwnote', 'Fonts load from Google Fonts. After you save, your site loads the fonts you picked.')); L.appendChild(ff);
+}
+/* ---------- Hero / About / How to start / FAQ ---------- */
+function ptag(txt) { var d = mk('div', 'ptag'); d.appendChild(document.createTextNode(txt)); return d; }
+function fldIn(lb, o, k, ph, max, onch, area, wide) {
+  var w = mk('label', 'fld' + (wide ? ' wide' : '')), inp = mk(area ? 'textarea' : 'input'); inp.value = o[k] || ''; inp.placeholder = ph || ''; if (max) inp.maxLength = max;
+  inp.oninput = function () { o[k] = inp.value; chg(); if (onch) onch(); };
+  w.append(mk('span', 0, lb), inp); return w;
+}
+function onBox(label, o, rerender) {
+  var on = mk('label', 'chk'), oi = mk('input'); oi.type = 'checkbox'; oi.checked = !!o.on; oi.onchange = function () { o.on = oi.checked; chg(); if (rerender) rerender(); };
+  on.append(oi, mk('span', 0, label)); return on;
+}
+function renderHero() {
+  var L = $('admHero'), H = siteDraft.hero; L.innerHTML = '';
+  var pv = mk('div', 'hprev');
+  function draw() {
+    pv.innerHTML = '';
+    if (H.tag) pv.appendChild(ptag(H.tag)); if (H.t) pv.appendChild(mk('h1', 'h1', H.t)); if (H.s) pv.appendChild(mk('p', 'hsub', H.s));
+    if (!pv.firstChild) pv.appendChild(mk('p', 'pwnote', 'All three are empty, so nothing shows above your stats.'));
+  }
+  L.appendChild(pv); draw();
+  var g = mk('div', 'fgrid');
+  g.append(fldIn('Small line above the headline (highlighted)', H, 'tag', 'Thumbnails built to get clicked.', 80, draw, false, true), fldIn('Big headline', H, 't', 'YouTube Thumbnail Designer', 120, draw, false, true), fldIn('Paragraph under the headline', H, 's', 'A short sentence about what you do', 300, draw, true, true));
+  L.appendChild(g);
+  var rs = mk('button', 'ghost', 'Reset to the example text'); rs.type = 'button'; rs.style.marginTop = '16px'; rs.onclick = function () { siteDraft.hero = cp(HERO0); chg(); renderHero(); }; L.appendChild(rs);
+  L.appendChild(mk('p', 'pwnote', 'The headline uses the Title font. Change it on the Text & fonts tab.'));
+}
+function renderAbout() {
+  var L = $('admAbout'), A = siteDraft.about; L.innerHTML = '';
+  L.appendChild(onBox('Show the About me section on my website', A));
+  var g = mk('div', 'fgrid');
+  g.append(fldIn('Heading', A, 't', 'About ' + (siteDraft.name || 'me'), 80, null, false, true), fldIn('About text (press Enter for a new paragraph)', A, 'body', 'Tell visitors who you are and what you do', 2000, null, true, true), fldIn('Button text (leave empty for no button)', A, 'btn', 'Let’s talk', 40), fldIn('Button link (empty = scrolls to the footer)', A, 'url', 'https://wa.me/… or mailto:you@mail.com', 300));
+  L.appendChild(g);
+  var pr = mk('div', 'avrow'), pb = mk('div', 'abprev'), tx = mk('div', 'avtx'), up = mk('label', 'ghost', A.photoId ? 'Change photo' : 'Upload photo'), fi = mk('input');
+  pr.style.marginTop = '22px';
+  if (A.photoId) { var im = mk('img'); im.src = '/api/img/' + A.photoId; im.alt = ''; pb.appendChild(im); } else if (siteDraft.avatarId) { var im2 = mk('img'); im2.src = '/api/img/' + siteDraft.avatarId; im2.alt = ''; pb.appendChild(im2); } else pb.textContent = 'No photo yet';
+  tx.append(mk('b', 0, 'About photo'), mk('span', 0, A.photoId ? 'Shown on the right of your About text (square works best).' : siteDraft.avatarId ? 'Using your main photo from Site details. Upload a different one here if you like.' : 'Upload a photo to show it next to your text. Without one, the text is shown on its own.'));
+  fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true; up.appendChild(fi);
+  fi.onchange = async function () {
+    var f = fi.files[0]; if (!f) return;
+    try { flash('Uploading photo…'); var bm = await createImageBitmap(f), sz = Math.min(bm.width, bm.height), cv = document.createElement('canvas'); cv.width = cv.height = Math.min(1000, sz);
+      cv.getContext('2d').drawImage(bm, (bm.width - sz) / 2, (bm.height - sz) / 2, sz, sz, 0, 0, cv.width, cv.height);
+      var blob = await new Promise(function (r) { cv.toBlob(r, 'image/jpeg', .85); }); if (blob.size > 740000) blob = await toJpeg(await createImageBitmap(blob), 800);
+      A.photoId = await uploadBlob(blob); chg(); renderAbout(); flash('Photo added. Press Save changes to publish.');
+    } catch (e) { if (e.message !== 'Signed out') flash('Could not use that image: ' + e.message); }
+  };
+  pr.append(pb, tx, up);
+  if (A.photoId) { var rm = mk('button', 'ghost', 'Remove photo'); rm.type = 'button'; rm.onclick = function () { A.photoId = ''; chg(); renderAbout(); }; pr.appendChild(rm); }
+  L.appendChild(pr);
+  var rs = mk('button', 'ghost', 'Reset text to the example'); rs.type = 'button'; rs.onclick = function () { var ph = A.photoId; siteDraft.about = about0(siteDraft.name || 'me'); siteDraft.about.photoId = ph; chg(); renderAbout(); }; L.appendChild(rs);
+}
+function moveBtns(bar, arr, i, rerender) {
+  [['Move up', -1], ['Move down', 1]].forEach(function (m) { var b = mk('button', 'ghost', m[0]); b.type = 'button'; b.onclick = function () { if (moveIn(arr, i, m[1])) { chg(); rerender(); } }; bar.appendChild(b); });
+}
+function renderHow() {
+  var L = $('admHow'), W = siteDraft.how; L.innerHTML = '';
+  L.appendChild(onBox('Show the “How to Get Started” section on my website', W));
+  var g = mk('div', 'fgrid'); g.append(fldIn('Small line above the heading (highlighted)', W, 'tag', 'Thumbnails, made simple and fast.', 80), fldIn('Heading', W, 't', 'How to Get Started', 80), fldIn('Paragraph under the heading', W, 's', 'A short line about your process', 300, null, true, true)); L.appendChild(g);
+  W.items.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Step ' + (i + 1)));
+    g2.append(fldIn('Step name (shown on the orange pill)', it, 't', 'Send message', 60), fldIn('Text', it, 'd', 'What happens in this step', 240, null, true, true)); f.appendChild(g2);
+    var cg2 = mk('div', 'fgrid'); cg2.style.marginTop = '8px';
+    cg2.append(cpick('Card color when this step is current', it, 'bg', '#f4f4f1'), cpick('Card color while waiting', it, 'off', '#0d1218'), cpick('Pill color', it, 'pill', siteDraft.theme.accent), cpick('Text color (current step)', it, 'txt', '#1b1b1b')); f.appendChild(cg2);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, W.items, i, renderHow);
+    var del = mk('button', 'ghost', 'Remove step'); del.type = 'button'; del.onclick = function () { W.items.splice(i, 1); chg(); renderHow(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a step'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (W.items.length >= 6) { flash('You can have up to 6 steps.'); return; } W.items.push({icon: 'check', t: '', d: ''}); chg(); renderHow(); };
+  var rs = mk('button', 'ghost', 'Reset to the example'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.how = cp(HOW0); chg(); renderHow(); };
+  L.append(add, rs, mk('p', 'pwnote', 'Each step can have its own colors. Left on default, a step follows the colors on the Text colors tab.'));
+}
+function renderFaq() {
+  var L = $('admFaq'), F = siteDraft.faq; L.innerHTML = '';
+  L.appendChild(onBox('Show the FAQ section on my website', F));
+  var g = mk('div', 'fgrid'); g.append(fldIn('Small line above the heading (highlighted)', F, 'tag', 'FAQs', 80), fldIn('Heading', F, 't', 'We’ve got the answers', 80)); L.appendChild(g);
+  F.items.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g2 = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Question ' + (i + 1)));
+    g2.append(fldIn('Question', it, 'q', 'What do you need from me?', 200, null, false, true), fldIn('Answer', it, 'a', 'Your answer', 1500, null, true, true)); f.appendChild(g2);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, F.items, i, renderFaq);
+    var del = mk('button', 'ghost', 'Delete'); del.type = 'button'; del.onclick = function () { F.items.splice(i, 1); chg(); renderFaq(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a question'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (F.items.length >= 20) { flash('You can have up to 20 questions.'); return; } F.items.push({q: '', a: ''}); chg(); renderFaq(); };
+  var rs = mk('button', 'ghost', 'Reset to the example questions'); rs.type = 'button'; rs.style.cssText = 'margin:18px 0 0 10px'; rs.onclick = function () { siteDraft.faq = cp(FAQ0); chg(); renderFaq(); };
+  L.append(add, rs, mk('p', 'pwnote', 'Questions left empty are dropped when you save. The example answers are placeholders: edit them so they match how you really work.'));
+}
+/* ---------- Text colors ---------- */
+var TCOL = [
+  ['Top of the page (Hero)', [['heroTag', 'Small line above the headline', 'accent'], ['heroT', 'Big headline', '#ffffff'], ['heroS', 'Paragraph under the headline', '#d1d1d1'], ['statN', 'Stat numbers', '#ffffff'], ['statL', 'Stat labels', '#a6a6a6']]],
+  ['Selected work', [['workT', 'Heading', '#ffffff'], ['workS', 'Subtitle', '#999999']]],
+  ['About me', [['aboutT', 'Heading', 'accent'], ['aboutB', 'About text', '#9e9e9e'], ['aboutBtn', 'Button text (Let’s talk)', '#b3b3b3']]],
+  ['How to Get Started', [['howTag', 'Small line above the heading', 'accent'], ['howT', 'Heading', '#ffffff'], ['howS', 'Paragraph under the heading', '#8c8c8c'], ['stepIcon', 'Step pill color', 'accent'], ['stepT', 'Step pill text', '#ffffff'], ['stepD', 'Step text (current step)', '#1b1b1b'], ['stepBg', 'Card color (current step)', '#f4f4f1'], ['stepBgOff', 'Card color (other steps)', '#0d1218']]],
+  ['Other section headings (above slides, slider and strips)', [['secT', 'Heading', '#ffffff'], ['secS', 'Subtitle', '#999999']]],
+  ['FAQ', [['faqTag', 'Small line above the heading', 'accent'], ['faqT', 'Heading', '#ffffff'], ['faqQ', 'Questions', '#e0e0e0'], ['faqA', 'Answers', '#949494']]],
+  ['Footer', [['footT', 'Title', '#ffffff'], ['footS', 'Line under the title', '#a6a6a6'], ['footSt', 'Status line (green dot)', '#d1d1d1'], ['footEm', 'Email', '#808080'], ['footC', 'Copyright line', '#737373']]]
+];
+function renderTcol() {
+  var L = $('admTcol'), C = siteDraft.theme.colors; L.innerHTML = '';
+  TCOL.forEach(function (g) {
+    var box = mk('div', 'fset'); box.appendChild(mk('b', 0, g[0]));
+    g[1].forEach(function (it) {
+      var k = it[0], def = it[2] === 'accent' ? siteDraft.theme.accent : it[2];
+      var row = mk('div', 'tcrow'), nm = mk('span', 'tcn', it[1]), pk = mk('input', 'col'), hx = mk('input'), st = mk('span', 'tcs'), rs = mk('button', 'ghost', 'Reset'), smp = mk('span', 'tcsmp', 'Aa');
+      pk.type = 'color'; hx.placeholder = def; hx.maxLength = 7; hx.setAttribute('aria-label', it[1] + ' hex'); rs.type = 'button';
+      function paint() { var v = C[k]; pk.value = v || def; hx.value = v || ''; smp.style.color = v || def; st.textContent = v ? '' : 'Default'; rs.disabled = !v; }
+      function set(v) { v = v.toLowerCase(); C[k] = v; applyTheme(siteDraft.theme); paint(); chg(); }
+      pk.oninput = function () { set(pk.value); };
+      hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { delete C[k]; applyTheme(siteDraft.theme); paint(); chg(); } };
+      rs.onclick = function () { delete C[k]; applyTheme(siteDraft.theme); paint(); chg(); };
+      paint(); row.append(smp, nm, pk, hx, st, rs); box.appendChild(row);
+    });
+    L.appendChild(box);
+  });
+  var all = mk('button', 'ghost', 'Reset all text colors'); all.type = 'button'; all.style.marginTop = '18px';
+  all.onclick = function () { siteDraft.theme.colors = {}; applyTheme(siteDraft.theme); chg(); renderTcol(); }; L.appendChild(all);
+}
+function renderLogo() {
+  var L = $('admLogo'); L.innerHTML = '';
+  var lgOn = mk('label', 'chk'), lgi = mk('input'); lgi.type = 'checkbox'; lgi.checked = siteDraft.logoOn !== false; lgi.onchange = function () { siteDraft.logoOn = lgi.checked; chg(); };
+  lgOn.append(lgi, mk('span', 0, 'Show my logo on my website (inside the menu bar, or top-left if the menu bar is off)')); L.appendChild(lgOn);
+  L.appendChild(iconRow('logoId', 'Logo image', 'Upload a square PNG with a transparent background for the best result (other images are cropped to a square in the middle). With none uploaded, your original logo is used.'));
+}
+function renderLoader() {
+  var L = $('admLoader'); L.innerHTML = '';
+  var on = mk('label', 'chk'), oi = mk('input'); oi.type = 'checkbox'; oi.checked = siteDraft.loaderOn !== false; oi.onchange = function () { siteDraft.loaderOn = oi.checked; chg(); };
+  on.append(oi, mk('span', 0, 'Show the refresh screen (your icon) when the website opens or refreshes')); L.appendChild(on);
+  /* live preview of the animation */
+  var stage = mk('div', 'ldst'), rp = mk('button', 'ghost', 'Replay animation'); rp.type = 'button'; rp.style.marginBottom = '22px';
+  function iconSrc() { var id = siteDraft.loaderId || siteDraft.logoId; return id ? '/api/img/' + id : '/logo.png'; }
+  function colors() { stage.style.setProperty('--lb', siteDraft.loaderBg || '#ffffff'); stage.style.setProperty('--lp', siteDraft.loaderPanel || '#111111'); }
+  function play() { stage.innerHTML = ''; colors(); var pn = mk('div', 'pn'), im = mk('img'), ln = mk('div', 'ln'); im.src = iconSrc(); im.alt = ''; stage.append(pn, im, ln); }
+  rp.onclick = play; L.append(stage, rp); play();
+  L.appendChild(iconRow('loaderId', 'Refresh icon', 'Upload a square PNG (transparent background looks best; other images are cropped to a square in the middle). With none uploaded, your top-left logo is used.'));
+  [['loaderBg', 'Background color of the refresh screen', '#ffffff'], ['loaderPanel', 'Color of the panel that fills the screen', '#111111']].forEach(function (c) {
+    var k = c[0], box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset');
+    pk.type = 'color'; hx.maxLength = 7; hx.placeholder = c[2]; rs.type = 'button';
+    function paint() { pk.value = siteDraft[k] || c[2]; hx.value = siteDraft[k] || ''; rs.disabled = !siteDraft[k]; colors(); }
+    function set(v) { siteDraft[k] = v.toLowerCase(); paint(); chg(); }
+    pk.oninput = function () { set(pk.value); };
+    hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { siteDraft[k] = ''; paint(); chg(); } };
+    rs.onclick = function () { siteDraft[k] = ''; paint(); chg(); };
+    box.appendChild(mk('b', 0, c[1])); line.append(pk, hx, rs); box.appendChild(line); paint(); L.appendChild(box);
+  });
+  L.appendChild(mk('p', 'pwnote', 'The refresh screen lasts about two seconds (longer only if your site is slow to load). Colors you change here reach a visitor’s browser after their first visit.'));
+}
+function applyAdminBg() {
+  var A = (siteDraft && siteDraft.adminBg) || {}, r = document.documentElement.style, rgb = hexRgb(A.c);
+  if (rgb) r.setProperty('--av-rgb', rgb.join(',')); else r.removeProperty('--av-rgb');
+  r.setProperty('--av-a', String((A.a == null ? 58 : A.a) / 100)); r.setProperty('--av-b', (A.b == null ? 20 : A.b) + 'px');
+}
+function adminBgBox() {
+  var A = siteDraft.adminBg, box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset');
+  box.appendChild(mk('b', 0, 'Admin panel background (the blurred look of this panel)'));
+  box.appendChild(mk('p', 'pwnote', 'The blurred copy of your website behind this panel. Pick a tint color and set how strong the tint and the blur are. Leave the color empty to follow your background color. This only changes the admin panel, not your website.'));
+  pk.type = 'color'; hx.maxLength = 7; hx.placeholder = 'Tint color'; rs.type = 'button';
+  function paint() { pk.value = A.c || siteDraft.theme.bg; hx.value = A.c || ''; applyAdminBg(); }
+  function set(v) { A.c = v.toLowerCase(); paint(); chg(); }
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { if (/^#[0-9a-f]{6}$/i.test(hx.value)) set(hx.value); else if (!hx.value) { A.c = ''; paint(); chg(); } };
+  rs.onclick = function () { siteDraft.adminBg = {c: '', a: 58, b: 20}; chg(); renderColors(); applyAdminBg(); };
+  line.append(pk, hx); box.appendChild(line);
+  var bar = mk('div', 'nbar');
+  function rng(lb, k, min, max, unit) {
+    var l = mk('label', 0, lb + ' '), i = mk('input'), v = mk('span', 0, A[k] + unit); i.type = 'range'; i.min = min; i.max = max; i.step = 1; i.value = A[k];
+    i.oninput = function () { A[k] = +i.value; v.textContent = A[k] + unit; applyAdminBg(); chg(); }; l.append(i, v); return l;
+  }
+  bar.append(rng('Tint strength', 'a', 0, 95, '%'), rng('Blur', 'b', 0, 40, 'px'), rs); box.appendChild(bar); paint(); return box;
+}
+
+function cpick(lb, o, k, def, cb) {
+  var box = mk('div', 'fset'), line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset'); pk.type = 'color'; hx.maxLength = 7; hx.placeholder = def; rs.type = 'button'; box.appendChild(mk('b', 0, lb));
+  function paint() { pk.value = o[k] || def; hx.value = o[k] || ''; rs.disabled = !o[k]; }
+  function set(v) { o[k] = v; paint(); chg(); if (cb) cb(); }
+  pk.oninput = function () { set(pk.value.toLowerCase()); };
+  hx.oninput = function () { var v = hx.value.trim(); if (v && v.charAt(0) !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) { o[k] = v.toLowerCase(); pk.value = o[k]; rs.disabled = false; chg(); if (cb) cb(); } else if (!v) { o[k] = ''; pk.value = def; rs.disabled = true; chg(); if (cb) cb(); } };
+  rs.onclick = function () { set(''); };
+  line.append(pk, hx, rs); box.appendChild(line); paint(); return box;
+}
+function rngRow(lb, o, k, lo, hi, unit) {
+  var w = mk('label', 'fld'), v = mk('span', 0, lb + ': ' + o[k] + unit), r = mk('input'); r.type = 'range'; r.min = lo; r.max = hi; r.value = o[k];
+  r.oninput = function () { o[k] = +r.value; v.textContent = lb + ': ' + o[k] + unit; chg(); }; w.append(v, r); return w;
+}
+
+function renderNav() {
+  var L = $('admNav'), N = siteDraft.nav; L.innerHTML = '';
+  L.appendChild(onBox('Show the menu bar on my website', N));
+  var hl = mk('p', 'pwnote', 'For each item, write the name and where it goes. Pick a section from the list (like #about, which jumps to the About me section) or paste a full link such as https://example.com or mailto:you@email.com. Items that point to a section you switched off are hidden automatically.'); L.appendChild(hl);
+  N.links.forEach(function (it, i) {
+    var f = mk('div', 'fset'), g = mk('div', 'fgrid'); f.appendChild(mk('b', 0, 'Menu item ' + (i + 1)));
+    var lk = fldIn('Goes to', it, 'u', '#about  or  https://…', 300); lk.querySelector('input').setAttribute('list', 'navAnchors');
+    g.append(fldIn('Name', it, 'l', 'About', 30), lk); f.appendChild(g);
+    var bar = mk('div', 'crow2'); bar.style.marginTop = '12px'; moveBtns(bar, N.links, i, renderNav);
+    var del = mk('button', 'ghost', 'Delete'); del.type = 'button'; del.onclick = function () { N.links.splice(i, 1); chg(); renderNav(); }; bar.appendChild(del); f.appendChild(bar); L.appendChild(f);
+  });
+  var add = mk('button', 'pub', 'Add a menu item'); add.type = 'button'; add.style.marginTop = '18px'; add.onclick = function () { if (N.links.length >= 8) { flash('You can have up to 8 menu items.'); return; } N.links.push({l: '', u: ''}); chg(); renderNav(); };
+  L.appendChild(add);
+  var cb = mk('div', 'fset'); cb.appendChild(mk('b', 0, 'Button on the right (leave the name empty to hide it)'));
+  var cg = mk('div', 'fgrid'), cu = fldIn('Goes to', N.cta, 'u', '#about  or  https://…', 300); cu.querySelector('input').setAttribute('list', 'navAnchors');
+  cg.append(fldIn('Button text', N.cta, 'l', 'Let’s Work', 30), cu); cb.appendChild(cg); L.appendChild(cb);
+  var sb = mk('div', 'fset'); sb.appendChild(mk('b', 0, 'Small pill under the menu bar'));
+  sb.appendChild(onBox('Show it (a green dot with a short line, like “3 slots left this month”)', N.slots));
+  sb.appendChild(fldIn('Text', N.slots, 't', '3 slots left this month', 60)); L.appendChild(sb);
+  var nmb = mk('div', 'fset'); nmb.appendChild(mk('b', 0, 'Name next to the logo (optional)'));
+  nmb.appendChild(fldIn('Text shown right after your logo in the bar', N, 'name', 'e.g. Shehroz Khan', 30)); L.appendChild(nmb);
+  var gl = mk('div', 'fset'); gl.appendChild(mk('b', 0, 'Frosted glass look'));
+  var gg = mk('div', 'fgrid'); gg.append(rngRow('Color strength (lower = more see-through)', N, 'a', 15, 100, '%'), rngRow('Blur', N, 'b', 0, 30, 'px')); gl.appendChild(gg); L.appendChild(gl);
+  var cl = mk('div', 'fset'); cl.appendChild(mk('b', 0, 'Menu bar color'));
+  var line = mk('div', 'crow'), pk = mk('input', 'col'), hx = mk('input'), rs = mk('button', 'ghost', 'Reset'); pk.type = 'color'; hx.maxLength = 7; hx.placeholder = '#1b1b1b'; rs.type = 'button';
+  function paint() { pk.value = N.bg || '#1b1b1b'; hx.value = N.bg || ''; rs.disabled = !N.bg; }
+  function set(v) { N.bg = v.toLowerCase(); paint(); chg(); }
+  pk.oninput = function () { set(pk.value); };
+  hx.oninput = function () { var v = hx.value.trim(); if (v && v.charAt(0) !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) { N.bg = v.toLowerCase(); pk.value = N.bg; rs.disabled = false; chg(); } else if (!v) { N.bg = ''; pk.value = '#1b1b1b'; rs.disabled = true; chg(); } };
+  rs.onclick = function () { N.bg = ''; paint(); chg(); };
+  line.append(pk, hx, rs); cl.appendChild(line); L.appendChild(cl); paint();
+  var rst = mk('button', 'ghost', 'Reset to the example menu'); rst.type = 'button'; rst.style.marginTop = '18px'; rst.onclick = function () { siteDraft.nav = cp(NAV0); chg(); renderNav(); }; L.appendChild(rst);
+}
+
+function renderMusic() {
+  var L = $('admMusic'), M = siteDraft.music; L.innerHTML = '';
+  L.appendChild(onBox('Play music on my website', M));
+  var tb = mk('div', 'fset'); tb.appendChild(mk('b', 0, 'Your music file'));
+  var src = M.id ? '/api/music/' + M.id : (M.url || '');
+  if (src) {
+    var nm = mk('p', 0, M.id ? (M.name || 'Uploaded track') : 'Linked track'); nm.style.cssText = 'margin:10px 0 8px;font-weight:600'; tb.appendChild(nm);
+    var au = mk('audio'); au.controls = true; au.preload = 'auto'; au.style.cssText = 'width:100%;max-width:420px;display:block'; tb.appendChild(au);
+    var ck = mk('p', 'pwnote', M.id ? 'Checking the file on your server…' : ''); ck.style.margin = '8px 0 0'; tb.appendChild(ck);
+    if (M.id && M.n > 0) {
+      (async function () {
+        try {
+          var parts = [], type = 'audio/mpeg';
+          for (var i = 0; i < M.n; i++) {
+            var r = await fetch('/api/music/' + M.id + '?c=' + i, {cache: 'no-store'});
+            if (!r.ok) { var j = {}; try { j = await r.json(); } catch (e) {} throw new Error('piece ' + (i + 1) + ' of ' + M.n + ' failed (error ' + r.status + (j.error ? ': ' + j.error : '') + ')'); }
+            type = r.headers.get('content-type') || type; parts.push(await r.arrayBuffer());
+          }
+          if (!ck.isConnected) return;
+          au.src = URL.createObjectURL(new Blob(parts, {type: type}));
+          ck.textContent = '✓ The file is on your server and ready (' + (parts.reduce(function (t, x) { return t + x.byteLength; }, 0) / 1048576).toFixed(1) + ' MB).'; ck.style.color = '#7ddf9a';
+        } catch (e) { if (!ck.isConnected) return; ck.textContent = '✗ The file could not be read from your server: ' + (e.message || e) + '. Press “Upload a different file” and upload it again, then Save changes.'; ck.style.color = '#ff8a7a'; }
+      })();
+    } else if (!M.id) au.src = src;
+  } else tb.appendChild(mk('p', 'pwnote', 'No music yet. Upload a file below and the music button will appear on your website.'));
+  var row = mk('div', 'crow2'); row.style.marginTop = '14px';
+  var up = mk('button', 'pub', src ? 'Upload a different file' : 'Upload music'), fi = mk('input'), pg = mk('span', 'pwnote'); up.type = 'button'; fi.type = 'file'; fi.accept = 'audio/*,.mp3,.m4a,.aac,.ogg,.wav,.webm'; fi.hidden = true; pg.style.margin = '0 0 0 12px';
+  up.onclick = function () { fi.click(); };
+  fi.onchange = async function () {
+    var f = fi.files && fi.files[0]; fi.value = ''; if (!f) return;
+    var CH = 262144, n = Math.ceil(f.size / CH);
+    if (n > 48) { flash('That file is too big. The limit is 12 MB.'); return; }
+    var id = ''; for (var q = 0; q < 20; q++) id += Math.floor(Math.random() * 16).toString(16);
+    up.disabled = true;
+    try {
+      for (var i = 0; i < n; i++) {
+        pg.textContent = 'Uploading… ' + Math.round(i / n * 100) + '%';
+        var r = await fetch('/api/music-chunk?id=' + id + '&i=' + i + '&n=' + n, {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: f.slice(i * CH, (i + 1) * CH), credentials: 'same-origin'});
+        var j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || 'Upload failed.');
+      }
+      M.id = id; M.n = n; M.name = f.name.slice(0, 80); M.url = ''; M.on = true; chg(); flash('Music uploaded. Press Save changes to make it live.'); renderMusic();
+    } catch (e) { pg.textContent = ''; up.disabled = false; flash(e.message || 'Upload failed.'); }
+  };
+  row.append(up, fi, pg);
+  if (src) { var rm = mk('button', 'ghost', 'Remove music'); rm.type = 'button'; rm.onclick = function () { M.id = ''; M.n = 0; M.name = ''; M.url = ''; chg(); renderMusic(); }; row.appendChild(rm); }
+  tb.appendChild(row);
+  tb.appendChild(mk('p', 'pwnote', 'MP3 works best. Up to 12 MB (about 10 minutes of MP3). The track repeats in a loop. Only use music you have the right to use.')); L.appendChild(tb);
+  var lk = mk('div', 'fset'); lk.appendChild(mk('b', 0, 'Or use a link instead (optional)'));
+  lk.appendChild(fldIn('Direct link to an audio file', M, 'url', 'https://example.com/song.mp3', 300, function () { })); lk.appendChild(mk('p', 'pwnote', 'Only used when no file is uploaded. It must be a direct https link to an audio file.')); L.appendChild(lk);
+  var st = mk('div', 'fset'); st.appendChild(mk('b', 0, 'Playback'));
+  st.appendChild(rngRow('Starting volume', M, 'vol', 0, 100, '%'));
+  var ar = mk('label', 'chk'), ai = mk('input'); ai.type = 'checkbox'; ai.checked = M.auto !== false; ai.onchange = function () { M.auto = ai.checked; chg(); }; ar.append(ai, mk('span', 0, 'Start by itself on the visitor’s first tap or click')); st.appendChild(ar);
+  st.appendChild(mk('p', 'pwnote', 'Browsers do not allow sound until the visitor taps or clicks somewhere on the page, so the music begins at their first tap. Visitors can pause it or change the volume with the orange button, and the site remembers their choice.')); L.appendChild(st);
+}
+
+var statTimer = 0;
+function renderStats() {
+  var L = $('admStats'); clearInterval(statTimer);
+  L.innerHTML = '<p class="hint">Loading visitor numbers…</p>';
+  async function load() {
+    if (tab !== 'stats') { clearInterval(statTimer); return; }
+    var d; try { var r = await fetch('/api/stats', {cache: 'no-store', credentials: 'same-origin'}); if (!r.ok) throw 0; d = await r.json(); } catch (e) { if (!L.querySelector('.stg')) L.innerHTML = '<p class="hint">Could not load the numbers. Check that your storage is connected.</p>'; return; }
+    var today = d.days[d.days.length - 1].n, week = d.days.slice(-7).reduce(function (a, x) { return a + x.n; }, 0), mx = Math.max.apply(null, d.days.map(function (x) { return x.n; }).concat(1));
+    L.innerHTML = '';
+    var g = mk('div', 'stg'); g.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px';
+    [['On your site now', d.online, 'live', 'People with your site open right now'], ['Total visits', d.visits, '', 'Since counting started'], ['Visitors', d.people, '', 'Different people (browsers)'], ['Today', today, '', 'Visits (UTC day)'], ['Last 7 days', week, '', 'Visits']].forEach(function (c) {
+      var b = mk('div'); b.style.cssText = 'padding:16px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(var(--br),.6)';
+      var h = mk('div', 0, c[0]); h.style.cssText = 'font:600 13px Inter,sans-serif;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px';
+      if (c[2]) { var dot = mk('i'); dot.style.cssText = 'width:9px;height:9px;border-radius:50%;background:#2ee66b;box-shadow:0 0 0 4px rgba(46,230,107,.2)'; h.prepend(dot); }
+      var n = mk('div', 0, String(c[1])); n.style.cssText = 'font:700 34px Poppins,Inter,sans-serif;margin:6px 0 2px';
+      var s = mk('div', 0, c[3]); s.style.cssText = 'font:500 12px Inter,sans-serif;color:rgba(255,255,255,.45)';
+      b.append(h, n, s); g.appendChild(b);
+    });
+    L.appendChild(g);
+    var t = mk('b', 0, 'Visits per day (last 14 days)'); t.style.cssText = 'display:block;margin-bottom:10px';
+    var ch = mk('div'); ch.style.cssText = 'display:flex;align-items:flex-end;gap:6px;height:150px;padding:14px 12px 0;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(var(--br),.6)';
+    d.days.forEach(function (x) {
+      var col = mk('div'); col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0'; col.title = x.d + ': ' + x.n;
+      var v = mk('span', 0, x.n ? String(x.n) : ''); v.style.cssText = 'font:600 11px Inter,sans-serif;color:rgba(255,255,255,.7)';
+      var bar = mk('div'); bar.style.cssText = 'width:100%;max-width:34px;border-radius:5px 5px 0 0;background:var(--accent,#fb2f01);min-height:' + (x.n ? 3 : 1) + 'px;height:' + Math.round(x.n / mx * 92) + 'px;opacity:' + (x.n ? 1 : .25);
+      var dl = mk('span', 0, x.d.slice(8)); dl.style.cssText = 'font:500 10px Inter,sans-serif;color:rgba(255,255,255,.45);padding-bottom:6px';
+      col.append(v, bar, dl); ch.appendChild(col);
+    });
+    L.append(t, ch);
+    var nt = mk('p', 'hint', 'Updates by itself every few seconds. You and the admin preview are never counted, and neither are search-engine bots. One visit = one browser session. “On your site now” means the site was open in a visible tab in the last minute.'); nt.style.marginTop = '14px'; L.appendChild(nt);
+  }
+  load(); statTimer = setInterval(load, 8000);
+}
+function renderAdm() {
+  rowsSync(); applyAdminBg();
+  ['stats', 'lib', 'logo', 'nav', 'music', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  chips();
+  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, music: renderMusic, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  meter();
+}
+
+/* ---------- login + start ---------- */
+function gateCard(title, text) { var G = $('admGate'); G.innerHTML = ''; var c = mk('div', 'gate'); c.appendChild(mk('b', 0, title)); if (text) c.appendChild(mk('p', 0, text)); G.appendChild(c); return c; }
+function showLogin(text) {
+  var c = gateCard('Admin login', text || 'Enter your admin password to continue.');
+  var pi = mk('input'), go = mk('button', 'pub', 'Sign in'), er = mk('p', 'err');
+  pi.type = 'password'; pi.placeholder = 'Password'; pi.autocomplete = 'current-password'; go.type = 'button';
+  async function submit() {
+    go.disabled = true; er.textContent = '';
+    try {
+      var r = await fetch('/api/login', {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({password: pi.value}), credentials: 'same-origin'});
+      var j = {}; try { j = await r.json(); } catch (e) {}
+      if (r.ok) { loadApp(); return; }
+      er.textContent = j.error || 'Could not sign in.'; pi.value = '';
+    } catch (e) { er.textContent = 'Can\u2019t reach the server.'; }
+    go.disabled = false; pi.focus();
+  }
+  go.onclick = submit; pi.onkeydown = function (e) { if (e.key === 'Enter') submit(); };
+  c.append(pi, go, er); setTimeout(function () { pi.focus(); }, 50);
+}
+async function loadApp() {
+  try {
+    var r = await fetch('/api/data', {cache: 'no-cache', credentials: 'same-origin'}), d = norm(await r.json());
+    draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme); setAdminIcon();
+    $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
+    renderAdm(); checkSeed();
+  } catch (e) { gateCard('Could not load your site', e.message); }
+}
+function checkSeed() {
+  fetch('/seed/data.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (seed) {
+    if (!seed || !seed.thumbs || !seed.thumbs.length || draft.length) return;
+    var box = mk('div', 'gate'), b = mk('button', 'pub', 'Import my ' + seed.thumbs.length + ' existing thumbnails');
+    box.style.margin = '0 0 22px'; box.style.maxWidth = 'none'; b.type = 'button';
+    box.append(mk('b', 0, 'Bring over your existing content'), mk('p', 0, 'Your thumbnails, photo, colors and details from before are included in this project. One click copies them into your new admin.'), b);
+    b.onclick = function () { importSeed(seed, b, box); };
+    $('tab-lib').insertBefore(box, $('tab-lib').firstChild);
+  }).catch(function () {});
+}
+async function importSeed(seed, btn, box) {
+  btn.disabled = true;
+  try {
+    for (var i = 0; i < seed.thumbs.length; i++) {
+      var t = seed.thumbs[i]; flash('Importing ' + (i + 1) + ' of ' + seed.thumbs.length + '\u2026');
+      var id = await uploadBlob(await (await fetch('/seed/' + t.file)).blob());
+      draft.push({id: id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}); if (tab === 'lib') renderLib();
+    }
+    if (seed.avatar) siteDraft.avatarId = await uploadBlob(await (await fetch('/seed/' + seed.avatar)).blob());
+    var s = seed.site || {}; siteDraft.name = s.name || siteDraft.name; siteDraft.role = s.role || siteDraft.role;
+    if (s.stats && s.stats.length) siteDraft.stats = s.stats; if (s.theme) { siteDraft.theme = Object.assign(cp(TH0), s.theme, {fonts: siteDraft.theme.fonts}); applyTheme(siteDraft.theme); }
+    if (!siteDraft.work.length) siteDraft.work = draft.filter(function (t) { return t.feat; }).slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; });
+    await save(); box.remove(); renderAdm(); flash('Imported and saved. Your website is updated.');
+  } catch (e) { if (e.message !== 'Signed out') flash('Import stopped: ' + e.message); btn.disabled = false; }
+}
+async function init() {
+  var me; try { me = await (await fetch('/api/me', {credentials: 'same-origin'})).json(); } catch (e) { gateCard('Can\u2019t reach the server', 'Open this page from your deployed website (or run npm run dev). The API did not answer.'); return; }
+  if (!me.storage) { gateCard('Storage isn\u2019t connected yet', me.storageError || 'Connect storage in your hosting dashboard (see the README), then redeploy.'); return; }
+  if (!me.configured) { gateCard('Set your admin password', 'In your hosting dashboard add an environment variable named ADMIN_PASSWORD with the password you want, redeploy, then reload this page.'); return; }
+  if (!me.admin) showLogin(); else loadApp();
+}
+
+$('pub').onclick = save;
+$('disc').onclick = function () { var d = norm(JSON.parse(saved)); draft = d.thumbs; siteDraft = d.site; applyTheme(siteDraft.theme); renderAdm(); };
+$('logout').onclick = async function () { try { await fetch('/api/logout', {method: 'POST', credentials: 'same-origin'}); } catch (e) {} location.reload(); };
+[].forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; renderAdm(); }; });
+$('file').onchange = function (e) { addFiles(e.target.files); e.target.value = ''; };
+var drop = $('drop');
+['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function (e) { addFiles(e.dataTransfer.files); });
+$('filew').onchange = function (e) { addWork(e.target.files); e.target.value = ''; };
+var dropw = $('dropw');
+['dragenter', 'dragover'].forEach(function (ev) { dropw.addEventListener(ev, function (e) { e.preventDefault(); dropw.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { dropw.addEventListener(ev, function (e) { e.preventDefault(); dropw.classList.remove('over'); }); });
+dropw.addEventListener('drop', function (e) { addWork(e.dataTransfer.files); });
+$('fromSlides').onclick = function () { var P = $('picker'); P.hidden = !P.hidden; $('fromSlides').textContent = P.hidden ? 'Add from my slides' : 'Hide my slides'; if (!P.hidden) renderPicker(); };
+init();
+</script>
+</body>
+</html>
