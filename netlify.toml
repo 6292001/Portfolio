@@ -16,13 +16,3 @@
   for = "/admin*"
   [headers.values]
     X-Robots-Tag = "noindex"
-
-[[headers]]
-  for = "/logo.png"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
