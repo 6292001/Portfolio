@@ -232,7 +232,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-music" data-t="music">Music</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -257,6 +257,7 @@ label.ghost{display:inline-block}
 <section id="tab-colors" hidden><p class="hint">Change the colors of your whole website. The panel updates instantly so you can see the result. Press Save changes to make it live.</p><div id="admColors"></div></section>
 <section id="tab-stats" hidden><div id="admStats"></div></section>
 <section id="tab-nav" hidden><p class="hint">The menu bar at the top of your website. Add, rename, reorder or remove menu items, and set the orange button on the right. Press Save changes to make it live.</p><div id="admNav"></div></section>
+<section id="tab-music" hidden><p class="hint">Background music for your website. Visitors see an orange music button at the bottom-left; tapping it opens the volume control. Press Save changes to make it live.</p><div id="admMusic"></div></section>
 <section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
@@ -311,7 +312,7 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      music: Object.assign({on: true, auto: true, id: '', n: 0, name: '', url: '', vol: 35}, cp(s.music || {})), nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -1017,6 +1018,46 @@ function renderNav() {
   var rst = mk('button', 'ghost', 'Reset to the example menu'); rst.type = 'button'; rst.style.marginTop = '18px'; rst.onclick = function () { siteDraft.nav = cp(NAV0); chg(); renderNav(); }; L.appendChild(rst);
 }
 
+function renderMusic() {
+  var L = $('admMusic'), M = siteDraft.music; L.innerHTML = '';
+  L.appendChild(onBox('Play music on my website', M));
+  var tb = mk('div', 'fset'); tb.appendChild(mk('b', 0, 'Your music file'));
+  var src = M.id ? '/api/music/' + M.id : (M.url || '');
+  if (src) {
+    var nm = mk('p', 0, M.id ? (M.name || 'Uploaded track') : 'Linked track'); nm.style.cssText = 'margin:10px 0 8px;font-weight:600'; tb.appendChild(nm);
+    var au = mk('audio'); au.controls = true; au.preload = 'none'; au.src = src; au.style.cssText = 'width:100%;max-width:420px;display:block'; tb.appendChild(au);
+  } else tb.appendChild(mk('p', 'pwnote', 'No music yet. Upload a file below and the music button will appear on your website.'));
+  var row = mk('div', 'crow2'); row.style.marginTop = '14px';
+  var up = mk('button', 'pub', src ? 'Upload a different file' : 'Upload music'), fi = mk('input'), pg = mk('span', 'pwnote'); up.type = 'button'; fi.type = 'file'; fi.accept = 'audio/*,.mp3,.m4a,.aac,.ogg,.wav,.webm'; fi.hidden = true; pg.style.margin = '0 0 0 12px';
+  up.onclick = function () { fi.click(); };
+  fi.onchange = async function () {
+    var f = fi.files && fi.files[0]; fi.value = ''; if (!f) return;
+    var CH = 524288, n = Math.ceil(f.size / CH);
+    if (n > 24) { flash('That file is too big. The limit is 12 MB.'); return; }
+    var id = ''; for (var q = 0; q < 20; q++) id += Math.floor(Math.random() * 16).toString(16);
+    up.disabled = true;
+    try {
+      for (var i = 0; i < n; i++) {
+        pg.textContent = 'Uploading… ' + Math.round(i / n * 100) + '%';
+        var r = await fetch('/api/music-chunk?id=' + id + '&i=' + i + '&n=' + n, {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: f.slice(i * CH, (i + 1) * CH), credentials: 'same-origin'});
+        var j = {}; try { j = await r.json(); } catch (e) {}
+        if (!r.ok) throw new Error(j.error || 'Upload failed.');
+      }
+      M.id = id; M.n = n; M.name = f.name.slice(0, 80); M.url = ''; M.on = true; chg(); flash('Music uploaded. Press Save changes to make it live.'); renderMusic();
+    } catch (e) { pg.textContent = ''; up.disabled = false; flash(e.message || 'Upload failed.'); }
+  };
+  row.append(up, fi, pg);
+  if (src) { var rm = mk('button', 'ghost', 'Remove music'); rm.type = 'button'; rm.onclick = function () { M.id = ''; M.n = 0; M.name = ''; M.url = ''; chg(); renderMusic(); }; row.appendChild(rm); }
+  tb.appendChild(row);
+  tb.appendChild(mk('p', 'pwnote', 'MP3 works best. Up to 12 MB (about 10 minutes of MP3). The track repeats in a loop. Only use music you have the right to use.')); L.appendChild(tb);
+  var lk = mk('div', 'fset'); lk.appendChild(mk('b', 0, 'Or use a link instead (optional)'));
+  lk.appendChild(fldIn('Direct link to an audio file', M, 'url', 'https://example.com/song.mp3', 300, function () { })); lk.appendChild(mk('p', 'pwnote', 'Only used when no file is uploaded. It must be a direct https link to an audio file.')); L.appendChild(lk);
+  var st = mk('div', 'fset'); st.appendChild(mk('b', 0, 'Playback'));
+  st.appendChild(rngRow('Starting volume', M, 'vol', 0, 100, '%'));
+  var ar = mk('label', 'chk'), ai = mk('input'); ai.type = 'checkbox'; ai.checked = M.auto !== false; ai.onchange = function () { M.auto = ai.checked; chg(); }; ar.append(ai, mk('span', 0, 'Start by itself on the visitor’s first tap or click')); st.appendChild(ar);
+  st.appendChild(mk('p', 'pwnote', 'Browsers do not allow sound until the visitor taps or clicks somewhere on the page, so the music begins at their first tap. Visitors can pause it or change the volume with the orange button, and the site remembers their choice.')); L.appendChild(st);
+}
+
 var statTimer = 0;
 function renderStats() {
   var L = $('admStats'); clearInterval(statTimer);
@@ -1052,9 +1093,9 @@ function renderStats() {
 }
 function renderAdm() {
   rowsSync(); applyAdminBg();
-  ['stats', 'lib', 'logo', 'nav', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['stats', 'lib', 'logo', 'nav', 'music', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, music: renderMusic, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 
