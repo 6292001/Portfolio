@@ -1025,7 +1025,23 @@ function renderMusic() {
   var src = M.id ? '/api/music/' + M.id : (M.url || '');
   if (src) {
     var nm = mk('p', 0, M.id ? (M.name || 'Uploaded track') : 'Linked track'); nm.style.cssText = 'margin:10px 0 8px;font-weight:600'; tb.appendChild(nm);
-    var au = mk('audio'); au.controls = true; au.preload = 'none'; au.src = src; au.style.cssText = 'width:100%;max-width:420px;display:block'; tb.appendChild(au);
+    var au = mk('audio'); au.controls = true; au.preload = 'auto'; au.style.cssText = 'width:100%;max-width:420px;display:block'; tb.appendChild(au);
+    var ck = mk('p', 'pwnote', M.id ? 'Checking the file on your server…' : ''); ck.style.margin = '8px 0 0'; tb.appendChild(ck);
+    if (M.id && M.n > 0) {
+      (async function () {
+        try {
+          var parts = [], type = 'audio/mpeg';
+          for (var i = 0; i < M.n; i++) {
+            var r = await fetch('/api/music/' + M.id + '?c=' + i, {cache: 'no-store'});
+            if (!r.ok) { var j = {}; try { j = await r.json(); } catch (e) {} throw new Error('piece ' + (i + 1) + ' of ' + M.n + ' failed (error ' + r.status + (j.error ? ': ' + j.error : '') + ')'); }
+            type = r.headers.get('content-type') || type; parts.push(await r.arrayBuffer());
+          }
+          if (!ck.isConnected) return;
+          au.src = URL.createObjectURL(new Blob(parts, {type: type}));
+          ck.textContent = '✓ The file is on your server and ready (' + (parts.reduce(function (t, x) { return t + x.byteLength; }, 0) / 1048576).toFixed(1) + ' MB).'; ck.style.color = '#7ddf9a';
+        } catch (e) { if (!ck.isConnected) return; ck.textContent = '✗ The file could not be read from your server: ' + (e.message || e) + '. Press “Upload a different file” and upload it again, then Save changes.'; ck.style.color = '#ff8a7a'; }
+      })();
+    } else if (!M.id) au.src = src;
   } else tb.appendChild(mk('p', 'pwnote', 'No music yet. Upload a file below and the music button will appear on your website.'));
   var row = mk('div', 'crow2'); row.style.marginTop = '14px';
   var up = mk('button', 'pub', src ? 'Upload a different file' : 'Upload music'), fi = mk('input'), pg = mk('span', 'pwnote'); up.type = 'button'; fi.type = 'file'; fi.accept = 'audio/*,.mp3,.m4a,.aac,.ogg,.wav,.webm'; fi.hidden = true; pg.style.margin = '0 0 0 12px';

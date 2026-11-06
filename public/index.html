@@ -217,6 +217,10 @@ html.is-pre .rv.in{animation-play-state:paused}
 .mus-r::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-5px;border-radius:50%;background:#fff;border:0;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .mus-r::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:0;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .mus-pc{flex:none;width:34px;text-align:right;color:rgba(255,255,255,.6);font-size:12px;font-variant-numeric:tabular-nums}
+/* a small "tap to start" note that fades away once the music plays */
+.mus-hint{position:absolute;left:66px;bottom:11px;padding:9px 14px;border-radius:999px;background:rgba(18,18,22,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);color:#fff;font:500 13px var(--f-body);white-space:nowrap;opacity:0;transform:translateX(-8px);pointer-events:none;transition:opacity .4s,transform .4s}
+.mus.hint-on:not(.open) .mus-hint{opacity:1;transform:none;transition-delay:2.6s}
+@media (max-width:420px){.mus-hint{font-size:12px;padding:8px 12px}}
 @media (prefers-reduced-motion:reduce){.mus,.mus.playing .mus-btn:after,.mus.playing .mus-btn svg .nt{animation:none}}
 /* menu bar (top, fixed): as wide as its content, frosted glass */
 .nav{--nav-c:#1b1b1b;--na:55%;--nb:18px;position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:0;right:0;margin:0 auto;width:fit-content;max-width:min(1180px,calc(100% - 28px));z-index:7;display:flex;align-items:center;gap:12px;padding:9px 9px 9px 18px;border-radius:999px;background:linear-gradient(180deg,color-mix(in srgb,color-mix(in srgb,var(--nav-c) 80%,#fff) var(--na),transparent),color-mix(in srgb,var(--nav-c) var(--na),transparent));-webkit-backdrop-filter:blur(var(--nb)) saturate(1.5);backdrop-filter:blur(var(--nb)) saturate(1.5);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 36px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(255,255,255,.05);animation:navIn .7s cubic-bezier(.2,.8,.2,1) .15s backwards}
@@ -722,52 +726,73 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
 /* background music: orange button at the bottom-left, opens a small volume panel */
 (function () {
   var M = S1.music || {}; if (M.on === false) return;
-  var src = M.id ? '/api/music/' + M.id : (M.url || ''); if (!src) return;
+  var direct = M.id ? '/api/music/' + M.id : (M.url || ''); if (!direct) return;
   try { if (window.top !== window.self) return; } catch (e) { return; }
   var lsGet = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, lsSet = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
   var vol = parseInt(lsGet('pf-vol'), 10); if (!(vol >= 0 && vol <= 100)) vol = M.vol == null ? 35 : M.vol;
-  var a = new Audio(); a.loop = true; a.preload = 'none'; a.src = src; a.muted = lsGet('pf-mute') === '1'; a.volume = vol / 100;
-  var optOut = lsGet('pf-mus') === 'off', fade = 0, back = false;
+  var SIL = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  var a = new Audio(); a.loop = true; a.preload = 'auto'; a.muted = lsGet('pf-mute') === '1'; a.volume = vol / 100;
+  var optOut = lsGet('pf-mus') === 'off', fade = 0, back = false, ready = false, want = false, unlocked = false, failed = false;
   var box = mk('div', 'mus'), btn = mk('button', 'mus-btn'), pop = mk('div', 'mus-pop');
   btn.type = 'button'; btn.setAttribute('aria-label', 'Music and volume'); btn.setAttribute('aria-expanded', 'false');
   btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><g class="nt"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></g><path class="sl" d="M3 3l18 18" stroke-width="2.6"/></svg>';
   pop.innerHTML = '<div class="mus-top"><button type="button" class="mus-pp" aria-label="Play or pause"><svg class="ia" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg><svg class="ip" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></button><div class="mus-nm"><b></b><span></span></div></div>'
     + '<div class="mus-vol"><button type="button" class="mus-mu" aria-label="Mute or unmute"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="wv" d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg></button><input class="mus-r" type="range" min="0" max="100" step="1" aria-label="Volume"><span class="mus-pc"></span></div>';
-  box.append(btn, pop); document.body.appendChild(box);
+  var hint = mk('div', 'mus-hint', 'Tap anywhere to start the music'); box.append(btn, pop, hint); document.body.appendChild(box);
   var rg = pop.querySelector('.mus-r'), pc = pop.querySelector('.mus-pc'), pp = pop.querySelector('.mus-pp'), mu = pop.querySelector('.mus-mu'), nm = pop.querySelector('.mus-nm b'), st = pop.querySelector('.mus-nm span');
-  nm.textContent = M.name ? M.name.replace(/\.[a-z0-9]{2,4}$/i, '') : 'Music'; 
+  nm.textContent = M.name ? M.name.replace(/\.[a-z0-9]{2,4}$/i, '') : 'Music';
   function paint() {
     var v = a.muted ? 0 : vol; rg.value = v; rg.style.setProperty('--p', v + '%'); pc.textContent = v + '%';
-    box.classList.toggle('muted', a.muted || vol === 0); box.classList.toggle('playing', !a.paused); st.textContent = a.paused ? 'Paused' : 'Playing';
+    box.classList.toggle('muted', a.muted || vol === 0); box.classList.toggle('playing', !a.paused);
+    st.textContent = failed ? 'Could not load this music' : a.paused ? 'Paused' : 'Playing';
+    if (!a.paused) box.classList.remove('hint-on');
   }
-  function ramp(to) { clearInterval(fade); var t0 = performance.now(), from = 0; a.volume = 0; fade = setInterval(function () { var k = Math.min(1, (performance.now() - t0) / 1400); a.volume = Math.max(0, Math.min(1, to / 100 * k)); if (k >= 1) clearInterval(fade); }, 50); }
-  function play(user) {
+  /* load the whole track first (a few small downloads), so playback never depends on streaming support */
+  function getTrack() {
+    if (!M.id || !(M.n > 0)) return Promise.resolve(direct);
+    var parts = new Array(M.n), type = 'audio/mpeg', next = 0;
+    function worker() { if (next >= M.n) return Promise.resolve(); var i = next++; return fetch('/api/music/' + M.id + '?c=' + i).then(function (r) { if (!r.ok) throw new Error('piece ' + i); type = r.headers.get('content-type') || type; return r.arrayBuffer(); }).then(function (b) { parts[i] = b; return worker(); }); }
+    return Promise.all([worker(), worker(), worker(), worker()]).then(function () { return URL.createObjectURL(new Blob(parts, {type: type})); });
+  }
+  function onReady(u) { ready = true; a.src = u; if (want) kick(); }
+  getTrack().then(onReady, function () { onReady(direct); });
+  var triedDirect = false;
+  a.addEventListener('error', function () { var u = a.src || ''; if (u.indexOf('data:') === 0) return; if (u.indexOf('blob:') === 0 && !triedDirect) { triedDirect = true; a.src = direct; if (want) kick(); return; } failed = true; paint(); });
+  function ramp(to) { clearInterval(fade); var t0 = performance.now(); a.volume = 0; fade = setInterval(function () { var k = Math.min(1, (performance.now() - t0) / 1400); a.volume = Math.max(0, Math.min(1, to / 100 * k)); if (k >= 1) clearInterval(fade); }, 50); }
+  function kick() { var p; try { p = a.play(); } catch (e) {} if (p && p.then) p.then(function () { ramp(vol); paint(); }, function () { paint(); }); else paint(); }
+  /* call this from a tap: it unlocks sound on phones even if the track is still downloading */
+  function request(user) {
     if (user) { optOut = false; lsSet('pf-mus', 'on'); }
-    var p; try { p = a.play(); } catch (e) {}
-    if (p && p.then) p.then(function () { ramp(vol); paint(); }, function () { paint(); }); else paint();
+    want = true;
+    if (ready) return kick();
+    if (!unlocked) { unlocked = true; a.src = SIL; try { a.play(); } catch (e) {} }
+    paint();
   }
-  function pause(user) { if (user) { optOut = true; lsSet('pf-mus', 'off'); } clearInterval(fade); a.pause(); paint(); }
+  function pause(user) { if (user) { optOut = true; lsSet('pf-mus', 'off'); } want = false; clearInterval(fade); a.pause(); paint(); }
   a.addEventListener('play', paint); a.addEventListener('pause', paint);
-  btn.onclick = function () { var o = box.classList.toggle('open'); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); if (o && a.paused && !optOut) play(true); };
-  document.addEventListener('pointerdown', function (e) { if (!box.contains(e.target)) { box.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
-  addEventListener('keydown', function (e) { if (e.key === 'Escape') { box.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
-  pp.onclick = function () { a.paused ? play(true) : pause(true); };
-  mu.onclick = function () { a.muted = !a.muted; lsSet('pf-mute', a.muted ? '1' : '0'); if (!a.muted && vol === 0) { vol = 35; a.volume = .35; lsSet('pf-vol', 35); } if (a.paused && !a.muted) play(true); paint(); };
-  rg.oninput = function () { vol = +rg.value; clearInterval(fade); a.volume = vol / 100; if (vol > 0 && a.muted) { a.muted = false; lsSet('pf-mute', '0'); } lsSet('pf-vol', vol); if (vol > 0 && a.paused) play(true); paint(); };
-  /* browsers only allow sound after a tap or click, so the music starts with the visitor's first one (we keep trying until a real tap works) */
+  function close() { box.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  btn.onclick = function () { var o = box.classList.toggle('open'); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); box.classList.remove('hint-on'); if (o && a.paused && !optOut) request(true); };
+  document.addEventListener('pointerdown', function (e) { if (!box.contains(e.target)) close(); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  pp.onclick = function () { a.paused ? request(true) : pause(true); };
+  mu.onclick = function () { a.muted = !a.muted; lsSet('pf-mute', a.muted ? '1' : '0'); if (!a.muted && vol === 0) { vol = 35; a.volume = .35; lsSet('pf-vol', 35); } if (a.paused && !a.muted) request(true); paint(); };
+  rg.oninput = function () { vol = +rg.value; clearInterval(fade); a.volume = vol / 100; if (vol > 0 && a.muted) { a.muted = false; lsSet('pf-mute', '0'); } lsSet('pf-vol', vol); if (vol > 0 && a.paused) request(true); paint(); };
+  /* browsers only allow sound after a tap, click or key press, so the music starts with the visitor's very first one */
   var EV = ['pointerup', 'mousedown', 'click', 'touchend', 'keydown'];
   function unarm() { EV.forEach(function (t) { document.removeEventListener(t, go, true); }); }
   function go(e) {
     if (box.contains(e.target) || optOut) return;
-    var p; try { p = a.play(); } catch (x) {}
-    if (p && p.then) p.then(function () { unarm(); ramp(vol); paint(); }, function () {}); else { unarm(); paint(); }
+    if (!a.paused && ready) { unarm(); return; }
+    request(false);
+    if (ready) setTimeout(function () { if (!a.paused) unarm(); }, 400);
   }
-  a.addEventListener('error', function () { st.textContent = 'Could not load this music'; });
   if (M.auto !== false && !optOut) {
     EV.forEach(function (t) { document.addEventListener(t, go, true); });
-    var tryNow; try { tryNow = a.play(); } catch (x) {} if (tryNow && tryNow.then) tryNow.then(function () { unarm(); ramp(vol); paint(); }, function () {});
+    box.classList.add('hint-on'); setTimeout(function () { box.classList.remove('hint-on'); }, 9000);
+    var again = setInterval(function () { if (ready) { clearInterval(again); want = true; var p; try { p = a.play(); } catch (e) {} if (p && p.then) p.then(function () { unarm(); ramp(vol); paint(); }, function () { want = false; }); } }, 300);
+    setTimeout(function () { clearInterval(again); }, 20000);
   }
-  document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!a.paused) { back = true; clearInterval(fade); a.pause(); } } else if (back) { back = false; if (!optOut) play(false); } });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!a.paused) { back = true; clearInterval(fade); a.pause(); } } else if (back) { back = false; if (!optOut) request(false); } });
   paint();
 })();
 
