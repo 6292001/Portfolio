@@ -777,8 +777,8 @@ function renderFooter() {
     });
   }
   rows(); L.appendChild(lst);
-  var add = mk('button', 'ghost', 'Add a social link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 8) { flash('You can add up to 8 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
-  L.append(add, mk('p', 'pwnote', 'Each link becomes an icon, chosen automatically from the name or the link (YouTube, Instagram, X / Twitter, LinkedIn, TikTok, Facebook, or mailto: for email). Anything else shows as a small text link. Links must start with https://, mailto: or tel: to work.')); draw();
+  var add = mk('button', 'ghost', 'Add a social link'); add.type = 'button'; add.onclick = function () { if (F.links.length >= 12) { flash('You can add up to 12 links.'); return; } F.links.push({l: '', u: ''}); chg(); rows(); };
+  L.append(add, mk('p', 'pwnote', 'Each link becomes an icon on your website, chosen automatically from the link or the name: Fiverr, Upwork, LinkedIn, Instagram, YouTube, X / Twitter, TikTok, Facebook, GitHub, Dribbble, Telegram, WhatsApp, email (mailto:), or \u201CWebsite\u201D for a globe. Any other name gets a round icon with its first letter. Every link needs a name and a link. Links must start with https://, mailto: or tel: to work.')); draw();
 }
 var FG = [['s', 'Clean sans-serif'], ['d', 'Bold display'], ['f', 'Serif'], ['h', 'Handwritten']];
 function fontSel(key) {
