@@ -8,6 +8,11 @@
   status = 200
 
 [[redirects]]
+  from = "/copyright"
+  to = "/copyright.html"
+  status = 200
+
+[[redirects]]
   from = "/favicon.ico"
   to = "/api/favicon"
   status = 200

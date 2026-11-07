@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#02070d">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Copyright</title>
+<link rel="icon" href="/api/favicon">
+<link rel="apple-touch-icon" href="/api/favicon?apple=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Inter:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&display=swap"></noscript>
+<script>
+function hexRgb(h) { return /^#[0-9a-f]{6}$/i.test(h || '') ? [1, 3, 5].map(function (k) { return parseInt(h.substr(k, 2), 16); }) : null; }
+function toHex(c) { return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); }
+var GF = {'Inter': ['500;600;800', 's'], 'Poppins': ['400;500;600;700', 's'], 'Montserrat': ['500;600;800', 's'], 'Space Grotesk': ['500;600;700', 's'], 'Outfit': ['500;600;800', 's'], 'Manrope': ['500;600;800', 's'], 'DM Sans': ['500;600;800', 's'], 'Sora': ['500;600;800', 's'], 'Syne': ['500;600;800', 's'], 'Bebas Neue': ['', 'd'], 'Anton': ['', 'd'], 'Oswald': ['500;600;700', 'd'], 'Archivo Black': ['', 'd'], 'Bangers': ['', 'd'], 'Righteous': ['', 'd'], 'Playfair Display': ['500;600;800', 'f'], 'Caveat Brush': ['', 'h'], 'Caveat': ['500;700', 'h'], 'Permanent Marker': ['', 'h'], 'Kalam': ['400;700', 'h'], 'Shadows Into Light': ['', 'h'], 'Gochi Hand': ['', 'h'], 'Rock Salt': ['', 'h'], 'Patrick Hand': ['', 'h'], 'Gloria Hallelujah': ['', 'h'], 'Nanum Pen Script': ['', 'h'], 'Covered By Your Grace': ['', 'h']}, FB = {s: 'system-ui,sans-serif', d: 'Impact,sans-serif', f: 'Georgia,serif', h: 'cursive'}, LOADED = {};
+function loadFont(n) {
+  if (n === 'Inter' || n === 'Poppins' || n === 'Caveat Brush' || LOADED[n] || !GF[n]) return; LOADED[n] = 1;
+  var l = document.createElement('link'); l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=' + n.replace(/ /g, '+') + (GF[n][0] ? ':wght@' + GF[n][0] : '') + '&display=swap'; document.head.appendChild(l);
+}
+var CK = ['heroTag','heroT','heroS','statN','statL','workT','workS','aboutT','aboutB','aboutBtn','howTag','howT','stepIcon','stepT','stepD','howS','stepBg','stepBgOff','secT','secS','faqTag','faqT','faqQ','faqA','footT','footS','footSt','footEm','footC'];
+function applyTheme(t) {
+  var r = document.documentElement.style, a = hexRgb(t && t.accent) || [251, 47, 1], b = hexRgb(t && t.bg) || [2, 7, 13];
+  r.setProperty('--glow', toHex(a)); r.setProperty('--ar', a.join(','));
+  r.setProperty('--glow2', toHex(a.map(function (v) { return Math.round(v * .7); })));
+  r.setProperty('--bg', toHex(b)); r.setProperty('--br', b.join(','));
+  var tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', toHex(b));
+  document.documentElement.setAttribute('data-grid', t && t.grid === 'off' ? 'off' : 'on');
+  var co = (t && t.colors) || {};
+  CK.forEach(function (k) { if (hexRgb(co[k])) r.setProperty('--c-' + k, co[k]); else r.removeProperty('--c-' + k); });
+  var fo = (t && t.fonts) || {};
+  [['--f-body', fo.body, 'Inter'], ['--f-head', fo.head, 'Poppins'], ['--f-hand', fo.hand, 'Caveat Brush']].forEach(function (x) {
+    var n = GF[x[1]] ? x[1] : x[2]; loadFont(n); r.setProperty(x[0], "'" + n + "'," + FB[GF[n][1]]);
+  });
+}
+try { applyTheme(JSON.parse(localStorage.getItem('pf-theme') || 'null')); } catch (e) {}
+</script>
+<script>try { var iv = localStorage.getItem('pf-icv'); if (iv) document.querySelector('link[rel=icon]').setAttribute('href', '/api/favicon?v=' + encodeURIComponent(iv)); } catch (e) {}</script>
+<style>
+:root{--bg:#02070d;--br:2,7,13;--glow:#fb2f01;--ar:251,47,1;--glow2:#b32000;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-body:Inter,system-ui,sans-serif;--f-head:'Poppins',system-ui,sans-serif;--f-hand:'Caveat Brush',cursive;--gs:linear-gradient(90deg,#f4f4f0 25%,#85857f 100%);--gh:linear-gradient(100deg,#9c9c95 0%,#f1f1ed 62%,#fff 100%)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{background:var(--bg)}
+html,body{margin:0;font-family:var(--f-body);color:#fff}
+.bglow,.bgrid{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.bglow{background:radial-gradient(ellipse 60% 45% at 50% -5%,rgba(var(--ar),.18),transparent 70%),radial-gradient(ellipse 45% 40% at 100% 70%,rgba(var(--ar),.07),transparent 70%);animation:breathe 9s ease-in-out infinite}
+.bgrid{background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,#000 25%,transparent 100%);mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,#000 25%,transparent 100%);animation:gridmove 80s linear infinite}
+html[data-grid=off] .bgrid,html[data-grid=off] .bglow{display:none}
+@media (max-width:700px){.bglow{animation:none}}
+@keyframes breathe{50%{opacity:.55}}
+/* menu bar (top, fixed): as wide as its content, frosted glass */
+.nav{--nav-c:#1b1b1b;--na:55%;--nb:18px;position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:0;right:0;margin:0 auto;width:fit-content;max-width:min(1180px,calc(100% - 28px));z-index:7;display:flex;align-items:center;gap:12px;padding:9px 9px 9px 18px;border-radius:999px;background:linear-gradient(180deg,color-mix(in srgb,color-mix(in srgb,var(--nav-c) 80%,#fff) var(--na),transparent),color-mix(in srgb,var(--nav-c) var(--na),transparent));-webkit-backdrop-filter:blur(var(--nb)) saturate(1.5);backdrop-filter:blur(var(--nb)) saturate(1.5);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 36px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(255,255,255,.05);animation:navIn .7s cubic-bezier(.2,.8,.2,1) .15s backwards}
+@keyframes navIn{from{opacity:0;transform:translateY(-26px)}}
+.nav-logo{display:block;width:38px;height:38px;border-radius:10px;line-height:0;flex:none;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.nav-logo:hover,.nav-logo:focus-visible{transform:scale(1.08);outline:0}
+.nav-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;pointer-events:none;-webkit-user-select:none;user-select:none}
+.nav-name{flex:none;color:#fff;font:700 18px var(--f-head);letter-spacing:-.01em;text-decoration:none;white-space:nowrap;margin:0 6px 0 -2px}
+.nav-links{display:flex;align-items:center;justify-content:center;gap:2px;margin:0 8px}
+.nav-links a{padding:10px 15px;border-radius:999px;color:#fff;font:600 15px var(--f-body);text-decoration:none;white-space:nowrap;opacity:.92;transition:background .25s,opacity .25s}
+.nav-links a:hover,.nav-links a:focus-visible{background:rgba(255,255,255,.12);opacity:1;outline:0}
+.nav-links a.on{background:rgba(255,255,255,.18);opacity:1}
+.nav-cta{flex:none;padding:13px 26px;border-radius:999px;background:var(--glow);color:#fff;font:700 15px var(--f-body);text-decoration:none;white-space:nowrap;box-shadow:inset 0 -2px 0 rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px rgba(var(--ar),.35);transition:transform .25s cubic-bezier(.22,1,.36,1),filter .25s}
+.nav-cta:hover,.nav-cta:focus-visible{transform:translateY(-1px) scale(1.04);filter:brightness(1.08);outline:0}
+.nav-burger{display:none;width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.12);cursor:pointer;flex:none;padding:0;position:relative;-webkit-tap-highlight-color:transparent}
+.nav-burger i,.nav-burger i:before,.nav-burger i:after{position:absolute;left:12px;width:18px;height:2px;border-radius:2px;background:#fff;transition:transform .3s,opacity .2s}
+.nav-burger i{top:20px}.nav-burger i:before,.nav-burger i:after{content:"";left:0}.nav-burger i:before{top:-6px}.nav-burger i:after{top:6px}
+.nav.open .nav-burger i{background:transparent}.nav.open .nav-burger i:before{transform:translateY(6px) rotate(45deg)}.nav.open .nav-burger i:after{transform:translateY(-6px) rotate(-45deg)}
+/* too many items for one row (or a phone): the items move into a drop-down */
+.nav.compact{width:calc(100% - 28px);max-width:1180px;padding:8px 8px 8px 14px;gap:10px}
+.nav.compact .nav-logo{width:34px;height:34px}
+.nav.compact .nav-burger{display:block;margin-left:auto}
+.nav.compact .nav-cta{padding:11px 18px;font-size:14px}
+.nav.compact .nav-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;margin:0;flex-direction:column;align-items:stretch;gap:2px;padding:10px;border-radius:26px;background:color-mix(in srgb,var(--nav-c) 92%,#000);border:1px solid rgba(255,255,255,.12);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.nav.compact.open .nav-links{display:flex}
+.nav.compact .nav-links a{padding:14px 18px;font-size:16px;border-radius:16px}
+.slots{position:relative;z-index:4;display:flex;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 4vw 0}
+html.has-nav .slots{padding-top:calc(env(safe-area-inset-top,0px) + 98px)}
+.slots span{display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border:1px dashed rgba(255,255,255,.3);border-radius:999px;background:rgba(255,255,255,.03);color:#ececec;font:500 14px var(--f-body);animation:navIn .7s cubic-bezier(.2,.8,.2,1) .3s backwards}
+.slots i{width:8px;height:8px;border-radius:50%;background:#1ec94c;box-shadow:0 0 0 0 rgba(30,201,76,.5);animation:slotP 2s ease-out infinite}
+@keyframes slotP{70%{box-shadow:0 0 0 8px rgba(30,201,76,0)}100%{box-shadow:0 0 0 0 rgba(30,201,76,0)}}
+html.has-nav .hero{padding-top:calc(env(safe-area-inset-top,0px) + max(13vh,125px))}
+html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
+@media (max-width:760px){html.has-nav .slots{padding-top:calc(env(safe-area-inset-top,0px) + 82px)}}
+@media (prefers-reduced-motion:reduce){.nav,.slots span,.slots i{animation:none}}
+
+.legal{position:relative;z-index:2;max-width:820px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 132px) 6vw 40px}
+.legal h1{margin:0;font:600 clamp(34px,6vw,60px)/1.1 var(--f-head);letter-spacing:-.02em;color:var(--c-secT,#fff)}
+.legal .upd{margin:14px 0 0;color:rgba(255,255,255,.5);font-size:14px}
+.lbody{margin-top:34px;color:var(--c-secS,rgba(255,255,255,.72));font:400 17px/1.75 var(--f-body)}
+.lbody p{margin:0 0 1.15em}
+.lbody>p:first-child{color:#fff;font-weight:500;font-size:1.15em}
+.lbody h2{margin:2em 0 .6em;color:#fff;font:600 clamp(20px,2.6vw,25px)/1.25 var(--f-head)}
+.lbody ul{margin:0 0 1.2em;padding-left:1.3em}.lbody li{margin:.35em 0}
+.back{display:inline-flex;align-items:center;gap:8px;margin-top:34px;padding:12px 22px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;font:600 15px var(--f-body);text-decoration:none;transition:background .25s,transform .25s}
+.back:hover{background:rgba(255,255,255,.14);transform:translateX(-3px)}
+.lfoot{position:relative;z-index:2;max-width:820px;margin:0 auto;padding:30px 6vw calc(env(safe-area-inset-bottom,0px) + 50px);color:var(--c-footC,rgba(255,255,255,.45));font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+@media (max-width:760px){.lbody{font-size:16px}}
+</style>
+<script>try { var iv = localStorage.getItem('pf-icv'); if (iv) document.querySelector('link[rel=icon]').setAttribute('href', '/api/favicon?v=' + encodeURIComponent(iv)); } catch (e) {}</script>
+</head>
+<body>
+<div class="bglow" aria-hidden="true"></div><div class="bgrid" aria-hidden="true"></div>
+<nav class="nav" id="nav" aria-label="Main" style="display:none"></nav>
+<main class="legal" id="legal" hidden><h1 id="lt"></h1><p class="upd" id="lu"></p><div class="lbody" id="lb"></div><a class="back" href="/">← Back to home</a></main>
+<footer class="lfoot" id="lf" hidden></footer>
+<script>
+(function () {
+  function mk(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  var $ = function (i) { return document.getElementById(i); };
+  var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ’s', u: '#faq'}], cta: {l: 'Let’s Work', u: '#about'}, slots: {on: false, t: ''}, bg: '', name: '', a: 55, b: 18};
+  var LEGAL0 = {on: true, link: true, t: 'Copyright Notice', upd: '', body: '\u00A9 {year} {name}. All rights reserved.\n\n## Ownership\nAll thumbnails, designs, graphics, images, text, logos and other content on this website were created by {name} and are protected by copyright and other intellectual property laws.\n\n## Using this content\nYou may not copy, download, reproduce, edit, distribute, sell, share or use any content from this website, in whole or in part, without written permission from {name}. This includes using the designs as your own, in your own videos or channels, or in any other project.\n\n## Client work\nDesigns shown in the portfolio were made for clients. Names, logos and channels shown in them belong to their respective owners. Rights to a design a client has paid for are handled as agreed between the client and {name}.\n\n## Permission and takedown\nTo ask for permission to use something, or to report a use of this content that you believe is not authorised, please get in touch through the contact details on the home page.'};
+  function home(u) { return u === '#top' || u === '#' ? '/' : (u.charAt(0) === '#' ? '/' + u : u); }
+  function render(d) {
+    var S = (d && d.site) || {}, N = S.nav ? Object.assign({}, NAV0, S.nav) : NAV0, L = Object.assign({}, LEGAL0, S.legal || {}), name = S.name || 'Shehroz Khan', year = new Date().getFullYear();
+    function fill(t) { return String(t || '').replace(/\{year\}/g, year).replace(/\{name\}/g, name); }
+    document.title = (L.t || 'Copyright') + ' · ' + name;
+    /* menu bar: same as the home page, but section links lead back to the home page */
+    var nv = $('nav'); nv.innerHTML = ''; nv.className = 'nav';
+    if (N.on !== false) {
+      nv.style.display = ''; if (N.bg) nv.style.setProperty('--nav-c', N.bg); nv.style.setProperty('--na', (N.a == null ? 55 : N.a) + '%'); nv.style.setProperty('--nb', (N.b == null ? 18 : N.b) + 'px');
+      if (S.logoOn !== false) { var lo = mk('a', 'nav-logo'), im = mk('img'); lo.href = '/'; lo.setAttribute('aria-label', 'Home'); im.src = S.logoId ? '/api/img/' + S.logoId : '/logo.png'; im.alt = ''; im.draggable = false; lo.appendChild(im); nv.appendChild(lo); }
+      if (N.name) { var nm = mk('a', 'nav-name', N.name); nm.href = '/'; nv.appendChild(nm); }
+      var box = mk('div', 'nav-links');
+      (N.links || []).forEach(function (l) { if (l && l.l && l.u) { var a = mk('a', 0, l.l); a.href = home(l.u); box.appendChild(a); } });
+      var hasL = !!box.children.length; if (hasL) nv.appendChild(box);
+      if (hasL) { var bg = mk('button', 'nav-burger'); bg.type = 'button'; bg.setAttribute('aria-label', 'Menu'); bg.appendChild(mk('i')); bg.onclick = function () { nv.classList.toggle('open'); }; nv.appendChild(bg); }
+      var c = N.cta || {}; if (c.l && c.u) { var ca = mk('a', 'nav-cta', c.l); ca.href = home(c.u); nv.appendChild(ca); }
+      function fit() { nv.classList.remove('compact', 'open'); if (innerWidth <= 760 || nv.scrollWidth > nv.clientWidth + 1) nv.classList.add('compact'); }
+      fit(); addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    } else nv.style.display = 'none';
+    var m = $('legal'); m.hidden = false; $('lb').innerHTML = '';
+    if (L.on === false) { $('lt').textContent = 'Page not available'; $('lu').textContent = ''; $('lb').appendChild(mk('p', 0, 'This page is not available right now.')); $('lf').hidden = true; return; }
+    $('lt').textContent = fill(L.t) || 'Copyright'; $('lu').textContent = fill(L.upd); $('lu').style.display = L.upd ? '' : 'none';
+    var el = $('lb'), p = [], ul = null;
+    function flush() { if (p.length) { el.appendChild(mk('p', 0, p.join(' '))); p = []; } }
+    fill(L.body).replace(/\r/g, '').split('\n').forEach(function (ln) {
+      var t = ln.trim(), r;
+      if (!t) { flush(); ul = null; }
+      else if ((r = /^#{1,3}\s+(.*)$/.exec(t))) { flush(); ul = null; el.appendChild(mk('h2', 0, r[1])); }
+      else if ((r = /^[-•*]\s+(.*)$/.exec(t))) { flush(); if (!ul) { ul = mk('ul'); el.appendChild(ul); } ul.appendChild(mk('li', 0, r[1])); }
+      else { ul = null; p.push(t); }
+    });
+    flush();
+    var f = $('lf'); f.hidden = false; f.textContent = (S.footer && S.footer.c) ? S.footer.c : '© ' + year + ' ' + name + '. All rights reserved.';
+  }
+  var CK = 'pf-data', raw = null, shown = false;
+  try { raw = localStorage.getItem(CK); if (raw) { render(JSON.parse(raw)); shown = true; } } catch (e) { shown = false; }
+  fetch('/api/data', {cache: 'no-cache'}).then(function (r) { return r.ok ? r.text() : null; }).then(function (txt) {
+    if (txt === null) { if (!shown) render({}); return; }
+    try { localStorage.setItem(CK, txt); } catch (e) {}
+    if (!shown || txt !== raw) { var d = {}; try { d = JSON.parse(txt); } catch (e) {} render(d); }
+  }).catch(function () { if (!shown) render({}); });
+})();
+</script>
+</body>
+</html>

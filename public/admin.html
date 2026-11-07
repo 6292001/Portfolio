@@ -232,7 +232,7 @@ label.ghost{display:inline-block}
 <div id="admGate"><div class="gate"><b>Loading…</b></div></div>
 <div id="admPanel" hidden>
 <div class="chips" id="chips"></div>
-<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-music" data-t="music">Music</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
+<div class="tabs" id="tabs"><button type="button" id="t-stats" data-t="stats">Visitors</button><button type="button" id="t-lib" data-t="lib">Library</button><button type="button" id="t-logo" data-t="logo">Logo</button><button type="button" id="t-nav" data-t="nav">Menu bar</button><button type="button" id="t-music" data-t="music">Music</button><button type="button" id="t-loader" data-t="loader">Refresh screen</button><button type="button" id="t-hero" data-t="hero">Hero (top text)</button><button type="button" id="t-slides" data-t="slides">Slides</button><button type="button" id="t-compare" data-t="compare">Before / After</button><button type="button" id="t-sel" data-t="sel">Selected work</button><button type="button" id="t-about" data-t="about">About me</button><button type="button" id="t-how" data-t="how">How to start</button><button type="button" id="t-strip" data-t="strip">Strips</button><button type="button" id="t-faq" data-t="faq">FAQ</button><button type="button" id="t-footer" data-t="footer">Footer</button><button type="button" id="t-legal" data-t="legal">Copyright page</button><button type="button" id="t-text" data-t="text">Text &amp; fonts</button><button type="button" id="t-colors" data-t="colors">Colors</button><button type="button" id="t-tcol" data-t="tcol">Text colors</button><button type="button" id="t-site" data-t="site">Site details</button></div>
 <section id="tab-lib">
 <label class="drop" id="drop"><input type="file" id="file" accept="image/*" multiple hidden>Drop thumbnails here, or click to choose</label>
 <p class="hint" id="hint"></p>
@@ -258,6 +258,7 @@ label.ghost{display:inline-block}
 <section id="tab-stats" hidden><div id="admStats"></div></section>
 <section id="tab-nav" hidden><p class="hint">The menu bar at the top of your website. Add, rename, reorder or remove menu items, and set the orange button on the right. Press Save changes to make it live.</p><div id="admNav"></div></section>
 <section id="tab-music" hidden><p class="hint">Background music for your website. Visitors see an orange music button at the bottom-left; tapping it opens the volume control. Press Save changes to make it live.</p><div id="admMusic"></div></section>
+<section id="tab-legal" hidden><p class="hint">A separate page on your website (<b>/copyright</b>) with your copyright notice. It has the same menu bar as your home page. Press Save changes to make it live.</p><div id="admLegal"></div></section>
 <section id="tab-tcol" hidden><p class="hint">Pick the color of every heading and small text on your site. Each one is separate. “Default” means it follows the original look. Press Save changes to make it live.</p><div id="admTcol"></div></section>
 <section id="tab-site" hidden><p class="hint">Your photo, name and the three stats shown under the top text. (Your name is no longer shown on the first screen; it is still used for the browser tab, the footer line and the default About heading.)</p><div id="admSite"></div></section>
 </div>
@@ -275,6 +276,7 @@ var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w
 var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
 function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
 var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: '', name: '', a: 55, b: 18};
+var LEGAL0 = {on: true, link: true, t: 'Copyright Notice', upd: '', body: '\u00A9 {year} {name}. All rights reserved.\n\n## Ownership\nAll thumbnails, designs, graphics, images, text, logos and other content on this website were created by {name} and are protected by copyright and other intellectual property laws.\n\n## Using this content\nYou may not copy, download, reproduce, edit, distribute, sell, share or use any content from this website, in whole or in part, without written permission from {name}. This includes using the designs as your own, in your own videos or channels, or in any other project.\n\n## Client work\nDesigns shown in the portfolio were made for clients. Names, logos and channels shown in them belong to their respective owners. Rights to a design a client has paid for are handled as agreed between the client and {name}.\n\n## Permission and takedown\nTo ask for permission to use something, or to report a use of this content that you believe is not authorised, please get in touch through the contact details on the home page.'};
 var HOW0 = {on: true, v: 2, tag: 'Thumbnails, made simple and fast.', t: 'How to Get Started', s: 'Great thumbnails start with a clear process. Here\u2019s how we go from your video idea to a thumbnail built to get clicks.', items: [
   {icon: 'list', t: 'Send message', d: 'Send over your video title, topic and any references, and we\u2019ll talk more from there.'},
   {icon: 'chat', t: 'Onboarding', d: 'You\u2019ll get your private design board and chat channel, so everything stays in one place.'},
@@ -312,7 +314,7 @@ function norm(d) {
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
-      music: Object.assign({on: true, auto: true, id: '', n: 0, name: '', url: '', vol: 35}, cp(s.music || {})), nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
+      legal: s.legal ? Object.assign({on: true, link: true, t: '', upd: '', body: ''}, cp(s.legal)) : cp(LEGAL0), music: Object.assign({on: true, auto: true, id: '', n: 0, name: '', url: '', vol: 35}, cp(s.music || {})), nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
       sections: {slides: sc(sec.slides), compare: sc(sec.compare), work: sec.work ? sc(sec.work) : {t: 'Selected work', s: 'A few of my favourites.'}},
@@ -362,11 +364,19 @@ async function toJpeg(bm, max) {
   }
   throw new Error('That image is too large to shrink.');
 }
+/* a light 640 px copy of every picture, used on the website's sliding wall and grid so pages load much faster */
+async function makeSmall(id, bm) {
+  try {
+    var blob = await toJpeg(bm, 640); if (blob.size > 240000) return false;
+    var r = await fetch('/api/upload-small/' + id, {method: 'POST', headers: {'content-type': 'application/octet-stream'}, body: blob, credentials: 'same-origin'});
+    return r.ok;
+  } catch (e) { return false; }
+}
 async function addFiles(fl) {
   var files = [].filter.call(fl, function (f) { return /^image\//.test(f.type); }), n = 0, last = '';
   for (var q = 0; q < files.length; q++) {
     flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
-    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); draft.push({id: id, title: '', stat: '', feat: false}); n++; renderAdm(); }
+    try { var bm = await createImageBitmap(files[q]), id = await uploadBlob(await toJpeg(bm, 1280)); draft.push({id: id, title: '', stat: '', feat: false, sm: await makeSmall(id, bm)}); n++; renderAdm(); }
     catch (e) { last = e.message; if (last === 'Signed out') return; }
   }
   chg(); if (last) flash(n + ' added. Problem: ' + last); else if (n) flash(n + ' added. Press Save changes to publish.');
@@ -395,9 +405,32 @@ function card(it, i) {
   c.append(im, ti, st, ct);
   return c;
 }
+function optBox() {
+  var need = []; draft.forEach(function (t) { if (!t.sm) need.push(t); }); (siteDraft.work || []).forEach(function (w) { if (!w.sm) need.push(w); });
+  if (!need.length) return null;
+  var b = mk('div', 'fset'); b.style.cssText = 'grid-column:1/-1;margin-bottom:6px';
+  b.appendChild(mk('b', 0, 'Make your website faster'));
+  var tx = mk('p', 'pwnote', need.length + ' of your pictures do not have a light copy yet. Make them once and the sliding wall and Selected work load much faster, especially on phones. This takes a minute or two.'); tx.style.margin = '8px 0 12px'; b.appendChild(tx);
+  var go = mk('button', 'pub', 'Optimize my pictures'); go.type = 'button';
+  go.onclick = async function () {
+    go.disabled = true; var done = 0, next = 0;
+    async function worker() {
+      while (next < need.length) {
+        var it = need[next++];
+        try { var r = await fetch('/api/img/' + it.id, {credentials: 'same-origin'}); if (r.ok) { var bm = await createImageBitmap(await r.blob()); it.sm = await makeSmall(it.id, bm); } } catch (e) {}
+        done++; tx.textContent = 'Working\u2026 ' + done + ' of ' + need.length;
+      }
+    }
+    await Promise.all([worker(), worker(), worker()]);
+    chg(); var ok = need.filter(function (x) { return x.sm; }).length;
+    flash(ok + ' of ' + need.length + ' pictures optimized. Press Save changes.'); renderLib();
+  };
+  b.appendChild(go); return b;
+}
 function renderLib() {
   $('hint').textContent = draft.length ? 'Every thumbnail you own. They all slide across the top, in the rows you set on the Slides tab (each card shows its row). Selected work has its own list on the Selected work tab. Press Save changes to update your live website.' : 'No thumbnails yet, so the site is showing numbered placeholders. Add some above.';
   var L = $('admList'); L.innerHTML = '';
+  var ob = optBox(); if (ob) L.appendChild(ob);
   draft.forEach(function (it, i) { L.appendChild(card(it, i)); });
 }
 function rowGroup(r, n) { var a = Math.floor(r * n / 3), b = Math.floor((r + 1) * n / 3), g = []; for (var k = a; k < b; k++) g.push(k); return g.length ? g : [r % n]; }
@@ -467,7 +500,7 @@ async function addWork(fl) {
   for (var q = 0; q < files.length; q++) {
     if (siteDraft.work.length >= 60) { last = 'Selected work can hold up to 60.'; break; }
     flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
-    try { var id = await uploadBlob(await toJpeg(await createImageBitmap(files[q]), 1280)); siteDraft.work.push({id: id, title: '', stat: ''}); n++; renderSel(); }
+    try { var bm = await createImageBitmap(files[q]), id = await uploadBlob(await toJpeg(bm, 1280)); siteDraft.work.push({id: id, title: '', stat: '', sm: await makeSmall(id, bm)}); n++; renderSel(); }
     catch (e) { last = e.message; if (last === 'Signed out') return; }
   }
   chg(); if (last) flash(n + ' added. ' + last); else if (n) flash(n + ' added to Selected work. Press Save changes to publish.');
@@ -926,7 +959,9 @@ function renderLogo() {
 function renderLoader() {
   var L = $('admLoader'); L.innerHTML = '';
   var on = mk('label', 'chk'), oi = mk('input'); oi.type = 'checkbox'; oi.checked = siteDraft.loaderOn !== false; oi.onchange = function () { siteDraft.loaderOn = oi.checked; chg(); };
-  on.append(oi, mk('span', 0, 'Show the refresh screen (your icon) when the website opens or refreshes')); L.appendChild(on);
+  on.append(oi, mk('span', 0, 'Show the refresh screen (your icon) when the website opens')); L.appendChild(on);
+  var once = mk('label', 'chk'), oc = mk('input'); oc.type = 'checkbox'; oc.checked = siteDraft.introOnce !== false; oc.onchange = function () { siteDraft.introOnce = oc.checked; chg(); };
+  once.append(oc, mk('span', 0, 'Only on a visitor\u2019s first visit (recommended). After that the website opens instantly with no intro or entrance animations, so refreshing stays smooth.')); L.appendChild(once);
   /* live preview of the animation */
   var stage = mk('div', 'ldst'), rp = mk('button', 'ghost', 'Replay animation'); rp.type = 'button'; rp.style.marginBottom = '22px';
   function iconSrc() { var id = siteDraft.loaderId || siteDraft.logoId; return id ? '/api/img/' + id : '/logo.png'; }
@@ -1074,6 +1109,22 @@ function renderMusic() {
   st.appendChild(mk('p', 'pwnote', 'Browsers do not allow sound until the visitor taps or clicks somewhere on the page, so the music begins at their first tap. Visitors can pause it or change the volume with the orange button, and the site remembers their choice.')); L.appendChild(st);
 }
 
+function renderLegal() {
+  var L = $('admLegal'), G = siteDraft.legal; L.innerHTML = '';
+  L.appendChild(onBox('Turn on the Copyright page', G));
+  var lk = mk('label', 'chk'), li = mk('input'); li.type = 'checkbox'; li.checked = G.link !== false; li.onchange = function () { G.link = li.checked; chg(); };
+  lk.append(li, mk('span', 0, 'Show a small “Copyright” link at the bottom of my website (next to the copyright line in the footer)')); L.appendChild(lk);
+  var g = mk('div', 'fgrid'); g.style.marginTop = '14px'; g.append(fldIn('Page title', G, 't', 'Copyright Notice', 100), fldIn('Small line under the title (optional)', G, 'upd', 'Last updated: November 2026', 60)); L.appendChild(g);
+  var ta = mk('label', 'fld'), tl = mk('span', 0, 'Page text'), tx = mk('textarea'); tx.value = G.body || ''; tx.rows = 18; tx.style.cssText = 'width:100%;min-height:340px;resize:vertical;line-height:1.55'; tx.maxLength = 12000;
+  tx.oninput = function () { G.body = tx.value; chg(); }; ta.append(tl, tx); ta.style.marginTop = '18px'; L.appendChild(ta);
+  L.appendChild(mk('p', 'pwnote', 'Write it like normal text. A blank line starts a new paragraph. Start a line with ## to make a heading, or with - to make a bullet point. {name} becomes your name and {year} becomes the current year, so the notice never goes out of date.'));
+  var row = mk('div', 'crow2'); row.style.marginTop = '14px';
+  var op = mk('a', 'ghost', 'Open the page'); op.href = '/copyright'; op.target = '_blank'; op.rel = 'noopener'; op.style.textDecoration = 'none';
+  var rs = mk('button', 'ghost', 'Reset to the example text'); rs.type = 'button'; rs.onclick = function () { siteDraft.legal = cp(LEGAL0); chg(); renderLegal(); };
+  row.append(op, rs); L.appendChild(row);
+  L.appendChild(mk('p', 'pwnote', 'The example text is a general template, not legal advice. Edit it so it matches how you really work with clients.'));
+}
+
 var statTimer = 0;
 function renderStats() {
   var L = $('admStats'); clearInterval(statTimer);
@@ -1109,9 +1160,9 @@ function renderStats() {
 }
 function renderAdm() {
   rowsSync(); applyAdminBg();
-  ['stats', 'lib', 'logo', 'nav', 'music', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
+  ['stats', 'lib', 'logo', 'nav', 'music', 'loader', 'hero', 'slides', 'compare', 'sel', 'about', 'how', 'strip', 'faq', 'footer', 'legal', 'text', 'colors', 'tcol', 'site'].forEach(function (t) { $('tab-' + t).hidden = t !== tab; $('t-' + t).classList.toggle('on', t === tab); });
   chips();
-  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, music: renderMusic, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
+  ({stats: renderStats, lib: renderLib, logo: renderLogo, nav: renderNav, music: renderMusic, legal: renderLegal, loader: renderLoader, hero: renderHero, slides: renderSlides, compare: renderCompare, sel: renderSel, about: renderAbout, how: renderHow, strip: renderStrip, faq: renderFaq, footer: renderFooter, text: renderText, colors: renderColors, tcol: renderTcol, site: renderSite})[tab]();
   meter();
 }
 

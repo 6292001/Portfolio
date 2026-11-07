@@ -14,7 +14,7 @@ export const server = http.createServer(async (req, res) => {
   try {
     if (req.url.startsWith('/api/')) return await send(res, await handler(await toWeb(req)));
     let p = decodeURIComponent(req.url.split('?')[0]);
-    if (p === '/') p = '/index.html'; else if (p === '/admin') p = '/admin.html';
+    if (p === '/') p = '/index.html'; else if (p === '/admin') p = '/admin.html'; else if (p === '/copyright') p = '/copyright.html';
     const file = path.join(root, path.normalize(p));
     if (!file.startsWith(root)) { res.statusCode = 403; return res.end(); }
     const data = await fs.readFile(file);

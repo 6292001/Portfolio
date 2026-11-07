@@ -3,6 +3,8 @@
   "rewrites": [{ "source": "/favicon.ico", "destination": "/api/favicon" }],
   "outputDirectory": "public",
   "headers": [
-    { "source": "/admin(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+    { "source": "/admin(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
+    { "source": "/logo.png", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] },
+    { "source": "/seed/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }] }
   ]
 }
