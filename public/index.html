@@ -903,6 +903,27 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   if (document.readyState === 'complete') hide(); else addEventListener('load', hide);
   setTimeout(hide, 5000);
 })();
+/* refresh: come back to the exact spot, even while pictures and fonts are still settling */
+(function () {
+  var K = 'pf-y', nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  var reload = nav ? nav.type === 'reload' || nav.type === 'back_forward' : true, want = 0;
+  try { want = reload && !location.hash ? parseInt(sessionStorage.getItem(K) || '0', 10) || 0 : 0; } catch (e) {}
+  var t = 0, stop = false;
+  function save() { t = 0; try { sessionStorage.setItem(K, String(Math.round(window.pageYOffset))); } catch (e) {} }
+  addEventListener('scroll', function () { if (!stop && want && Date.now() - t0 < 4000) return; if (!t) t = setTimeout(save, 120); }, {passive: true});
+  addEventListener('pagehide', function () { if (!want || stop) save(); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden && (!want || stop)) save(); });
+  var t0 = Date.now();
+  if (!want) return;
+  function stopIt() { stop = true; }
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) { addEventListener(ev, stopIt, {passive: true, once: true}); });
+  function go() { if (stop) return; var max = document.documentElement.scrollHeight - innerHeight; if (Math.abs(window.pageYOffset - Math.min(want, max)) > 2) window.scrollTo(0, Math.min(want, Math.max(0, max))); }
+  go();
+  var n = 0, iv = setInterval(function () { go(); if (++n > 30 || stop) clearInterval(iv); }, 100);
+  addEventListener('load', function () { go(); setTimeout(go, 400); setTimeout(function () { stop = true; }, 3000); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+})();
 /* image protection: no right-click menu or drag on pictures */
 document.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest('img,.card,.gcard,.cmpstage,.about-ph,.logo')) e.preventDefault(); });
 document.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') e.preventDefault(); });
