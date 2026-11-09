@@ -329,6 +329,22 @@ html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
 .how.static .how-stack{position:static}
 @media (max-width:640px){.step-pad{padding:18px 18px 22px}.step-lab{height:38px;padding:0 16px;font-size:15px}}
 @media (prefers-reduced-motion:reduce){.step,.step-lab,.step-lab .ttl,.step p{transition:none}}
+.legal{animation:lgIn .4s cubic-bezier(.2,.8,.2,1) backwards;position:relative;z-index:2;max-width:820px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 132px) 6vw 40px}
+.legal h1{margin:0;font:600 clamp(34px,6vw,60px)/1.1 var(--f-head);letter-spacing:-.02em;color:var(--c-secT,#fff)}
+.legal .upd{margin:14px 0 0;color:rgba(255,255,255,.5);font-size:14px}
+.lbody{margin-top:34px;color:var(--c-secS,rgba(255,255,255,.72));font:400 17px/1.75 var(--f-body)}
+.lbody p{margin:0 0 1.15em}
+.lbody>p:first-child{color:#fff;font-weight:500;font-size:1.15em}
+.lbody h2{margin:2em 0 .6em;color:#fff;font:600 clamp(20px,2.6vw,25px)/1.25 var(--f-head)}
+.lbody ul{margin:0 0 1.2em;padding-left:1.3em}.lbody li{margin:.35em 0}
+.back{display:inline-flex;align-items:center;gap:8px;margin-top:34px;padding:12px 22px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;font:600 15px var(--f-body);text-decoration:none;transition:background .25s,transform .25s}
+.back:hover{background:rgba(255,255,255,.14);transform:translateX(-3px)}
+.lfoot{position:relative;z-index:2;max-width:820px;margin:0 auto;padding:30px 6vw calc(env(safe-area-inset-bottom,0px) + 50px);color:var(--c-footC,rgba(255,255,255,.45));font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+@media (max-width:760px){.lbody{font-size:16px}}
+@keyframes lgIn{from{opacity:0;transform:translateY(12px)}}
+html.lgmode #homeview{display:none}
+html:not(.lgmode) #lgview,html:not(.lgmode) #lf{display:none}
+@media (prefers-reduced-motion:reduce){.legal{animation:none}}
 </style>
 </head>
 <body>
@@ -346,6 +362,7 @@ html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
 <div class="bglow" aria-hidden="true"></div><div class="bgrid" aria-hidden="true"></div>
 <a class="logo" id="logo" href="#" aria-label="Back to top" style="display:none"></a>
 <nav class="nav" id="nav" aria-label="Main" style="display:none"></nav>
+<div id="homeview">
 <div class="slots" id="slots" style="display:none"></div>
 <header class="hero">
 <div id="h-tag"></div>
@@ -367,13 +384,16 @@ html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
 <div id="strips"></div>
 <section class="faq" id="faq" style="display:none"></section>
 <footer class="foot" id="foot" style="display:none"></footer>
+</div>
+<main class="legal" id="lgview" hidden><h1 id="lt"></h1><p class="upd" id="lu"></p><div class="lbody" id="lb"></div><a class="back" href="/">← Back to home</a></main>
+<footer class="lfoot" id="lf" hidden></footer>
 <script>
 function $(i) { return document.getElementById(i); }
 function mk(t, c, tx) { var e = document.createElement(t); if (c) e.className = c; if (tx != null) e.textContent = tx; return e; }
 function boot(RAW) {
 
 function x(v) { return String(v).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-var DATA = RAW || {};
+var DATA = RAW || {}; window.__D = DATA;
 var S0 = {name: 'Shehroz Khan', role: 'Thumbnail designer', stats: [{v: '50M+', l: 'Clicks generated', n: ''}, {v: '100+', l: 'Clients worked with globally', n: ''}, {v: '100%', l: 'Satisfied clients', n: 'every single time :)'}]}, S1 = DATA.site || {};
 var SITE = {name: S1.name || S0.name, role: S1.role || S0.role, stats: S1.stats || S0.stats, avatar: S1.avatarId ? '/api/img/' + S1.avatarId : '', theme: S1.theme || {accent: '#fb2f01', bg: '#02070d', grid: 'on'}};
 var NAME = SITE.name, ROLE = SITE.role;
@@ -842,6 +862,7 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   nv.style.display = ''; html.classList.add('has-nav'); if (NV.bg) nv.style.setProperty('--nav-c', NV.bg); nv.style.setProperty('--na', (NV.a == null ? 55 : NV.a) + '%'); nv.style.setProperty('--nb', (NV.b == null ? 18 : NV.b) + 'px');
   var targets = [];
   function go(u) {
+    if (window.__goHome && html.classList.contains('lgmode')) { window.__goHome(function () { go(u); }); return; }
     var id = u.slice(1), y = 0;
     if (id && id !== 'top') { var el = $(id); if (!el) return; y = el.getBoundingClientRect().top + window.pageYOffset - 96; }
     window.scrollTo({top: Math.max(0, y), behavior: reduced ? 'auto' : 'smooth'});
@@ -878,7 +899,7 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   /* highlight the link of the section you are looking at */
   var tk = 0;
   function spy() {
-    tk = 0; var cur = null, y = window.pageYOffset;
+    tk = 0; if (html.classList.contains('lgmode')) { targets.forEach(function (t) { t.a.classList.remove('on'); }); return; } var cur = null, y = window.pageYOffset;
     targets.forEach(function (t) { var el = t.id && t.id !== 'top' ? $(t.id) : null; if (!el) { if (y < 200) cur = t; return; } if (el.getBoundingClientRect().top <= window.innerHeight * .35 && y >= 200) cur = t; });
     targets.forEach(function (t) { t.a.classList.toggle('on', t === cur); });
   }
@@ -886,6 +907,7 @@ SITE.stats.forEach(function (st) { if (!st.v && !st.l) return; var d = mk('div',
   /* "slots left" pill */
   var sl = NV.slots || {}; if (sl.on && sl.t) { var se = $('slots'), sp = mk('span'); sp.append(mk('i'), document.createTextNode(sl.t)); se.appendChild(sp); se.style.display = ''; html.classList.add('has-slots'); }
 })();
+if (window.__route) window.__route();
 }
 /* loading screen: runs about 2 seconds (longer only if the site is slow), then fades away */
 (function () {
@@ -938,6 +960,52 @@ document.addEventListener('dragstart', function (e) { if (e.target && e.target.t
   ping(first);
   setInterval(function () { if (!document.hidden) ping(0); }, 25000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) ping(0); });
+})();
+/* page switching without reloading: home <-> copyright (a real refresh on either page reloads that page) */
+(function () {
+  var html = document.documentElement, homeY = 0, home = document.title, reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var LEGAL0 = {on: true, link: true, t: 'Copyright Notice', upd: '', body: '© {year} {name}. All rights reserved.\n\n## Ownership\nAll thumbnails, designs, graphics, images, text, logos and other content on this website were created by {name} and are protected by copyright and other intellectual property laws.\n\n## Using this content\nYou may not copy, download, reproduce, edit, distribute, sell, share or use any content from this website, in whole or in part, without written permission from {name}. This includes using the designs as your own, in your own videos or channels, or in any other project.\n\n## Client work\nDesigns shown in the portfolio were made for clients. Names, logos and channels shown in them belong to their respective owners. Rights to a design a client has paid for are handled as agreed between the client and {name}.\n\n## Permission and takedown\nTo ask for permission to use something, or to report a use of this content that you believe is not authorised, please get in touch through the contact details on the home page.'};
+  var isLg = function () { return /^\/copyright\/?$/.test(location.pathname); };
+  function fillLegal() {
+    var S = (window.__D && window.__D.site) || {}, L = Object.assign({}, LEGAL0, S.legal || {}), name = S.name || 'Shehroz Khan', year = new Date().getFullYear();
+    function fill(t) { return String(t || '').replace(/\{year\}/g, year).replace(/\{name\}/g, name); }
+    var el = $('lb'); el.innerHTML = '';
+    if (L.on === false) { $('lt').textContent = 'Page not available'; $('lu').style.display = 'none'; el.appendChild(mk('p', 0, 'This page is not available right now.')); $('lf').textContent = ''; return; }
+    $('lt').textContent = fill(L.t) || 'Copyright'; $('lu').textContent = fill(L.upd); $('lu').style.display = L.upd ? '' : 'none';
+    var p = [], ul = null;
+    function flush() { if (p.length) { el.appendChild(mk('p', 0, p.join(' '))); p = []; } }
+    fill(L.body).replace(/\r/g, '').split('\n').forEach(function (ln) {
+      var t = ln.trim(), r;
+      if (!t) { flush(); ul = null; }
+      else if ((r = /^#{1,3}\s+(.*)$/.exec(t))) { flush(); ul = null; el.appendChild(mk('h2', 0, r[1])); }
+      else if ((r = /^[-•*]\s+(.*)$/.exec(t))) { flush(); if (!ul) { ul = mk('ul'); el.appendChild(ul); } ul.appendChild(mk('li', 0, r[1])); }
+      else { ul = null; p.push(t); }
+    });
+    flush();
+    $('lf').textContent = (S.footer && S.footer.c) ? S.footer.c : '© ' + year + ' ' + name + '. All rights reserved.';
+    $('lt').parentNode.hidden = false; $('lf').hidden = false;
+  }
+  var base = null;
+  function apply() {
+    var on = isLg(); if (base === null) base = home;
+    if (on) { fillLegal(); var S = (window.__D && window.__D.site) || {}; document.title = ($('lt').textContent || 'Copyright') + ' · ' + (S.name || 'Shehroz Khan'); }
+    else if (window.__baseTitle) document.title = window.__baseTitle;
+    html.classList.toggle('lgmode', on);
+    var nv = $('nav'); if (nv) nv.classList.remove('open');
+    dispatchEvent(new Event('resize'));
+  }
+  window.__route = function () { if (!window.__baseTitle) window.__baseTitle = document.title; apply(); };
+  function toLegal() { if (isLg()) { scrollTo(0, 0); return; } homeY = window.pageYOffset; history.pushState({lg: 1}, '', '/copyright'); apply(); scrollTo(0, 0); }
+  window.__goHome = function (cb) { if (!isLg()) { cb && cb(); return; } history.pushState({}, '', '/'); apply(); scrollTo(0, homeY); if (cb) requestAnimationFrame(function () { requestAnimationFrame(cb); }); };
+  addEventListener('popstate', function () { var y = homeY; apply(); if (isLg()) scrollTo(0, 0); else scrollTo(0, y); });
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a || a.target === '_blank') return;
+    var h = a.getAttribute('href');
+    if (h === '/copyright') { e.preventDefault(); toLegal(); }
+    else if (h === '/' && isLg()) { e.preventDefault(); window.__goHome(function () { scrollTo({top: 0, behavior: reduced ? 'auto' : 'smooth'}); }); }
+  });
+  if (history.scrollRestoration) history.scrollRestoration = 'manual';
 })();
 /* refreshing: draw the last known version immediately (no blank page, scroll position kept), then check for changes */
 (function () {
