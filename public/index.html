@@ -345,6 +345,7 @@ html.has-slots .hero{padding-top:calc(env(safe-area-inset-top,0px) + 7vh)}
 html.lgmode #homeview{display:none}
 html:not(.lgmode) #lgview,html:not(.lgmode) #lf{display:none}
 @media (prefers-reduced-motion:reduce){.legal{animation:none}}
+html.framed *,html.framed *::before,html.framed *::after{animation:none!important;transition:none!important}
 </style>
 </head>
 <body>
@@ -354,6 +355,8 @@ html:not(.lgmode) #lgview,html:not(.lgmode) #lf{display:none}
   var on = true, src = '/api/loader', p = document.getElementById('pre');
   var seen = false; try { seen = localStorage.getItem('pf-seen') === '1'; } catch (e) {}
   try { var d = JSON.parse(localStorage.getItem('pf-data') || 'null'), s = d && d.site; if (s) { if (s.loaderOn === false) on = false; if (s.introOnce === false) seen = false; var id = s.loaderId || s.logoId; src = '/api/loader?v=' + (id || 'd'); if (s.loaderBg) document.documentElement.style.setProperty('--pre-bg', s.loaderBg); if (s.loaderPanel) document.documentElement.style.setProperty('--pre-panel', s.loaderPanel); } } catch (e) {}
+  var framed = false; try { framed = window.top !== window.self; } catch (e) { framed = true; }
+  if (framed) { seen = true; document.documentElement.classList.add('framed'); }
   if (seen) document.documentElement.classList.add('seen');
   if (!on || seen) { p.parentNode.removeChild(p); return; }
   document.getElementById('preimg').src = src; document.documentElement.classList.add('is-pre');
