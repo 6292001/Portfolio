@@ -9,7 +9,7 @@
 
 [[redirects]]
   from = "/copyright"
-  to = "/copyright.html"
+  to = "/index.html"
   status = 200
 
 [[redirects]]

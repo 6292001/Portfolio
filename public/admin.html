@@ -97,7 +97,7 @@ html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,sans-serif;c
 @keyframes up{from{opacity:0;transform:translateY(10px)}}
 .adm.on{animation:fade .25s}
 .adm section{animation:up .35s}
-.it,.mini,.empty,.fset{animation:up .4s backwards}
+.empty,.fset{animation:up .3s backwards}
 .avrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
 .avprev{flex:none;width:88px;height:88px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,var(--glow),var(--glow2));font:800 34px Inter,sans-serif;border:2px solid rgba(var(--ar),.6)}
 .avprev img{width:100%;height:100%;object-fit:cover}
@@ -224,7 +224,7 @@ label.ghost{display:inline-block}
 </style>
 </head>
 <body>
-<iframe class="bgsite" id="bgsite" src="/" title="" aria-hidden="true" tabindex="-1"></iframe>
+<iframe class="bgsite" id="bgsite" title="" aria-hidden="true" tabindex="-1"></iframe>
 <div class="adm-veil" aria-hidden="true"></div>
 <div class="adm on" id="adm">
 <div class="adm-in">
@@ -310,7 +310,7 @@ function norm(d) {
   var strips = Array.isArray(s.strips) ? cp(s.strips) : (Array.isArray(s.strip) ? [{t: '', s: '', items: cp(s.strip)}] : [{t: '', s: '', items: cp(STRIP0)}]);
   strips.forEach(function (z) { z.t = z.t || ''; z.s = z.s || ''; z.items = z.items || []; });
   function sc(x) { x = x || {}; return {t: x.t || '', s: x.s || ''}; }
-  var thumbs = (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat}; });
+  var thumbs = (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat, sm: !!t.sm}; });
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
     site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
@@ -386,7 +386,7 @@ async function addFiles(fl) {
 function rowOf(id) { for (var r = 0; r < 3; r++) if (siteDraft.rows && siteDraft.rows[r].indexOf(id) >= 0) return r; return -1; }
 function card(it, i) {
   var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl');
-  c.id = 'it-' + i; im.src = '/api/img/' + it.id; im.alt = '';
+  c.id = 'it-' + i; im.src = '/api/img/' + it.id + (it.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async';
   ti.placeholder = 'Title (optional)'; ti.value = it.title; ti.oninput = function () { it.title = ti.value; chg(); };
   st.placeholder = 'Views or result (optional)'; st.value = it.stat; st.oninput = function () { it.stat = st.value; chg(); };
   [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
@@ -477,7 +477,7 @@ function dragMini(m, id) {
   });
 }
 function dmini(it) {
-  var m = mk('div', 'mini'), im = mk('img'); m.dataset.id = it.id; im.src = '/api/img/' + it.id; im.alt = ''; m.appendChild(im);
+  var m = mk('div', 'mini'), im = mk('img'); m.dataset.id = it.id; im.src = '/api/img/' + it.id + (it.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; m.appendChild(im);
   m.appendChild(mk('span', 'num', '#' + (draft.indexOf(it) + 1))); m.title = 'Drag to another row or another position';
   dragMini(m, it.id); return m;
 }
@@ -507,7 +507,7 @@ async function addWork(fl) {
 }
 function workCard(w, i) {
   var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), W = siteDraft.work;
-  im.src = '/api/img/' + w.id; im.alt = '';
+  im.src = '/api/img/' + w.id + (w.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async';
   ti.placeholder = 'Title (optional)'; ti.value = w.title || ''; ti.oninput = function () { w.title = ti.value; chg(); };
   st.placeholder = 'Views or result (optional)'; st.value = w.stat || ''; st.oninput = function () { w.stat = st.value; chg(); };
   [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
@@ -527,7 +527,7 @@ function renderPicker() {
   if (!draft.length) { P.appendChild(mk('p', 'hint', 'You have no thumbnails on the Library tab yet.')); return; }
   var used = {}; siteDraft.work.forEach(function (w) { used[w.id] = 1; });
   draft.forEach(function (t, i) {
-    var m = mk('div', 'mini' + (used[t.id] ? ' picked' : '')), im = mk('img'); im.src = '/api/img/' + t.id; im.alt = ''; m.appendChild(im); m.appendChild(mk('span', 'num', '#' + (i + 1)));
+    var m = mk('div', 'mini' + (used[t.id] ? ' picked' : '')), im = mk('img'); im.src = '/api/img/' + t.id + (t.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; m.appendChild(im); m.appendChild(mk('span', 'num', '#' + (i + 1)));
     m.title = used[t.id] ? 'Already in Selected work' : 'Click to add to Selected work';
     m.onclick = function () { if (used[t.id]) return; if (siteDraft.work.length >= 60) { flash('Selected work can hold up to 60.'); return; } siteDraft.work.push({id: t.id, title: t.title, stat: t.stat}); chg(); renderSel(); };
     P.appendChild(m);
@@ -1187,10 +1187,11 @@ function showLogin(text) {
 }
 async function loadApp() {
   try {
-    var r = await fetch('/api/data', {cache: 'no-cache', credentials: 'same-origin'}), d = norm(await r.json());
+    var r = await (window.__dp || fetch('/api/data?adm=1', {cache: 'no-store', credentials: 'same-origin'})); window.__dp = null; var d = norm(await r.json());
     draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme); setAdminIcon();
     $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
     renderAdm(); checkSeed();
+    var bgf = $('bgsite'); if (bgf && !bgf.getAttribute('src')) (window.requestIdleCallback || function (f) { setTimeout(f, 600); })(function () { bgf.src = '/'; }, {timeout: 1500});
   } catch (e) { gateCard('Could not load your site', e.message); }
 }
 function checkSeed() {
@@ -1219,6 +1220,7 @@ async function importSeed(seed, btn, box) {
   } catch (e) { if (e.message !== 'Signed out') flash('Import stopped: ' + e.message); btn.disabled = false; }
 }
 async function init() {
+  try { window.__dp = fetch('/api/data?adm=1', {cache: 'no-store', credentials: 'same-origin'}); window.__dp.catch(function () {}); } catch (e) {}
   var me; try { me = await (await fetch('/api/me', {credentials: 'same-origin'})).json(); } catch (e) { gateCard('Can\u2019t reach the server', 'Open this page from your deployed website (or run npm run dev). The API did not answer.'); return; }
   if (!me.storage) { gateCard('Storage isn\u2019t connected yet', me.storageError || 'Connect storage in your hosting dashboard (see the README), then redeploy.'); return; }
   if (!me.configured) { gateCard('Set your admin password', 'In your hosting dashboard add an environment variable named ADMIN_PASSWORD with the password you want, redeploy, then reload this page.'); return; }
