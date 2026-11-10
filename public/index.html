@@ -63,6 +63,7 @@ html,body{margin:0;font-family:var(--f-body);color:#fff}
 .work h2{margin:0;font:500 clamp(34px,5.4vw,60px)/1.1 var(--f-head);letter-spacing:-.01em;color:var(--c-workT,#fff)}
 .work p{margin:.6em 0 4vh;color:var(--c-workS,rgba(255,255,255,.6));font-weight:500}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px}
+.cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 3vh}.cat{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 var(--f-body,inherit);color:rgba(255,255,255,.75);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:11px 16px;cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .25s;-webkit-tap-highlight-color:transparent}.cat i{font-style:normal;font-size:12px;opacity:.55}.cat:hover{background:rgba(255,255,255,.12);color:#fff}.cat.on{background:rgb(var(--ar));border-color:rgb(var(--ar));color:#fff}.cat.on i{opacity:.8}@keyframes catIn{from{opacity:0;transform:translateY(14px) scale(.97)}}@media(max-width:640px){.cats{flex-wrap:nowrap;overflow-x:auto;margin-right:-4vw;padding-right:4vw;scrollbar-width:none}.cats::-webkit-scrollbar{display:none}.cat{flex:none}}
 .gcard{border-radius:14px;border:1px solid rgba(255,255,255,.08)}
 .gcard:hover,.gcard:focus-visible{transform:translateY(-5px);box-shadow:0 0 0 1px rgba(var(--ar),.7),0 14px 50px rgba(var(--ar),.25);outline:0}
 .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 14px 12px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(transparent,rgba(0,0,0,.85));opacity:0;transition:opacity .25s}
@@ -456,13 +457,37 @@ for (var r = 0; r < 3; r++) {
 var rszT, builtW = innerWidth; addEventListener('resize', function () { clearTimeout(rszT); rszT = setTimeout(function () { if (innerWidth === builtW) return; builtW = innerWidth; if (cover !== Infinity && innerWidth * 1.05 > cover * (innerHeight / builtH)) location.reload(); }, 450); });
 var grid = document.getElementById('grid');
 var witems;
-if (Array.isArray(S1.work)) witems = S1.work.map(function (w, i) { return {src: '/api/img/' + w.id + (w.sm ? '?s=1' : ''), title: w.title || '', stat: w.stat || '', n: i + 1}; });
+if (Array.isArray(S1.work)) witems = S1.work.map(function (w, i) { return {src: '/api/img/' + w.id + (w.sm ? '?s=1' : ''), title: w.title || '', stat: w.stat || '', cat: w.cat || '', n: i + 1}; });
 else {
   var fi = []; items.forEach(function (it, ix) { if (it.feat) fi.push(ix); });
   if (!fi.length) for (var q0 = 0; q0 < Math.min(N, 10); q0++) fi.push(q0);
   witems = fi.slice(0, 21).map(function (ix) { return items[ix]; });
 }
-witems.forEach(function (it) { grid.appendChild(tile(it, 'gcard', true)); });
+function catPick(it, C) {
+  if (it.cat) for (var i0 = 0; i0 < C.list.length; i0++) if (C.list[i0].n === it.cat) return it.cat;
+  if (it.cat && it.cat === (C.other || 'Other')) return it.cat;
+  var t = ' ' + String((it.title || '') + ' ' + (it.stat || '')).toLowerCase().replace(/[^a-z0-9&+ ]+/g, ' ').replace(/\s+/g, ' ') + ' ', best = '', bs = 0;
+  C.list.forEach(function (z) { var sc = 0; String(z.k || '').toLowerCase().split(',').forEach(function (w) { w = w.trim().replace(/\s+/g, ' '); if (w && t.indexOf(' ' + w) > -1) sc += w.length > 2 ? 2 : 1; }); if (sc > bs) { bs = sc; best = z.n; } });
+  return best || C.other || 'Other';
+}
+var CT = S1.cats && Array.isArray(S1.cats.list) ? S1.cats : {on: true, all: 'All', other: 'Other', list: [{n: 'Finance', k: 'finance, money, invest, stock, crypto, bitcoin, trading, trader, bank, budget, wealth, forex, rich, millionaire, income, tax, dollar, profit, passive'}, {n: 'Real Estate', k: 'real estate, house, home, property, mortgage, rent, apartment, realtor, landlord, airbnb, flip, land, condo, listing'}, {n: 'Entertainment', k: 'movie, film, music, celebrity, reaction, show, comedy, funny, prank, vlog, trailer, song, drama, tv, netflix, react'}, {n: 'Gaming', k: 'game, gaming, gamer, minecraft, fortnite, roblox, gta, valorant, stream, esports, console, ps5, xbox, playthrough'}, {n: 'Tech', k: 'tech, ai, phone, iphone, android, software, app, code, coding, gadget, review, pc, laptop, computer, chatgpt'}, {n: 'Business', k: 'business, marketing, startup, entrepreneur, ecommerce, agency, brand, sales, ads, shopify, freelance, side hustle, course, success'}, {n: 'Health & Fitness', k: 'fitness, workout, gym, health, diet, weight, fat, muscle, yoga, run, nutrition, wellness, body'}, {n: 'Education', k: 'learn, tutorial, how to, guide, lesson, study, school, explained, education, tips, beginner, facts, history, science'}]};
+var catOn = CT.on !== false && witems.length > 1, counts = {}, order = [];
+function catName(it) { return catPick(it, CT); }
+witems.forEach(function (it) { var el = tile(it, 'gcard', true); if (catOn) { var c = catName(it); el.dataset.cat = c; counts[c] = (counts[c] || 0) + 1; } grid.appendChild(el); });
+if (catOn) {
+  CT.list.forEach(function (z) { if (counts[z.n] && order.indexOf(z.n) < 0) order.push(z.n); }); var oth = CT.other || 'Other'; if (counts[oth] && order.indexOf(oth) < 0) order.push(oth);
+  if (order.length > 1) {
+    var bar = document.createElement('div'); bar.className = 'cats'; bar.setAttribute('role', 'tablist');
+    var mkb = function (label, key, n) { var b = document.createElement('button'); b.type = 'button'; b.className = 'cat'; b.setAttribute('role', 'tab'); b.dataset.k = key; b.innerHTML = '<span></span><i></i>'; b.firstChild.textContent = label; b.lastChild.textContent = n; b.onclick = function () { setCat(key); }; bar.appendChild(b); return b; };
+    mkb(CT.all || 'All', '', witems.length); order.forEach(function (n) { mkb(n, n, counts[n]); });
+    grid.parentNode.insertBefore(bar, grid);
+    var setCat = function (key) {
+      [].forEach.call(bar.children, function (b) { var on = b.dataset.k === key; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+      var k = 0; [].forEach.call(grid.children, function (g) { var show = !key || g.dataset.cat === key; if (show) { g.hidden = false; g.style.display = ''; g.classList.add('in'); g.style.animation = 'none'; void g.offsetWidth; g.style.animation = 'catIn .45s cubic-bezier(.2,.8,.2,1) ' + Math.min(k++, 12) * .03 + 's backwards'; } else { g.style.display = 'none'; } });
+    };
+    setCat('');
+  }
+}
 var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w'}, {v: '800+', t: 'Creators served', d: 'Every niche imaginable', s: 'w'}, {v: '12%', t: 'Avg CTR', d: 'Platform average is 2\u20134%', s: 'w'}, {v: '48H', t: 'Delivery', d: 'Fast. Never compromise.', s: 'w'}];
 function heading(host, c) {
   host.innerHTML = ''; host.className = ''; host.style.display = '';

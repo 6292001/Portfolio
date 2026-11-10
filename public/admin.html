@@ -244,6 +244,7 @@ label.ghost{display:inline-block}
 <section id="tab-slides" hidden><p class="hint">The three rows that slide across the top of your site. Drag any thumbnail to another row, or to a new place in its row. Changes go live when you press Save changes.</p><div id="admSlides"></div></section>
 <section id="tab-compare" hidden><p class="hint">The before and after slider that sits between your slides and Selected work. Choose the two images, then add the handwritten texts that pop up around it. Drag the handle in the preview to try the slider. Leave either image empty to hide the slider.</p><div id="admCompare"></div></section>
 <section id="tab-sel" hidden><p class="hint" id="selNote"></p>
+<div id="catBox"></div>
 <label class="drop" id="dropw"><input type="file" id="filew" accept="image/*" multiple hidden>Drop thumbnails here to add them to Selected work, or click to choose</label>
 <div class="crow2" style="margin:14px 0 18px"><button class="ghost" id="fromSlides" type="button">Add from my slides</button></div>
 <div id="picker" hidden></div>
@@ -276,6 +277,7 @@ var STRIP0 = [{v: '6', t: 'Years active', d: 'Fiverr & Upwork since 2018', s: 'w
 var HERO0 = {tag: 'Thumbnails built to get clicked.', t: 'YouTube Thumbnail Designer', s: 'Scroll-stopping thumbnails for creators and brands who want more clicks and more views.'};
 function about0(name) { return {on: true, t: 'About ' + name, body: 'I’m ' + name + ', a YouTube thumbnail designer. I help creators and brands stand out, capture attention and turn impressions into clicks.', btn: 'Let’s talk', url: '', photoId: ''}; }
 var NAV0 = {on: true, links: [{l: 'Home', u: '#top'}, {l: 'Work', u: '#work'}, {l: 'Process', u: '#how'}, {l: 'About', u: '#about'}, {l: 'FAQ\u2019s', u: '#faq'}], cta: {l: 'Let\u2019s Work', u: '#about'}, slots: {on: true, t: '3 slots left this month'}, bg: '', name: '', a: 55, b: 18};
+var CATS0 = {on: true, all: 'All', other: 'Other', list: [{n: 'Finance', k: 'finance, money, invest, stock, crypto, bitcoin, trading, trader, bank, budget, wealth, forex, rich, millionaire, income, tax, dollar, profit, passive'}, {n: 'Real Estate', k: 'real estate, house, home, property, mortgage, rent, apartment, realtor, landlord, airbnb, flip, land, condo, listing'}, {n: 'Entertainment', k: 'movie, film, music, celebrity, reaction, show, comedy, funny, prank, vlog, trailer, song, drama, tv, netflix, react'}, {n: 'Gaming', k: 'game, gaming, gamer, minecraft, fortnite, roblox, gta, valorant, stream, esports, console, ps5, xbox, playthrough'}, {n: 'Tech', k: 'tech, ai, phone, iphone, android, software, app, code, coding, gadget, review, pc, laptop, computer, chatgpt'}, {n: 'Business', k: 'business, marketing, startup, entrepreneur, ecommerce, agency, brand, sales, ads, shopify, freelance, side hustle, course, success'}, {n: 'Health & Fitness', k: 'fitness, workout, gym, health, diet, weight, fat, muscle, yoga, run, nutrition, wellness, body'}, {n: 'Education', k: 'learn, tutorial, how to, guide, lesson, study, school, explained, education, tips, beginner, facts, history, science'}]};
 var LEGAL0 = {on: true, link: true, t: 'Copyright Notice', upd: '', body: '\u00A9 {year} {name}. All rights reserved.\n\n## Ownership\nAll thumbnails, designs, graphics, images, text, logos and other content on this website were created by {name} and are protected by copyright and other intellectual property laws.\n\n## Using this content\nYou may not copy, download, reproduce, edit, distribute, sell, share or use any content from this website, in whole or in part, without written permission from {name}. This includes using the designs as your own, in your own videos or channels, or in any other project.\n\n## Client work\nDesigns shown in the portfolio were made for clients. Names, logos and channels shown in them belong to their respective owners. Rights to a design a client has paid for are handled as agreed between the client and {name}.\n\n## Permission and takedown\nTo ask for permission to use something, or to report a use of this content that you believe is not authorised, please get in touch through the contact details on the home page.'};
 var HOW0 = {on: true, v: 2, tag: 'Thumbnails, made simple and fast.', t: 'How to Get Started', s: 'Great thumbnails start with a clear process. Here\u2019s how we go from your video idea to a thumbnail built to get clicks.', items: [
   {icon: 'list', t: 'Send message', d: 'Send over your video title, topic and any references, and we\u2019ll talk more from there.'},
@@ -313,7 +315,7 @@ function norm(d) {
   var thumbs = (d.thumbs || []).map(function (t) { return {id: t.id, title: t.title || '', stat: t.stat || '', feat: !!t.feat, sm: !!t.sm}; });
   var lw = Array.isArray(s.work) ? cp(s.work) : (function () { var f = thumbs.filter(function (t) { return t.feat; }); if (!f.length) f = thumbs.slice(0, 10); return f.slice(0, 21).map(function (t) { return {id: t.id, title: t.title, stat: t.stat}; }); })();
   return {thumbs: thumbs,
-    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
+    site: {name: name, role: s.role || S0.role, stats: st, avatarId: s.avatarId || '', iconId: s.iconId || '', adminIconId: s.adminIconId || '', work: lw, cats: s.cats && Array.isArray(s.cats.list) ? Object.assign({on: true, all: 'All', other: 'Other', list: []}, cp(s.cats)) : cp(CATS0), rows: Array.isArray(s.rows) ? cp(s.rows) : null, tabTitle: s.tabTitle || '',
       legal: s.legal ? Object.assign({on: true, link: true, t: '', upd: '', body: ''}, cp(s.legal)) : cp(LEGAL0), music: Object.assign({on: true, auto: true, id: '', n: 0, name: '', url: '', vol: 35}, cp(s.music || {})), nav: s.nav ? {on: s.nav.on !== false, links: cp(s.nav.links || []), cta: Object.assign({l: '', u: ''}, s.nav.cta || {}), slots: Object.assign({on: false, t: ''}, s.nav.slots || {}), bg: s.nav.bg || '', name: s.nav.name || '', a: s.nav.a == null ? 55 : s.nav.a, b: s.nav.b == null ? 18 : s.nav.b} : cp(NAV0), logoId: s.logoId || '', logoOn: s.logoOn !== false, adminBg: Object.assign({c: '', a: 58, b: 20}, s.adminBg || {}), loaderId: s.loaderId || '', loaderOn: s.loaderOn !== false, loaderBg: s.loaderBg || '', loaderPanel: s.loaderPanel || '', hero: Object.assign({}, HERO0, s.hero || {}), about: Object.assign(about0(name), s.about || {}), how: (s.how && s.how.v === 2) ? Object.assign({on: true, tag: '', t: '', s: ''}, cp(s.how), {items: cp(s.how.items || []), v: 2}) : Object.assign(cp(HOW0), {on: s.how ? s.how.on !== false : true}), faq: s.faq ? Object.assign({on: true, tag: '', t: ''}, cp(s.faq), {items: cp(s.faq.items || [])}) : cp(FAQ0), fv: 2,
       compare: {beforeId: cm.beforeId || '', afterId: cm.afterId || '', color: cm.color || '#ffe14d', size: cm.size || 3, notes: Array.isArray(cm.notes) ? cp(cm.notes) : cp(NOTES0)},
       strips: strips,
@@ -508,7 +510,7 @@ async function addWork(fl) {
 function workCard(w, i) {
   var c = mk('div', 'it'), im = mk('img'), ti = mk('input'), st = mk('input'), ct = mk('div', 'ctl'), W = siteDraft.work;
   im.src = '/api/img/' + w.id + (w.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async';
-  ti.placeholder = 'Title (optional)'; ti.value = w.title || ''; ti.oninput = function () { w.title = ti.value; chg(); };
+  ti.placeholder = 'Title (helps pick its category)'; ti.value = w.title || ''; ti.oninput = function () { w.title = ti.value; chg(); };
   st.placeholder = 'Views or result (optional)'; st.value = w.stat || ''; st.oninput = function () { w.stat = st.value; chg(); };
   [['\u2039', -1, 'Move earlier'], ['\u203A', 1, 'Move later']].forEach(function (m) {
     var b = mk('button', 0, m[0]); b.type = 'button'; b.setAttribute('aria-label', m[2]);
@@ -520,7 +522,7 @@ function workCard(w, i) {
     if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
     W.splice(i, 1); chg(); renderSel();
   };
-  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); c.append(im, ti, st, ct); return c;
+  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); var C0 = siteDraft.cats; if (C0 && C0.on !== false) { var sel = mk('select'), auto = catPick({title: w.title, stat: w.stat}, C0), o0 = mk('option', 0, 'Category: Auto (' + auto + ')'); o0.value = ''; sel.appendChild(o0); C0.list.concat([{n: C0.other || 'Other'}]).forEach(function (z) { var o = mk('option', 0, z.n); o.value = z.n; sel.appendChild(o); }); sel.value = w.cat || ''; if (sel.value !== (w.cat || '')) sel.value = ''; sel.onchange = function () { w.cat = sel.value; chg(); renderSel(); }; sel.style.margin = '4px 0'; sel.style.width = '100%'; c.append(im, ti, st, sel, ct); } else c.append(im, ti, st, ct); return c;
 }
 function renderPicker() {
   var P = $('picker'); P.innerHTML = ''; P.className = 'pickgrid';
@@ -533,8 +535,35 @@ function renderPicker() {
     P.appendChild(m);
   });
 }
+function catPick(it, C) {
+  if (it.cat) for (var i0 = 0; i0 < C.list.length; i0++) if (C.list[i0].n === it.cat) return it.cat;
+  if (it.cat && it.cat === (C.other || 'Other')) return it.cat;
+  var t = ' ' + String((it.title || '') + ' ' + (it.stat || '')).toLowerCase().replace(/[^a-z0-9&+ ]+/g, ' ').replace(/\s+/g, ' ') + ' ', best = '', bs = 0;
+  C.list.forEach(function (z) { var sc = 0; String(z.k || '').toLowerCase().split(',').forEach(function (w) { w = w.trim().replace(/\s+/g, ' '); if (w && t.indexOf(' ' + w) > -1) sc += w.length > 2 ? 2 : 1; }); if (sc > bs) { bs = sc; best = z.n; } });
+  return best || C.other || 'Other';
+}
+function catOf(w) { var C = siteDraft.cats; if (!C || C.on === false) return ''; return catPick(w, C); }
+function renderCats() {
+  var B = $('catBox'); B.innerHTML = ''; var C = siteDraft.cats, box = mk('div', 'fset');
+  box.appendChild(mk('b', 0, 'Categories (automatic)'));
+  box.appendChild(mk('p', 'pwnote', 'Your Selected work gets a row of category buttons such as Finance, Real Estate or Entertainment. Each thumbnail goes into its category by itself: the website reads the words in its Title and Views boxes and matches them with the keywords below. If a thumbnail lands in the wrong one, choose its category by hand on the thumbnail.'));
+  var on = mk('label', 'chk'), cb = mk('input'); cb.type = 'checkbox'; cb.checked = C.on !== false; cb.onchange = function () { C.on = cb.checked; chg(); renderSel(); }; on.append(cb, document.createTextNode(' Show categories on my website')); box.appendChild(on);
+  function row(lbl, val, ph, fn) { var w = mk('div', 'crow2'), i = mk('input'); i.value = val; i.placeholder = ph; i.oninput = function () { fn(i.value); chg(); }; w.append(mk('span', 'pwnote', lbl), i); w.style.gap = '8px'; w.style.alignItems = 'center'; return w; }
+  box.appendChild(row('Button for everything', C.all, 'All', function (v) { C.all = v; }));
+  C.list.forEach(function (z, i) {
+    var w = mk('div', 'fset'), n = mk('input'), k = mk('input'), d = mk('button', 'del', 'Remove'), r = mk('div', 'crow2');
+    n.value = z.n; n.placeholder = 'Category name'; n.oninput = function () { var o = z.n; z.n = n.value; (siteDraft.work || []).forEach(function (x) { if (x.cat === o) x.cat = z.n; }); chg(); };
+    n.onchange = function () { renderSel(); };
+    k.value = z.k; k.placeholder = 'Words that belong here, separated by commas'; k.style.flex = '1'; k.oninput = function () { z.k = k.value; chg(); }; k.onchange = function () { renderSel(); };
+    d.type = 'button'; d.onclick = function () { C.list.splice(i, 1); chg(); renderCats(); renderSel(); };
+    r.style.gap = '8px'; r.append(n, d); w.append(r, k); w.style.padding = '10px'; box.appendChild(w);
+  });
+  var add = mk('button', 'ghost', '+ Add a category'); add.type = 'button'; add.onclick = function () { if (C.list.length >= 12) { flash('Up to 12 categories.'); return; } C.list.push({n: 'New category', k: ''}); chg(); renderCats(); };
+  box.appendChild(add); box.appendChild(row('Name for thumbnails that match nothing', C.other, 'Other', function (v) { C.other = v; }));
+  box.style.marginBottom = '18px'; B.appendChild(box);
+}
 function renderSel() {
-  var L = $('admSel'); L.innerHTML = '';
+  var L = $('admSel'); L.innerHTML = ''; renderCats();
   $('selNote').textContent = siteDraft.work.length ? siteDraft.work.length + ' in Selected work (up to 60), shown in this order on your site. Upload new ones below, or add from your slides.' : 'Selected work is empty. Upload thumbnails below, or add some from your slides.';
   siteDraft.work.forEach(function (w, i) { L.appendChild(workCard(w, i)); });
   if (!$('picker').hidden) renderPicker();
