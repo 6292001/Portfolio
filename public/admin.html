@@ -420,11 +420,12 @@ function optBox() {
       while (next < need.length) {
         var it = need[next++];
         try { var r = await fetch('/api/img/' + it.id, {credentials: 'same-origin'}); if (r.ok) { var bm = await createImageBitmap(await r.blob()); it.sm = await makeSmall(it.id, bm); } } catch (e) {}
-        done++; tx.textContent = 'Working\u2026 ' + done + ' of ' + need.length;
+        done++; tx.textContent = 'Working\u2026 ' + done + ' of ' + need.length; if (window.__auto) flash('Making your pictures load faster\u2026 ' + done + ' of ' + need.length);
       }
     }
     await Promise.all([worker(), worker(), worker()]);
     chg(); var ok = need.filter(function (x) { return x.sm; }).length;
+    if (window.__auto) { window.__auto = false; if (ok) await save(); flash(ok + ' pictures made lighter and saved. Your website now loads faster.'); renderLib(); return; }
     flash(ok + ' of ' + need.length + ' pictures optimized. Press Save changes.'); renderLib();
   };
   b.appendChild(go); return b;
@@ -1220,6 +1221,7 @@ async function loadApp() {
     draft = d.thumbs; siteDraft = d.site; rowsSync(); saved = snap(); applyTheme(siteDraft.theme); setAdminIcon();
     $('admGate').innerHTML = ''; $('admPanel').hidden = false; $('admBar').hidden = false; $('logout').hidden = false;
     renderAdm(); checkSeed();
+    setTimeout(function () { try { if (!window.__autoDone && !(typeof saved !== 'undefined' && snap() !== saved)) { var ob = optBox(); if (ob) { window.__autoDone = 1; window.__auto = true; ob.querySelector('button').click(); } } } catch (e) {} }, 2500);
     var bgf = $('bgsite'); if (bgf && !bgf.getAttribute('src')) (window.requestIdleCallback || function (f) { setTimeout(f, 600); })(function () { bgf.src = '/'; }, {timeout: 1500});
   } catch (e) { gateCard('Could not load your site', e.message); }
 }
