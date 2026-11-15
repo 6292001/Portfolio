@@ -152,7 +152,7 @@ html[data-grid=off] .bgrid,html[data-grid=off] .bglow{display:none}
 .fsoc a+a{border-left:1px solid rgba(255,255,255,.16)}
 .fsoc a:hover,.fsoc a:focus-visible{opacity:1;transform:translateY(-2px);color:var(--glow);outline:0}
 .fsoc svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.fsoc a.br{opacity:1}.fsoc a.br svg{stroke:none}.fsoc a.wm svg{width:48px}.fsoc a.tx{font:600 14px var(--f-body)}
+.fsoc a.br{opacity:.85}.fsoc a.br:hover,.fsoc a.br:focus-visible{opacity:1}.fsoc a.br svg{stroke:none}.fsoc a.wm svg{width:60px;height:60px;margin:-18px -4px}.fsoc a.tx{font:600 14px var(--f-body)}
 .fmail{display:inline-block;margin-top:26px;color:var(--c-footEm,rgba(255,255,255,.5));font:500 clamp(15px,1.7vw,19px) var(--f-body);text-decoration:none;transition:color .2s}
 .fmail:hover{filter:brightness(1.4)}
 .fcopy a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3)}.fcopy a:hover{color:#fff}
@@ -623,7 +623,7 @@ if (FT.on) {
     var sc = mk('div', 'fsoc'); has = true;
     FT.links.forEach(function (l) {
       var a = mk('a'), k = socKind(l); a.href = l.u; a.setAttribute('aria-label', l.l); a.title = l.l; if (!/^mailto:|^tel:/i.test(l.u)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-      var ic = k.k && SI[k.k]; if (ic) a.className = 'br' + (k.k === 'fiverr' || k.k === 'zoom' ? ' wm' : ''); a.innerHTML = '<svg viewBox="' + (ic ? ic[0] : '0 0 24 24') + '" aria-hidden="true">' + (ic ? '<path stroke="none" fill="#' + ic[2] + '" d="' + ic[1] + '"/>' : k.k ? SOC[k.k] : '<circle cx="12" cy="12" r="9.5"/><text x="12" y="' + (k.b.length > 1 ? 15.6 : 16) + '" text-anchor="middle" font-size="' + (k.b.length > 1 ? 9 : 11.5) + '" font-weight="700" font-family="Poppins,Inter,sans-serif" fill="currentColor" stroke="none">' + k.b.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</text>') + '</svg>';
+      var ic = k.k && SI[k.k]; if (ic) a.className = 'br' + (k.k === 'fiverr' || k.k === 'zoom' ? ' wm' : ''); a.innerHTML = '<svg viewBox="' + (ic ? ic[0] : '0 0 24 24') + '" aria-hidden="true">' + (ic ? '<path stroke="none" fill="currentColor" d="' + ic[1] + '"/>' : k.k ? SOC[k.k] : '<circle cx="12" cy="12" r="9.5"/><text x="12" y="' + (k.b.length > 1 ? 15.6 : 16) + '" text-anchor="middle" font-size="' + (k.b.length > 1 ? 9 : 11.5) + '" font-weight="700" font-family="Poppins,Inter,sans-serif" fill="currentColor" stroke="none">' + k.b.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</text>') + '</svg>';
       sc.appendChild(a);
     }); card.appendChild(sc);
   }
