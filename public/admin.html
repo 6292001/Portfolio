@@ -503,7 +503,7 @@ async function addWork(fl) {
   for (var q = 0; q < files.length; q++) {
     if (siteDraft.work.length >= 60) { last = 'Selected work can hold up to 60.'; break; }
     flash('Uploading ' + (q + 1) + ' of ' + files.length + '\u2026');
-    try { var bm = await createImageBitmap(files[q]), id = await uploadBlob(await toJpeg(bm, 1280)); siteDraft.work.push({id: id, title: '', stat: '', sm: await makeSmall(id, bm)}); n++; renderSel(); }
+    try { var bm = await createImageBitmap(files[q]), id = await uploadBlob(await toJpeg(bm, 1280)); siteDraft.work.splice(n, 0, {id: id, title: '', stat: '', sm: await makeSmall(id, bm)}); n++; renderSel(); }
     catch (e) { last = e.message; if (last === 'Signed out') return; }
   }
   chg(); if (last) flash(n + ' added. ' + last); else if (n) flash(n + ' added to Selected work. Press Save changes to publish.');
@@ -523,7 +523,7 @@ function workCard(w, i) {
     if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Tap again to remove'; setTimeout(function () { delete del.dataset.sure; del.textContent = 'Remove'; }, 2500); return; }
     W.splice(i, 1); chg(); renderSel();
   };
-  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); var C0 = siteDraft.cats; if (C0 && C0.on !== false) { var sel = mk('select'), auto = catPick({title: w.title, stat: w.stat}, C0), o0 = mk('option', 0, 'Category: Auto (' + auto + ')'); o0.value = ''; sel.appendChild(o0); C0.list.concat([{n: C0.other || 'Other'}]).forEach(function (z) { var o = mk('option', 0, z.n); o.value = z.n; sel.appendChild(o); }); sel.value = w.cat || ''; if (sel.value !== (w.cat || '')) sel.value = ''; sel.onchange = function () { w.cat = sel.value; chg(); renderSel(); }; sel.style.margin = '4px 0'; sel.style.width = '100%'; c.append(im, ti, st, sel, ct); } else c.append(im, ti, st, ct); return c;
+  ct.appendChild(del); c.appendChild(mk('span', 'num', '#' + (i + 1))); var C0 = siteDraft.cats; if (false) { var sel = mk('select'), auto = catPick({title: w.title, stat: w.stat}, C0), o0 = mk('option', 0, 'Category: Auto (' + auto + ')'); o0.value = ''; sel.appendChild(o0); C0.list.concat([{n: C0.other || 'Other'}]).forEach(function (z) { var o = mk('option', 0, z.n); o.value = z.n; sel.appendChild(o); }); sel.value = w.cat || ''; if (sel.value !== (w.cat || '')) sel.value = ''; sel.onchange = function () { w.cat = sel.value; chg(); renderSel(); }; sel.style.margin = '4px 0'; sel.style.width = '100%'; c.append(im, ti, st, sel, ct); } else c.append(im, ti, st, ct); return c;
 }
 function renderPicker() {
   var P = $('picker'); P.innerHTML = ''; P.className = 'pickgrid';
@@ -532,7 +532,7 @@ function renderPicker() {
   draft.forEach(function (t, i) {
     var m = mk('div', 'mini' + (used[t.id] ? ' picked' : '')), im = mk('img'); im.src = '/api/img/' + t.id + (t.sm ? '?s=1' : ''); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; m.appendChild(im); m.appendChild(mk('span', 'num', '#' + (i + 1)));
     m.title = used[t.id] ? 'Already in Selected work' : 'Click to add to Selected work';
-    m.onclick = function () { if (used[t.id]) return; if (siteDraft.work.length >= 60) { flash('Selected work can hold up to 60.'); return; } siteDraft.work.push({id: t.id, title: t.title, stat: t.stat}); chg(); renderSel(); };
+    m.onclick = function () { if (used[t.id]) return; if (siteDraft.work.length >= 60) { flash('Selected work can hold up to 60.'); return; } siteDraft.work.unshift({id: t.id, title: t.title, stat: t.stat}); chg(); renderSel(); };
     P.appendChild(m);
   });
 }
@@ -564,8 +564,8 @@ function renderCats() {
   box.style.marginBottom = '18px'; B.appendChild(box);
 }
 function renderSel() {
-  var L = $('admSel'); L.innerHTML = ''; renderCats();
-  $('selNote').textContent = siteDraft.work.length ? siteDraft.work.length + ' in Selected work (up to 60), shown in this order on your site. Upload new ones below, or add from your slides.' : 'Selected work is empty. Upload thumbnails below, or add some from your slides.';
+  var L = $('admSel'); L.innerHTML = '';
+  $('selNote').textContent = siteDraft.work.length ? siteDraft.work.length + ' in Selected work (up to 60), shown in this order on your site. New uploads go to the top and older ones move down.' : 'Selected work is empty. Upload thumbnails below, or add some from your slides.';
   siteDraft.work.forEach(function (w, i) { L.appendChild(workCard(w, i)); });
   if (!$('picker').hidden) renderPicker();
 }

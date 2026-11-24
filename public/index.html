@@ -472,7 +472,7 @@ function catPick(it, C) {
   return best || C.other || 'Other';
 }
 var CT = S1.cats && Array.isArray(S1.cats.list) ? S1.cats : {on: true, all: 'All', other: 'Other', list: [{n: 'Finance', k: 'finance, money, invest, stock, crypto, bitcoin, trading, trader, bank, budget, wealth, forex, rich, millionaire, income, tax, dollar, profit, passive'}, {n: 'Real Estate', k: 'real estate, house, home, property, mortgage, rent, apartment, realtor, landlord, airbnb, flip, land, condo, listing'}, {n: 'Entertainment', k: 'movie, film, music, celebrity, reaction, show, comedy, funny, prank, vlog, trailer, song, drama, tv, netflix, react'}, {n: 'Gaming', k: 'game, gaming, gamer, minecraft, fortnite, roblox, gta, valorant, stream, esports, console, ps5, xbox, playthrough'}, {n: 'Tech', k: 'tech, ai, phone, iphone, android, software, app, code, coding, gadget, review, pc, laptop, computer, chatgpt'}, {n: 'Business', k: 'business, marketing, startup, entrepreneur, ecommerce, agency, brand, sales, ads, shopify, freelance, side hustle, course, success'}, {n: 'Health & Fitness', k: 'fitness, workout, gym, health, diet, weight, fat, muscle, yoga, run, nutrition, wellness, body'}, {n: 'Education', k: 'learn, tutorial, how to, guide, lesson, study, school, explained, education, tips, beginner, facts, history, science'}]};
-var catOn = CT.on !== false && witems.length > 1, counts = {}, order = [];
+var catOn = false, counts = {}, order = [];
 function catName(it) { return catPick(it, CT); }
 witems.forEach(function (it) { var el = tile(it, 'gcard', true); if (catOn) { var c = catName(it); el.dataset.cat = c; counts[c] = (counts[c] || 0) + 1; } grid.appendChild(el); });
 if (catOn) {
